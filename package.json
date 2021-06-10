@@ -16,9 +16,20 @@
       "validator",
       "w3c"
    ],
+   "jshintConfig": {
+      "esversion": 9,
+      "strict": "implied",
+      "eqeqeq": true,
+      "undef": true,
+      "unused": true,
+      "varstmt": true,
+      "node": true,
+      "mocha": true
+   },
    "scripts": {
-      "pretest": "rimraf **/.DS_Store",
-      "test": "mocha spec"
+      "lint": "   jshint spec",
+      "pretest": "npm run lint && rimraf **/.DS_Store",
+      "test": "   mocha spec"
    },
    "dependencies": {
       "commander": "~7.2",
@@ -26,6 +37,7 @@
       "superagent-proxy": "~2.1"
    },
    "devDependencies": {
+      "jshint": "~2.13",
       "mocha": "~9.0",
       "rimraf": "~3.0"
    }
