@@ -1,0 +1,21 @@
+{
+   "compilerOptions": {
+      "target": "ES2020",
+      "module": "ES2020",
+      "moduleResolution": "node",
+      "declaration": true,
+      "outDir": "build",
+      "strict": true,
+      "allowSyntheticDefaultImports": true,
+      "alwaysStrict": true,
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "noFallthroughCasesInSwitch": true,
+      "noImplicitAny": true,
+      "noImplicitReturns": true,
+      "noImplicitThis": true,
+      "noUncheckedIndexedAccess": true,
+      "noUnusedLocals": true,
+      "suppressImplicitAnyIndexErrors": true
+   }
+}

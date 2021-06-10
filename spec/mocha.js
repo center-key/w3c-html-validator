@@ -5,14 +5,20 @@
 import assert from 'assert';
 
 // Setup
-const htmlValidator = { validate: () => true };
+import { htmlValidator } from '../build/w3c-html-validator.js';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-describe('Library module', () => {
+describe('The library', () => {
 
-   it('has a validate() function', () => {
-      const actual =   { type: typeof htmlValidator.validate };
-      const expected = { type: 'function' };
+   it('has a validate() function and a setW3cCheckUrl() function', () => {
+      const actual = {
+         validate:       typeof htmlValidator.validate,
+         setW3cCheckUrl: typeof htmlValidator.setW3cCheckUrl,
+         };
+      const expected = {
+         validate:       'function',
+         setW3cCheckUrl: 'function',
+         };
       assert.deepStrictEqual(actual, expected);
       });
 
