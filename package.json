@@ -1,31 +1,27 @@
 {
-  "author": "Thomas Davis <thomasalwyndavis@gmail.com>",
-  "name": "w3cjs",
-  "description": "A node.js module for using the w3c validator.",
-  "license": "Unlicense",
-  "version": "0.4.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/thomasdavis/w3cjs"
-  },
-  "main": "./lib/w3cjs",
-  "bin": {
-    "w3cjs": "./bin/w3cjs"
-  },
-  "dependencies": {
-    "commander": "^2.9.0",
-    "superagent": "^3.5.2",
-    "superagent-proxy": "^1.0.2"
-  },
-  "devDependencies": {},
-  "optionalDependencies": {},
-  "engines": {
-    "node": "*"
-  },
-  "keywords": [
-    "w3c",
-    "validator",
-    "html",
-    "html5"
-  ]
+   "name": "w3c-html-validator",
+   "version": "0.5.0",
+   "description": "A node.js module for using the w3c validator.",
+   "license": "MIT",
+   "main": "./lib/w3cjs",
+   "bin": {
+      "w3cjs": "./bin/w3cjs"
+   },
+   "repository": "github:center-key/w3c-html-validator",
+   "homepage": "https://github.com/center-key/w3c-html-validator",
+   "bugs": "https://github.com/center-key/w3c-html-validator/issues",
+   "docs": "https://github.com/center-key/w3c-html-validator#readme",
+   "author": "Thomas Davis <thomasalwyndavis@gmail.com>",
+   "keywords": [
+      "html",
+      "html5",
+      "validator",
+      "w3c"
+   ],
+   "dependencies": {
+      "commander": "~7.2",
+      "superagent": "~6.1",
+      "superagent-proxy": "~2.1"
+   },
+   "devDependencies": {}
 }
