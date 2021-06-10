@@ -3,10 +3,7 @@
    "version": "0.5.0",
    "description": "A node.js module for using the w3c validator.",
    "license": "MIT",
-   "main": "./lib/w3cjs",
-   "bin": {
-      "w3cjs": "./bin/w3cjs"
-   },
+   "main": "dist/w3c-html-validator.js",
    "repository": "github:center-key/w3c-html-validator",
    "homepage": "https://github.com/center-key/w3c-html-validator",
    "bugs": "https://github.com/center-key/w3c-html-validator/issues",
@@ -18,10 +15,15 @@
       "validator",
       "w3c"
    ],
+   "scripts": {
+      "test": "rimraf **/.DS_Store"
+   },
    "dependencies": {
       "commander": "~7.2",
       "superagent": "~6.1",
       "superagent-proxy": "~2.1"
    },
-   "devDependencies": {}
+   "devDependencies": {
+      "rimraf": "~3.0"
+   }
 }
