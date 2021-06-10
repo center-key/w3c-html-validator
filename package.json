@@ -1,8 +1,9 @@
 {
    "name": "w3c-html-validator",
    "version": "0.5.0",
-   "description": "A node.js module for using the w3c validator.",
+   "description": "A package for testing HTML files or URLs against the W3C validator",
    "license": "MIT",
+   "type": "module",
    "main": "dist/w3c-html-validator.js",
    "repository": "github:center-key/w3c-html-validator",
    "homepage": "https://github.com/center-key/w3c-html-validator",
@@ -16,7 +17,8 @@
       "w3c"
    ],
    "scripts": {
-      "test": "rimraf **/.DS_Store"
+      "pretest": "rimraf **/.DS_Store",
+      "test": "mocha spec"
    },
    "dependencies": {
       "commander": "~7.2",
@@ -24,6 +26,7 @@
       "superagent-proxy": "~2.1"
    },
    "devDependencies": {
+      "mocha": "~9.0",
       "rimraf": "~3.0"
    }
 }
