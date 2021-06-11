@@ -6,9 +6,9 @@ import withProxy from 'superagent-proxy';
 withProxy(request);
 
 export type ValidatorOptions = {
-   file:      string,
-   input:     string,
-   checkUrl:  string,
+   file?:     string,
+   input?:    string,
+   checkUrl?: string,
    output?:   'json' | 'html',
    proxy?:    string,
    callback?: (response: unknown, info?: unknown) => void,
@@ -26,6 +26,8 @@ const w3cHtmlValidator = {
          callback: (response: unknown) => console.log(response),
          };
       const settings = { ...defaults, ...options };
+      if (!settings.input && !settings.file)
+         throw Error('No "input" or "file" specified.');
       const getRequest = (isLocal: boolean): request.SuperAgentRequest => {
          const req = isLocal ? request.default.post(settings.checkUrl) :
             request.default.get(settings.checkUrl);
@@ -35,32 +37,24 @@ const w3cHtmlValidator = {
          req.set('Content-Type', 'text/html; encoding=utf-8');
          return req;
          };
-      if (!settings.input && !settings.file)
-         throw Error('No "input" or "file" specified.');
-      const remoteMode =  /^http[s]?:/.test(settings.file);
+      const remoteMode =  settings.file && /^http[s]?:/.test(settings.file);
       const type =        settings.input ? 'string' : remoteMode ? 'remote' : 'local';
       const context =     settings.input || settings.file;
       const req = getRequest(type !== 'remote');
-      if (type === 'remote') {
-         req.query({ out: settings.output });
+      req.query({ out: settings.output });
+      if (type === 'remote')
          req.query({ doc: settings.file });
-         }
-      else {
-         req.query({ out: settings.output });
-         req.send((type === 'local') ? readFileSync(settings.file, 'utf8') : settings.input + '');
-         }
-      req.end(function(error, res) {
-         if (error) {
-            settings.callback(error);
-            }
-         else if (settings.output === 'json') {
+      else
+         req.send(type === 'local' ? readFileSync(String(settings.file), 'utf8') : settings.input + '');
+      const handleResponse = (error: unknown, res: request.Response) => {
+         const getBody = () => {
             res.body.context = context;
-            settings.callback(null, res.body);
-            }
-         else {
-            settings.callback(null, res.text);
-            }
-         });
+            return res.body;
+            };
+         const getContext = () => settings.output === 'json' ? getBody() : res.text;
+         return error ? settings.callback(error) : settings.callback(null, getContext());
+         };
+      req.end(handleResponse);
       },
 
    };
