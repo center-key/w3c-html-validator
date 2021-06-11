@@ -7,8 +7,6 @@ withProxy(request);
 
 export type ValidatorOptions = {
    output?:   string,
-   doctype?:  string,
-   charset?:  string,
    proxy?:    string,
    callback?: (response: unknown, info?: unknown) => void,
    file:      string,
@@ -28,8 +26,6 @@ const w3cHtmlValidator = {
    validate(options: ValidatorOptions): void {
       const defaults = {
          output:   'json',
-         doctype:  null,
-         charset:  null,
          proxy:    null,
          callback: (response: unknown) => console.log(response),
          };
