@@ -6,33 +6,29 @@ import withProxy from 'superagent-proxy';
 withProxy(request);
 
 export type ValidatorOptions = {
-   output?:   string,
-   proxy?:    string,
-   callback?: (response: unknown, info?: unknown) => void,
    file:      string,
    input:     string,
+   checkUrl:  string,
+   output?:   'json' | 'html',
+   proxy?:    string,
+   callback?: (response: unknown, info?: unknown) => void,
    };
 
 const w3cHtmlValidator = {
 
    version: '[VERSION]',
 
-   w3cCheckUrl: 'https://validator.w3.org/nu/',
-
-   setW3cCheckUrl(newW3cCheckUrl: string): void {
-      w3cHtmlValidator.w3cCheckUrl = newW3cCheckUrl;
-      },
-
    validate(options: ValidatorOptions): void {
       const defaults = {
+         checkUrl: 'https://validator.w3.org/nu/',
          output:   'json',
          proxy:    null,
          callback: (response: unknown) => console.log(response),
          };
       const settings = { ...defaults, ...options };
-      const checkUrl = w3cHtmlValidator.w3cCheckUrl;
       const getRequest = (isLocal: boolean): request.SuperAgentRequest => {
-         const req = isLocal ? request.default.post(checkUrl) : request.default.get(checkUrl);
+         const req = isLocal ? request.default.post(settings.checkUrl) :
+            request.default.get(settings.checkUrl);
          if (settings.proxy)
             req.proxy(settings.proxy);
          req.set('User-Agent',   'w3c-html-validator');
