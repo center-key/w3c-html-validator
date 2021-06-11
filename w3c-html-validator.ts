@@ -1,11 +1,11 @@
-// w3c-html-validator ~ MIT License
+// W3C HTML Validator ~ MIT License
 
 import { readFileSync } from 'fs';
 import * as request from 'superagent';
 import withProxy from 'superagent-proxy';
 withProxy(request);
 
-export type ValidateOptions = {
+export type ValidatorOptions = {
    output?:   string,
    doctype?:  string,
    charset?:  string,
@@ -15,15 +15,17 @@ export type ValidateOptions = {
    input:     string,
    };
 
-const htmlValidator = {
+const w3cHtmlValidator = {
+
+   version: '[VERSION]',
 
    w3cCheckUrl: 'https://validator.w3.org/nu/',
 
    setW3cCheckUrl(newW3cCheckUrl: string): void {
-      htmlValidator.w3cCheckUrl = newW3cCheckUrl;
+      w3cHtmlValidator.w3cCheckUrl = newW3cCheckUrl;
       },
 
-   validate(options: ValidateOptions): void {
+   validate(options: ValidatorOptions): void {
       const defaults = {
          output:   'json',
          doctype:  null,
@@ -32,23 +34,20 @@ const htmlValidator = {
          callback: (response: unknown) => console.log(response),
          };
       const settings = { ...defaults, ...options };
-      const checkUrl = htmlValidator.w3cCheckUrl;
+      const checkUrl = w3cHtmlValidator.w3cCheckUrl;
       const getRequest = (isLocal: boolean): request.SuperAgentRequest => {
-         console.log('>>>>>>>>>>>');
-         console.log(request.default.post);
-         console.log(request.post);
-         const req = isLocal ? request.default.post(checkUrl) : request.get(checkUrl);
+         const req = isLocal ? request.default.post(checkUrl) : request.default.get(checkUrl);
          if (settings.proxy)
             req.proxy(settings.proxy);
-         req.set('User-Agent',   'w3cjs - npm module');
+         req.set('User-Agent',   'w3c-html-validator');
          req.set('Content-Type', 'text/html; encoding=utf-8');
          return req;
          };
       if (!settings.input && !settings.file)
-         throw Error('No "intput" or "file" specified.');
-      const remote =  /^http[s]?:/.test(settings.file);
-      const type =    settings.input ? 'string' : remote ? 'remote' : 'local';
-      const context = settings.input || settings.file;
+         throw Error('No "input" or "file" specified.');
+      const remoteMode =  /^http[s]?:/.test(settings.file);
+      const type =        settings.input ? 'string' : remoteMode ? 'remote' : 'local';
+      const context =     settings.input || settings.file;
       const req = getRequest(type !== 'remote');
       if (type === 'remote') {
          req.query({ out: settings.output });
@@ -74,4 +73,4 @@ const htmlValidator = {
 
    };
 
-export { htmlValidator };
+export { w3cHtmlValidator };

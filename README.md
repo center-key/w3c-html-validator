@@ -8,12 +8,17 @@ _A package for testing HTML files or URLs against the W3C validator_
 [![Vulnerabilities](https://snyk.io/test/github/center-key/w3c-html-validator/badge.svg)](https://snyk.io/test/github/center-key/w3c-html-validator)
 [![Build](https://github.com/center-key/w3c-html-validator/workflows/build/badge.svg)](https://github.com/center-key/w3c-html-validator/actions?query=workflow%3Abuild)
 
+
 ## Setup
+
+### Install
 Install package for node:
 ```shell
-$ npm install w3c-html-validator
+$ npm install --save-dev w3c-html-validator
 ```
+
+## Import
 Import into your application:
 ```javascript
-import { htmlValidator } from 'w3c-html-validator';
+import { w3cHtmlValidator } from 'w3c-html-validator';
 ```

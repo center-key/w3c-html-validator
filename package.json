@@ -4,7 +4,12 @@
    "description": "A package for testing HTML files or URLs against the W3C validator (written in TypeScript)",
    "license": "MIT",
    "type": "module",
-   "main": "dist/w3c-html-validator.js",
+   "main": "dist/w3c-html-validator.umd.cjs",
+   "module": "dist/w3c-html-validator.js",
+   "types": "dist/w3c-html-validator.d.ts",
+   "files": [
+      "dist"
+   ],
    "repository": "github:center-key/w3c-html-validator",
    "homepage": "https://github.com/center-key/w3c-html-validator",
    "bugs": "https://github.com/center-key/w3c-html-validator/issues",
@@ -44,9 +49,9 @@
    },
    "scripts": {
       "x": "node example/index.js",
-      "lint": "   jshint spec && eslint --max-warnings 0 . --ext .ts",
+      "lint": "   jshint *.js spec && eslint --max-warnings 0 . --ext .ts",
       "tsc": "    tsc --version && tsc --project . --removeComments && tsc --project . --module UMD --removeComments --outDir build/umd",
-      "pretest": "npm run lint && rimraf build dist **/.DS_Store && npm run tsc",
+      "pretest": "npm run lint && rimraf build dist **/.DS_Store && npm run tsc && gulp make-dist",
       "test": "   mocha spec"
    },
    "dependencies": {
@@ -56,12 +61,18 @@
    },
    "devDependencies": {
       "@types/node": "~15.12",
-      "@types/superagent": "~4.1.11",
-      "@types/superagent-proxy": "~2.0.0",
+      "@types/superagent": "~4.1",
+      "@types/superagent-proxy": "~2.0",
       "@typescript-eslint/eslint-plugin": "~4.26",
       "@typescript-eslint/parser": "~4.26",
       "eslint": "~7.28",
+      "gulp": "~4.0",
+      "gulp-header": "~2.0",
+      "gulp-rename": "~2.0",
+      "gulp-replace": "~1.1",
+      "gulp-size": "~4.0",
       "jshint": "~2.13",
+      "merge-stream": "~2.0",
       "mocha": "~9.0",
       "rimraf": "~3.0",
       "typescript": "~4.3"
