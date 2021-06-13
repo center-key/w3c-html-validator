@@ -1,48 +1,43 @@
-//! W3C HTML Validator v0.5.1 ~ github.com/center-key/w3c-html-validator ~ MIT License
+//! W3C HTML Validator v0.6.0 ~ github.com/center-key/w3c-html-validator ~ MIT License
 
 import { readFileSync } from 'fs';
-import * as request from 'superagent';
-import withProxy from 'superagent-proxy';
-withProxy(request);
+import request from 'superagent';
 const w3cHtmlValidator = {
-    version: '0.5.1',
+    version: '0.6.0',
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
             output: 'json',
-            proxy: null,
-            callback: (response) => console.log(response),
         };
         const settings = { ...defaults, ...options };
-        if (!settings.input && !settings.file)
-            throw Error('No "input" or "file" specified.');
-        const getRequest = (isLocal) => {
-            const req = isLocal ? request.default.post(settings.checkUrl) :
-                request.default.get(settings.checkUrl);
-            if (settings.proxy)
-                req.proxy(settings.proxy);
-            req.set('User-Agent', 'w3c-html-validator');
-            req.set('Content-Type', 'text/html; encoding=utf-8');
-            return req;
-        };
-        const remoteMode = settings.file && /^http[s]?:/.test(settings.file);
-        const type = settings.input ? 'string' : remoteMode ? 'remote' : 'local';
-        const context = settings.input || settings.file;
-        const req = getRequest(type !== 'remote');
-        req.query({ out: settings.output });
-        if (type === 'remote')
-            req.query({ doc: settings.file });
-        else
-            req.send(type === 'local' ? readFileSync(String(settings.file), 'utf8') : settings.input + '');
-        const handleResponse = (error, res) => {
-            const getBody = () => {
-                res.body.context = context;
-                return res.body;
-            };
-            const getContext = () => settings.output === 'json' ? getBody() : res.text;
-            return error ? settings.callback(error) : settings.callback(null, getContext());
-        };
-        req.end(handleResponse);
+        if (!settings.html && !settings.filename && !settings.website)
+            throw Error('Must specify the "html", "filename", or "website" option.');
+        if (settings.output !== 'json' && settings.output !== 'html')
+            throw Error('Option "output" must be "json" or "html".');
+        const mode = settings.html ? 'html' : settings.filename ? 'filename' : 'website';
+        const readFile = () => settings.filename ? readFileSync(settings.filename, 'utf8') : null;
+        const inputHtml = settings.html || readFile();
+        const makePostRequest = () => request.post(settings.checkUrl)
+            .set('Content-Type', 'text/html; encoding=utf-8')
+            .send(inputHtml);
+        const makeGetRequest = () => request.get(settings.checkUrl)
+            .query({ doc: settings.website });
+        const w3cRequest = inputHtml ? makePostRequest() : makeGetRequest();
+        w3cRequest.set('User-Agent', 'W3C HTML Validator ~ github.com/center-key/w3c-html-validator');
+        w3cRequest.query({ out: settings.output });
+        const json = settings.output === 'json';
+        const success = '<p class="success">';
+        return w3cRequest.then(response => ({
+            validates: json ? !response.body.messages.length : response.text.includes(success),
+            mode: mode,
+            html: inputHtml,
+            filename: settings.filename || null,
+            website: settings.website || null,
+            output: settings.output,
+            status: response.statusCode,
+            messages: json ? response.body.messages : null,
+            display: json ? null : response.text,
+        }));
     },
 };
 export { w3cHtmlValidator };

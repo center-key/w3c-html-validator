@@ -40,7 +40,7 @@ $ node examples.js
 | `filename` | **string** | `null`                         | HTML file to validate.       |
 | `website`  | **string** | `null`                         | URL of website to validate.  |
 | `checkUrl` | **string** | `https://validator.w3.org/nu/` | W3C validation API endpoint. |
-| `output`   | **string** | `'json'`                       | Get results as an array (`'json'`) or as a web page (`'html'`) |
+| `output`   | **string** | `'json'`                       | Get results as an array (`'json'`) or as a web page (`'html'`). |
 
 ## 4) TypeScript declarations
 The **TypeScript Declaration File** file is [w3c-html-validator.d.ts](dist/w3c-html-validator.d.ts)
@@ -70,7 +70,7 @@ import { w3cHtmlValidator } from 'w3c-html-validator';
 describe('Home page', () => {
    it('validates', (done) => {
       const handleResults = (results) => {
-         assert.deepStrictEqual(results.validates, 'Home page validates');
+         assert(results.validates, 'Home page validates');
          done();
          };
       w3cHtmlValidator.validate({ filename: 'docs/index.js' }).then(handleResults);
