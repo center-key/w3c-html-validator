@@ -48,21 +48,18 @@
       ]
    },
    "scripts": {
-      "x": "node example/index.js",
-      "lint": "   jshint *.js spec && eslint --max-warnings 0 . --ext .ts",
-      "tsc": "    tsc --version && tsc --project . --removeComments && tsc --project . --module UMD --removeComments --outDir build/umd",
-      "pretest": "npm run lint && rimraf build dist **/.DS_Store && npm run tsc && gulp make-dist",
-      "test": "   mocha spec"
+      "lint": "    jshint *.js spec && eslint --max-warnings 0 . --ext .ts",
+      "tsc": "     tsc --version && tsc --project . --removeComments && tsc --project . --module UMD --removeComments --outDir build/umd",
+      "pretest": " npm run lint && rimraf build dist **/.DS_Store && npm run tsc && gulp make-dist",
+      "test": "    mocha spec/*.js --timeout 5000"
    },
    "dependencies": {
       "commander": "~7.2",
-      "superagent": "~6.1",
-      "superagent-proxy": "~2.1"
+      "superagent": "~6.1"
    },
    "devDependencies": {
       "@types/node": "~15.12",
       "@types/superagent": "~4.1",
-      "@types/superagent-proxy": "~2.0",
       "@typescript-eslint/eslint-plugin": "~4.26",
       "@typescript-eslint/parser": "~4.26",
       "eslint": "~7.28",
