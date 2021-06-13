@@ -48,6 +48,7 @@
       ]
    },
    "scripts": {
+      "examples": "node examples.js",
       "lint": "    jshint *.js spec && eslint --max-warnings 0 . --ext .ts",
       "tsc": "     tsc --version && tsc --project . --removeComments && tsc --project . --module UMD --removeComments --outDir build/umd",
       "pretest": " npm run lint && rimraf build dist **/.DS_Store && npm run tsc && gulp make-dist",
