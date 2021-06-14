@@ -28,8 +28,9 @@ Call the `validate()` function:
 const options = { filename: 'docs/index.html' };
 w3cHtmlValidator.validate(options).then(console.log);
 ```
-To see some example validation results, run the command:
+To see some example validation results, run the commands:
 ```shell
+$ cd w3c-html-validator
 $ node examples.js
 ```
 
@@ -79,5 +80,5 @@ describe('Home page', () => {
 ```
 
 ## 6) Gulp Task
-This library is available as a Gulp plugin:
+This library is available as a Gulp plugin:<br>
 https://github.com/center-key/gulp-w3c-html-validator
