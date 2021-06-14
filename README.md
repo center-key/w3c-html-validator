@@ -34,15 +34,15 @@ $ node examples.js
 ```
 
 ## 3) Options
-| Name (key) | Type       | Default                        | Description                  |
-| :--------- | :--------- | :----------------------------- | :--------------------------- |
-| `html`     | **string** | `null`                         | HTML string to validate.     |
-| `filename` | **string** | `null`                         | HTML file to validate.       |
-| `website`  | **string** | `null`                         | URL of website to validate.  |
-| `checkUrl` | **string** | `https://validator.w3.org/nu/` | W3C validation API endpoint. |
-| `output`   | **string** | `'json'`                       | Get results as an array (`'json'`) or as a web page (`'html'`). |
+| Name (key) | Type       | Default                          | Description                  |
+| :--------- | :--------- | :------------------------------- | :--------------------------- |
+| `html`     | **string** | `null`                           | HTML string to validate.     |
+| `filename` | **string** | `null`                           | HTML file to validate.       |
+| `website`  | **string** | `null`                           | URL of website to validate.  |
+| `checkUrl` | **string** | `'https://validator.w3.org/nu/'` | W3C validation API endpoint. |
+| `output`   | **string** | `'json'`                         | Get results as an array (`'json'`) or as a web page (`'html'`). |
 
-## 4) TypeScript declarations
+## 4) TypeScript Declarations
 The **TypeScript Declaration File** file is [w3c-html-validator.d.ts](dist/w3c-html-validator.d.ts)
 in the **dist** folder.
 
@@ -62,7 +62,7 @@ type ValidatorResults = {
    };
 ```
 
-## 5) Mocha example
+## 5) Mocha Example
 ```javascript
 import assert from 'assert';
 import { w3cHtmlValidator } from 'w3c-html-validator';
@@ -77,3 +77,7 @@ describe('Home page', () => {
       });
    });
 ```
+
+## 6) Gulp Task
+This library is available as a Gulp plugin:
+https://github.com/center-key/gulp-w3c-html-validator
