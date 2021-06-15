@@ -28,6 +28,10 @@ Call the `validate()` function:
 const options = { filename: 'docs/index.html' };
 w3cHtmlValidator.validate(options).then(console.log);
 ```
+To display formatted output, replace `console.log` with `w3cHtmlValidator.reporter`:
+```javascript
+w3cHtmlValidator.validate(options).then(w3cHtmlValidator.reporter);
+```
 To see some example validation results, run the commands:
 ```shell
 $ cd w3c-html-validator
@@ -71,14 +75,29 @@ import { w3cHtmlValidator } from 'w3c-html-validator';
 describe('Home page', () => {
    it('validates', (done) => {
       const handleResults = (results) => {
+         assert(results.status === 200, 'Request succeeded');
          assert(results.validates, 'Home page validates');
          done();
          };
-      w3cHtmlValidator.validate({ filename: 'docs/index.js' }).then(handleResults);
+      const options = { filename: 'docs/index.html' };
+      w3cHtmlValidator.validate(options).then(handleResults);
       });
    });
 ```
 
-## 6) Gulp Task
+## 7) Command Line
+```shell
+$ npm install --save-dev w3c-html-validator
+$ w3c-html-validator docs/index.html
+```
+or as an npm script in **package.json**:
+```json
+   "scripts": {
+      "validate": "w3c-html-validator docs/index.html",
+   },
+```   
+**Note:** This feature is currently just experimental.
+
+## 7) Gulp Task
 This library is available as a Gulp plugin:<br>
 https://github.com/center-key/gulp-w3c-html-validator

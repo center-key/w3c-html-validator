@@ -10,6 +10,9 @@
    "files": [
       "dist"
    ],
+   "bin": {
+      "w3c-html-validator": "bin/cli.js"
+   },
    "repository": "github:center-key/w3c-html-validator",
    "homepage": "https://github.com/center-key/w3c-html-validator",
    "bugs": "https://github.com/center-key/w3c-html-validator/issues",
