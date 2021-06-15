@@ -37,6 +37,8 @@ To see some example validation results, run the commands:
 $ cd w3c-html-validator
 $ node examples.js
 ```
+<img src=https://raw.githubusercontent.com/center-key/w3c-html-validator/main/examples.png
+width=600 alt=screenshot>
 
 ## 3) Options
 | Name (key) | Type       | Default                          | Description                  |
