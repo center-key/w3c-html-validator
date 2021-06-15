@@ -38,7 +38,7 @@ $ cd w3c-html-validator
 $ node examples.js
 ```
 <img src=https://raw.githubusercontent.com/center-key/w3c-html-validator/main/examples.png
-width=600 alt=screenshot>
+width=800 alt=screenshot>
 
 ## 3) Options
 | Name (key) | Type       | Default                          | Description                  |
@@ -87,7 +87,7 @@ describe('Home page', () => {
    });
 ```
 
-## 7) Command Line
+## 6) Command Line
 ```shell
 $ npm install --save-dev w3c-html-validator
 $ w3c-html-validator docs/index.html
