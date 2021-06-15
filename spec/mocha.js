@@ -49,6 +49,7 @@ describe('Pretty-Print JSON website', () => {
          const expected = {
             validates: true,
             mode:      'website',
+            title:     'https://pretty-print-json.js.org/',
             html:      null,
             filename:  null,
             website:   'https://pretty-print-json.js.org/',
@@ -74,6 +75,7 @@ describe('Valid HTML string', () => {
          const expected = {
             validates: true,
             mode:      'html',
+            title:     'HTML characters: ' + validHtml.length,
             html:      validHtml,
             filename:  null,
             website:   null,
@@ -95,6 +97,7 @@ describe('Valid HTML string', () => {
          const expected = {
             validates: true,
             mode:      'html',
+            title:     'HTML characters: ' + validHtml.length,
             html:      validHtml,
             filename:  null,
             website:   null,
@@ -119,6 +122,7 @@ describe('Invalid HTML string', () => {
          const expected = {
             validates: false,
             mode:      'html',
+            title:     'HTML characters: ' + invalidHtml.length,
             html:      invalidHtml,
             filename:  null,
             website:   null,
@@ -162,6 +166,7 @@ describe('Invalid HTML string', () => {
          const expected = {
             validates: false,
             mode:      'html',
+            title:     'HTML characters: ' + invalidHtml.length,
             html:      invalidHtml,
             filename:  null,
             website:   null,
@@ -186,6 +191,7 @@ describe('Valid HTML file', () => {
          const expected = {
             validates: true,
             mode:      'filename',
+            title:     'spec/html/valid.html',
             html:      validHtml,
             filename:  'spec/html/valid.html',
             website:   null,
