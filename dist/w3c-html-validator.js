@@ -1,11 +1,11 @@
-//! W3C HTML Validator v0.7.0 ~ github.com/center-key/w3c-html-validator ~ MIT License
+//! W3C HTML Validator v0.7.1 ~ github.com/center-key/w3c-html-validator ~ MIT License
 
 import { readFileSync } from 'fs';
 import color from 'ansi-colors';
 import log from 'fancy-log';
 import request from 'superagent';
 const w3cHtmlValidator = {
-    version: '0.7.0',
+    version: '0.7.1',
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
@@ -47,10 +47,14 @@ const w3cHtmlValidator = {
             display: json ? null : response.text,
         }));
     },
-    reporter(results) {
+    reporter(results, options) {
+        const defaults = {
+            maxMessageLen: null,
+        };
+        const settings = { ...defaults, ...options };
         if (typeof results?.validates !== 'boolean')
             throw Error('[w3c-html-validator] Invalid parameter for reporter(): ' + String(results));
-        const fail = 'fail (' + results.messages.length + ')';
+        const fail = 'fail (messages: ' + results.messages.length + ')';
         const status = results.validates ? color.green('pass') : color.red.bold(fail);
         log(color.blue.bold(results.title), color.gray('validation:'), status);
         const typeColorMap = {
@@ -61,9 +65,10 @@ const w3cHtmlValidator = {
         const logMessage = (message) => {
             const type = message.subType || message.type;
             const typeColor = typeColorMap[type] || color.magenta.bold;
-            const lineNum = 'line #' + message.lastLine + ':';
+            const lineNum = `line ${message.lastLine}, column ${message.firstColumn}:`;
             const lineText = message.extract.replace(/\n/g, '\\n');
-            log(typeColor('[' + type.toUpperCase() + ']'), message.message);
+            const maxLen = settings.maxMessageLen ?? undefined;
+            log(typeColor('[HTML ' + type + ']'), message.message.substring(0, maxLen));
             log(color.gray(lineNum), color.cyan(lineText));
         };
         results.messages.forEach(logMessage);

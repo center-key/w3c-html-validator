@@ -1,4 +1,4 @@
-//! W3C HTML Validator v0.7.0 ~ github.com/center-key/w3c-html-validator ~ MIT License
+//! W3C HTML Validator v0.7.1 ~ github.com/center-key/w3c-html-validator ~ MIT License
 
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -20,7 +20,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     const fancy_log_1 = __importDefault(require("fancy-log"));
     const superagent_1 = __importDefault(require("superagent"));
     const w3cHtmlValidator = {
-        version: '0.7.0',
+        version: '0.7.1',
         validate(options) {
             const defaults = {
                 checkUrl: 'https://validator.w3.org/nu/',
@@ -62,10 +62,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
                 display: json ? null : response.text,
             }));
         },
-        reporter(results) {
+        reporter(results, options) {
+            const defaults = {
+                maxMessageLen: null,
+            };
+            const settings = { ...defaults, ...options };
             if (typeof results?.validates !== 'boolean')
                 throw Error('[w3c-html-validator] Invalid parameter for reporter(): ' + String(results));
-            const fail = 'fail (' + results.messages.length + ')';
+            const fail = 'fail (messages: ' + results.messages.length + ')';
             const status = results.validates ? ansi_colors_1.default.green('pass') : ansi_colors_1.default.red.bold(fail);
             fancy_log_1.default(ansi_colors_1.default.blue.bold(results.title), ansi_colors_1.default.gray('validation:'), status);
             const typeColorMap = {
@@ -76,9 +80,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             const logMessage = (message) => {
                 const type = message.subType || message.type;
                 const typeColor = typeColorMap[type] || ansi_colors_1.default.magenta.bold;
-                const lineNum = 'line #' + message.lastLine + ':';
+                const lineNum = `line ${message.lastLine}, column ${message.firstColumn}:`;
                 const lineText = message.extract.replace(/\n/g, '\\n');
-                fancy_log_1.default(typeColor('[' + type.toUpperCase() + ']'), message.message);
+                const maxLen = settings.maxMessageLen ?? undefined;
+                fancy_log_1.default(typeColor('[HTML ' + type + ']'), message.message.substring(0, maxLen));
                 fancy_log_1.default(ansi_colors_1.default.gray(lineNum), ansi_colors_1.default.cyan(lineText));
             };
             results.messages.forEach(logMessage);
