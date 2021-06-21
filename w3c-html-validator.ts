@@ -37,6 +37,7 @@ export type ValidatorResults = {
    };
 export type ReporterOptions = {
    maxMessageLen?: number,  //trim validation messages to not exceed a maximum length
+   title?:         string,  //override display title (useful for naming HTML strings)
    };
 
 const w3cHtmlValidator = {
@@ -67,7 +68,7 @@ const w3cHtmlValidator = {
       const json = settings.output === 'json';
       const success = '<p class="success">';
       const titleLookup = {
-         html:     'HTML characters: ' + inputHtml?.length,
+         html:     'HTML String (characters: ' + inputHtml?.length + ')',
          filename: settings.filename,
          website:  settings.website,
          };
@@ -88,13 +89,15 @@ const w3cHtmlValidator = {
    reporter(results: ValidatorResults, options?: ReporterOptions): ValidatorResults {
       const defaults = {
          maxMessageLen: null,
+         title:         null,
          };
       const settings = { ...defaults, ...options };
       if (typeof results?.validates !== 'boolean')
          throw Error('[w3c-html-validator] Invalid parameter for reporter(): ' + String(results));
+      const title =  settings.title ?? results.title;
       const fail =   'fail (messages: ' + results.messages!.length  + ')';
       const status = results.validates ? color.green('pass') : color.red.bold(fail);
-      log(color.blue.bold(results.title), color.gray('validation:'), status);
+      log(color.blue.bold(title), color.gray('validation:'), status);
       const typeColorMap = {
          error:   color.red.bold,
          warning: color.yellow.bold,
@@ -106,7 +109,7 @@ const w3cHtmlValidator = {
          const lineNum =   `line ${message.lastLine}, column ${message.firstColumn}:`;
          const lineText =  message.extract.replace(/\n/g, '\\n');
          const maxLen =    settings.maxMessageLen ?? undefined;
-         log(typeColor('[HTML ' + type + ']'), message.message.substring(0, maxLen));
+         log(typeColor('HTML ' + type + ':'), message.message.substring(0, maxLen));
          log(color.gray(lineNum), color.cyan(lineText));
          };
       results.messages!.forEach(logMessage);

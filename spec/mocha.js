@@ -75,7 +75,7 @@ describe('Valid HTML string', () => {
          const expected = {
             validates: true,
             mode:      'html',
-            title:     'HTML characters: ' + validHtml.length,
+            title:     'HTML String (characters: ' + validHtml.length + ')',
             html:      validHtml,
             filename:  null,
             website:   null,
@@ -97,7 +97,7 @@ describe('Valid HTML string', () => {
          const expected = {
             validates: true,
             mode:      'html',
-            title:     'HTML characters: ' + validHtml.length,
+            title:     'HTML String (characters: ' + validHtml.length + ')',
             html:      validHtml,
             filename:  null,
             website:   null,
@@ -122,7 +122,7 @@ describe('Invalid HTML string', () => {
          const expected = {
             validates: false,
             mode:      'html',
-            title:     'HTML characters: ' + invalidHtml.length,
+            title:     'HTML String (characters: ' + invalidHtml.length + ')',
             html:      invalidHtml,
             filename:  null,
             website:   null,
@@ -166,7 +166,7 @@ describe('Invalid HTML string', () => {
          const expected = {
             validates: false,
             mode:      'html',
-            title:     'HTML characters: ' + invalidHtml.length,
+            title:     'HTML String (characters: ' + invalidHtml.length + ')',
             html:      invalidHtml,
             filename:  null,
             website:   null,

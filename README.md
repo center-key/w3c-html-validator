@@ -53,6 +53,7 @@ width=800 alt=screenshot>
 | Name (key)      | Type       | Default | Description                                              |
 | :-------------- | :--------- | :------ | :------------------------------------------------------- |
 | `maxMessageLen` | **number** | `null`  | Trim validation messages to not exceed a maximum length. |
+| `title`         | **string** | `null`  | Override display title (useful for naming HTML strings). |
 
 ## 4) TypeScript Declarations
 The **TypeScript Declaration File** file is [w3c-html-validator.d.ts](dist/w3c-html-validator.d.ts)
