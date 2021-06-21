@@ -35,6 +35,9 @@ export type ValidatorResults = {
    messages:  ValidatorResultsMessage[] | null,
    display:   string | null,
    };
+export type ReporterOptions = {
+   maxMessageLen?: number,  //trim validation messages to not exceed a maximum length
+   };
 
 const w3cHtmlValidator = {
 
@@ -82,10 +85,14 @@ const w3cHtmlValidator = {
          }));
       },
 
-   reporter(results: ValidatorResults): ValidatorResults {
+   reporter(results: ValidatorResults, options?: ReporterOptions): ValidatorResults {
+      const defaults = {
+         maxMessageLen: null,
+         };
+      const settings = { ...defaults, ...options };
       if (typeof results?.validates !== 'boolean')
          throw Error('[w3c-html-validator] Invalid parameter for reporter(): ' + String(results));
-      const fail =   'fail (' + results.messages!.length  + ')';
+      const fail =   'fail (messages: ' + results.messages!.length  + ')';
       const status = results.validates ? color.green('pass') : color.red.bold(fail);
       log(color.blue.bold(results.title), color.gray('validation:'), status);
       const typeColorMap = {
@@ -98,7 +105,8 @@ const w3cHtmlValidator = {
          const typeColor = typeColorMap[type] || color.magenta.bold;
          const lineNum =   `line ${message.lastLine}, column ${message.firstColumn}:`;
          const lineText =  message.extract.replace(/\n/g, '\\n');
-         log(typeColor('[HTML ' + type + ']'), message.message);
+         const maxLen =    settings.maxMessageLen ?? undefined;
+         log(typeColor('[HTML ' + type + ']'), message.message.substring(0, maxLen));
          log(color.gray(lineNum), color.cyan(lineText));
          };
       results.messages!.forEach(logMessage);

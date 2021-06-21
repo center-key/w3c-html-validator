@@ -41,6 +41,7 @@ $ node examples.js
 width=800 alt=screenshot>
 
 ## 3) Options
+### validate()
 | Name (key) | Type       | Default                          | Description                  |
 | :--------- | :--------- | :------------------------------- | :--------------------------- |
 | `html`     | **string** | `null`                           | HTML string to validate.     |
@@ -48,6 +49,10 @@ width=800 alt=screenshot>
 | `website`  | **string** | `null`                           | URL of website to validate.  |
 | `checkUrl` | **string** | `'https://validator.w3.org/nu/'` | W3C validation API endpoint. |
 | `output`   | **string** | `'json'`                         | Get results as an array (`'json'`) or as a web page (`'html'`). |
+### reporter()
+| Name (key)      | Type       | Default | Description                                              |
+| :-------------- | :--------- | :------ | :------------------------------------------------------- |
+| `maxMessageLen` | **number** | `null`  | Trim validation messages to not exceed a maximum length. |
 
 ## 4) TypeScript Declarations
 The **TypeScript Declaration File** file is [w3c-html-validator.d.ts](dist/w3c-html-validator.d.ts)
