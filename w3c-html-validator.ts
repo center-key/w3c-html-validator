@@ -14,12 +14,12 @@ export type ValidatorOptions = {
    };
 export type ValidatorResultsMessage = {
    type:         'info' | 'error',
-   lastLine:     number,
-   lastColumn:   number,
-   firstColumn:  number,
    subType?:     'warning',
    message:      string,
    extract:      string,
+   lastLine:     number,
+   firstColumn:  number,
+   lastColumn:   number,
    hiliteStart:  number,
    hiliteLength: number,
    };
@@ -96,9 +96,9 @@ const w3cHtmlValidator = {
       const logMessage = (message: ValidatorResultsMessage) => {
          const type =      message.subType || message.type;
          const typeColor = typeColorMap[type] || color.magenta.bold;
-         const lineNum =   'line #' + message.lastLine + ':';
+         const lineNum =   `line ${message.lastLine}, column ${message.firstColumn}:`;
          const lineText =  message.extract.replace(/\n/g, '\\n');
-         log(typeColor('[' + type.toUpperCase() + ']'), message.message);
+         log(typeColor('[HTML ' + type + ']'), message.message);
          log(color.gray(lineNum), color.cyan(lineText));
          };
       results.messages!.forEach(logMessage);
