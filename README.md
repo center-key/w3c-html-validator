@@ -52,6 +52,7 @@ width=800 alt=screenshot>
 ### reporter()
 | Name (key)      | Type                    | Default | Description                                                    |
 | :-------------- | :---------------------- | :------ | :------------------------------------------------------------- |
+| `ignoreLevel`   | `'info'` or `'warning'` | `null`  | Skip unwanted messages (`'warning'` also skips `'info'`).      |
 | `maxMessageLen` | **number**              | `null`  | Trim validation messages to not exceed a maximum length.       |
 | `title`         | **string**              | `null`  | Override display title (useful for naming HTML string inputs). |
 

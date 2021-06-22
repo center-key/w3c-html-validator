@@ -41,6 +41,7 @@ export type ValidatorResults = {
    display:   string | null,
    };
 export type ReporterOptions = {
+   ignoreLevel?:   'info' | 'warning',  //skip unwanted messages ('warning' also skips 'info')
    maxMessageLen?: number,              //trim validation messages to not exceed a maximum length
    title?:         string,              //override display title (useful for naming HTML string inputs)
    };
@@ -93,13 +94,19 @@ const w3cHtmlValidator = {
 
    reporter(results: ValidatorResults, options?: ReporterOptions): ValidatorResults {
       const defaults = {
+         ignoreLevel:   null,
          maxMessageLen: null,
          title:         null,
          };
       const settings = { ...defaults, ...options };
       if (typeof results?.validates !== 'boolean')
          throw Error('[w3c-html-validator] Invalid results for reporter(): ' + String(results));
-      const messages = results.messages ? results.messages : [];
+      if (![null, 'info', 'warning'].includes(settings.ignoreLevel))
+         throw Error('[w3c-html-validator] Invalid ignoreLevel option: ' + settings.ignoreLevel);
+      const aboveIgnoreLevel = (message: ValidatorResultsMessage): boolean => {
+         return !settings.ignoreLevel || message.type !== 'info' || (settings.ignoreLevel === 'info' && !!message.subType);
+         };
+      const messages = results.messages ? results.messages.filter(aboveIgnoreLevel) : [];
       const title =  settings.title ?? results.title;
       const fail =   'fail (messages: ' + messages!.length  + ')';
       const status = results.validates ? color.green('pass') : color.red.bold(fail);
