@@ -103,9 +103,10 @@ const w3cHtmlValidator = {
          throw Error('[w3c-html-validator] Invalid results for reporter(): ' + String(results));
       if (![null, 'info', 'warning'].includes(settings.ignoreLevel))
          throw Error('[w3c-html-validator] Invalid ignoreLevel option: ' + settings.ignoreLevel);
-      const aboveIgnoreLevel = (message: ValidatorResultsMessage): boolean => {
-         return !settings.ignoreLevel || message.type !== 'info' || (settings.ignoreLevel === 'info' && !!message.subType);
-         };
+      const aboveInfo = (subType: ValidatorResultsMessage['subType']): boolean =>
+         settings.ignoreLevel === 'info' && !!subType;
+      const aboveIgnoreLevel = (message: ValidatorResultsMessage): boolean =>
+         !settings.ignoreLevel || message.type !== 'info' || aboveInfo(message.subType);
       const messages = results.messages ? results.messages.filter(aboveIgnoreLevel) : [];
       const title =  settings.title ?? results.title;
       const fail =   'fail (messages: ' + messages!.length  + ')';
@@ -123,7 +124,8 @@ const w3cHtmlValidator = {
          const lineText =  message.extract?.replace(/\n/g, '\\n');
          const maxLen =    settings.maxMessageLen ?? undefined;
          log(typeColor('HTML ' + type + ':'), message.message.substring(0, maxLen));
-         log(color.gray(location), color.cyan(lineText));
+         if (message.lastLine)
+            log(color.gray(location), color.cyan(lineText));
          };
       messages.forEach(logMessage);
       return results;
