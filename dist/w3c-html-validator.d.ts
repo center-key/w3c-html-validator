@@ -1,4 +1,4 @@
-//! W3C HTML Validator v0.7.1 ~ github.com/center-key/w3c-html-validator ~ MIT License
+//! W3C HTML Validator v0.7.2 ~ github.com/center-key/w3c-html-validator ~ MIT License
 
 export declare type ValidatorOptions = {
     html?: string;
@@ -8,8 +8,8 @@ export declare type ValidatorOptions = {
     output?: ValidatorResults['output'];
 };
 export declare type ValidatorResultsMessage = {
-    type: 'info' | 'error';
-    subType?: 'warning';
+    type: 'info' | 'error' | 'non-document-error';
+    subType?: 'warning' | 'fatal' | 'io' | 'schema' | 'internal';
     message: string;
     extract: string;
     lastLine: number;
@@ -31,7 +31,9 @@ export declare type ValidatorResults = {
     display: string | null;
 };
 export declare type ReporterOptions = {
+    ignoreLevel?: 'info' | 'warning';
     maxMessageLen?: number;
+    title?: string;
 };
 declare const w3cHtmlValidator: {
     version: string;

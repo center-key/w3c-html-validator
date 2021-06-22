@@ -1,11 +1,11 @@
-//! W3C HTML Validator v0.7.1 ~ github.com/center-key/w3c-html-validator ~ MIT License
+//! W3C HTML Validator v0.7.2 ~ github.com/center-key/w3c-html-validator ~ MIT License
 
 import { readFileSync } from 'fs';
 import color from 'ansi-colors';
 import log from 'fancy-log';
 import request from 'superagent';
 const w3cHtmlValidator = {
-    version: '0.7.1',
+    version: '0.7.2',
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
@@ -30,7 +30,7 @@ const w3cHtmlValidator = {
         const json = settings.output === 'json';
         const success = '<p class="success">';
         const titleLookup = {
-            html: 'HTML characters: ' + inputHtml?.length,
+            html: 'HTML String (characters: ' + inputHtml?.length + ')',
             filename: settings.filename,
             website: settings.website,
         };
@@ -49,29 +49,38 @@ const w3cHtmlValidator = {
     },
     reporter(results, options) {
         const defaults = {
+            ignoreLevel: null,
             maxMessageLen: null,
+            title: null,
         };
         const settings = { ...defaults, ...options };
         if (typeof results?.validates !== 'boolean')
-            throw Error('[w3c-html-validator] Invalid parameter for reporter(): ' + String(results));
-        const fail = 'fail (messages: ' + results.messages.length + ')';
+            throw Error('[w3c-html-validator] Invalid results for reporter(): ' + String(results));
+        if (![null, 'info', 'warning'].includes(settings.ignoreLevel))
+            throw Error('[w3c-html-validator] Invalid ignoreLevel option: ' + settings.ignoreLevel);
+        const aboveIgnoreLevel = (message) => {
+            return !settings.ignoreLevel || message.type !== 'info' || (settings.ignoreLevel === 'info' && !!message.subType);
+        };
+        const messages = results.messages ? results.messages.filter(aboveIgnoreLevel) : [];
+        const title = settings.title ?? results.title;
+        const fail = 'fail (messages: ' + messages.length + ')';
         const status = results.validates ? color.green('pass') : color.red.bold(fail);
-        log(color.blue.bold(results.title), color.gray('validation:'), status);
+        log(color.blue.bold(title), color.gray('validation:'), status);
         const typeColorMap = {
             error: color.red.bold,
             warning: color.yellow.bold,
-            info: color.blue.bold,
+            info: color.white.bold,
         };
         const logMessage = (message) => {
             const type = message.subType || message.type;
-            const typeColor = typeColorMap[type] || color.magenta.bold;
-            const lineNum = `line ${message.lastLine}, column ${message.firstColumn}:`;
-            const lineText = message.extract.replace(/\n/g, '\\n');
+            const typeColor = typeColorMap[type] || color.redBright.bold;
+            const location = `line ${message.lastLine}, column ${message.firstColumn}:`;
+            const lineText = message.extract?.replace(/\n/g, '\\n');
             const maxLen = settings.maxMessageLen ?? undefined;
-            log(typeColor('[HTML ' + type + ']'), message.message.substring(0, maxLen));
-            log(color.gray(lineNum), color.cyan(lineText));
+            log(typeColor('HTML ' + type + ':'), message.message.substring(0, maxLen));
+            log(color.gray(location), color.cyan(lineText));
         };
-        results.messages.forEach(logMessage);
+        messages.forEach(logMessage);
         return results;
     },
 };
