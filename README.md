@@ -42,18 +42,18 @@ width=800 alt=screenshot>
 
 ## 3) Options
 ### validate()
-| Name (key) | Type       | Default                          | Description                  |
-| :--------- | :--------- | :------------------------------- | :--------------------------- |
-| `html`     | **string** | `null`                           | HTML string to validate.     |
-| `filename` | **string** | `null`                           | HTML file to validate.       |
-| `website`  | **string** | `null`                           | URL of website to validate.  |
-| `checkUrl` | **string** | `'https://validator.w3.org/nu/'` | W3C validation API endpoint. |
-| `output`   | **string** | `'json'`                         | Get results as an array (`'json'`) or as a web page (`'html'`). |
+| Name (key) | Type                 | Default                          | Description                               |
+| :--------- | :------------------- | :------------------------------- | :---------------------------------------- |
+| `html`     | **string**           | `null`                           | HTML string to validate.                  |
+| `filename` | **string**           | `null`                           | HTML file to validate.                    |
+| `website`  | **string**           | `null`                           | URL of website to validate.               |
+| `checkUrl` | **string**           | `'https://validator.w3.org/nu/'` | W3C validation API endpoint.              |
+| `output`   | `'json'` or `'html'` | `'json'`                         | Get results as an array or as a web page. |
 ### reporter()
-| Name (key)      | Type       | Default | Description                                              |
-| :-------------- | :--------- | :------ | :------------------------------------------------------- |
-| `maxMessageLen` | **number** | `null`  | Trim validation messages to not exceed a maximum length. |
-| `title`         | **string** | `null`  | Override display title (useful for naming HTML strings). |
+| Name (key)      | Type                    | Default | Description                                                    |
+| :-------------- | :---------------------- | :------ | :------------------------------------------------------------- |
+| `maxMessageLen` | **number**              | `null`  | Trim validation messages to not exceed a maximum length.       |
+| `title`         | **string**              | `null`  | Override display title (useful for naming HTML string inputs). |
 
 ## 4) TypeScript Declarations
 The **TypeScript Declaration File** file is [w3c-html-validator.d.ts](dist/w3c-html-validator.d.ts)

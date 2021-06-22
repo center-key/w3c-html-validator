@@ -13,8 +13,13 @@ export type ValidatorOptions = {
    output?:   ValidatorResults['output'],
    };
 export type ValidatorResultsMessage = {
-   type:         'info' | 'error',
-   subType?:     'warning',
+   type:         'info' | 'error' | 'non-document-error',
+   subType?:     'warning' | 'fatal' | 'io' | 'schema' | 'internal',
+   // type                  subType
+   // --------------------  --------------------------------------------------
+   // 'info'                'warning' | undefined (informative)
+   // 'error'               'fatal' | undefined (spec violation)
+   // 'non-document-error'  'io' | 'schema' | 'internal' | undefined (external)
    message:      string,
    extract:      string,
    lastLine:     number,
@@ -36,8 +41,8 @@ export type ValidatorResults = {
    display:   string | null,
    };
 export type ReporterOptions = {
-   maxMessageLen?: number,  //trim validation messages to not exceed a maximum length
-   title?:         string,  //override display title (useful for naming HTML strings)
+   maxMessageLen?: number,              //trim validation messages to not exceed a maximum length
+   title?:         string,              //override display title (useful for naming HTML string inputs)
    };
 
 const w3cHtmlValidator = {
@@ -93,26 +98,27 @@ const w3cHtmlValidator = {
          };
       const settings = { ...defaults, ...options };
       if (typeof results?.validates !== 'boolean')
-         throw Error('[w3c-html-validator] Invalid parameter for reporter(): ' + String(results));
+         throw Error('[w3c-html-validator] Invalid results for reporter(): ' + String(results));
+      const messages = results.messages ? results.messages : [];
       const title =  settings.title ?? results.title;
-      const fail =   'fail (messages: ' + results.messages!.length  + ')';
+      const fail =   'fail (messages: ' + messages!.length  + ')';
       const status = results.validates ? color.green('pass') : color.red.bold(fail);
       log(color.blue.bold(title), color.gray('validation:'), status);
       const typeColorMap = {
          error:   color.red.bold,
          warning: color.yellow.bold,
-         info:    color.blue.bold,
+         info:    color.white.bold,
          };
       const logMessage = (message: ValidatorResultsMessage) => {
          const type =      message.subType || message.type;
-         const typeColor = typeColorMap[type] || color.magenta.bold;
-         const lineNum =   `line ${message.lastLine}, column ${message.firstColumn}:`;
-         const lineText =  message.extract.replace(/\n/g, '\\n');
+         const typeColor = typeColorMap[type] || color.redBright.bold;
+         const location =  `line ${message.lastLine}, column ${message.firstColumn}:`;
+         const lineText =  message.extract?.replace(/\n/g, '\\n');
          const maxLen =    settings.maxMessageLen ?? undefined;
          log(typeColor('HTML ' + type + ':'), message.message.substring(0, maxLen));
-         log(color.gray(lineNum), color.cyan(lineText));
+         log(color.gray(location), color.cyan(lineText));
          };
-      results.messages!.forEach(logMessage);
+      messages.forEach(logMessage);
       return results;
       },
 
