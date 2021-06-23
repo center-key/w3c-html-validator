@@ -50,7 +50,9 @@ width=800 alt=screenshot>
 | `checkUrl`    | **string**              | `'https://validator.w3.org/nu/'` | W3C validation API endpoint.              |
 | `ignoreLevel` | `'info'` or `'warning'` | `null`                           | Skip unwanted messages.*                  |
 | `output`      | `'json'` or `'html'`    | `'json'`                         | Get results as an array or as a web page. |
-*The `ignoreLevel` option only works for `'json'` output.&nbsp; Leven `'warning'` also skips `'info'`.
+
+*The `ignoreLevel` option only works for `'json'` output.&nbsp;
+Option value `'warning'` also skips `'info'`.
 
 ### reporter()
 | Name (key)      | Type       | Default | Description                                                    |
