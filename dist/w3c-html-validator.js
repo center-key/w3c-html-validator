@@ -1,19 +1,22 @@
-//! W3C HTML Validator v0.7.2 ~ github.com/center-key/w3c-html-validator ~ MIT License
+//! W3C HTML Validator v0.7.3 ~ github.com/center-key/w3c-html-validator ~ MIT License
 
 import { readFileSync } from 'fs';
 import color from 'ansi-colors';
 import log from 'fancy-log';
 import request from 'superagent';
 const w3cHtmlValidator = {
-    version: '0.7.2',
+    version: '0.7.3',
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
+            ignoreLevel: null,
             output: 'json',
         };
         const settings = { ...defaults, ...options };
         if (!settings.html && !settings.filename && !settings.website)
             throw Error('Must specify the "html", "filename", or "website" option.');
+        if (![null, 'info', 'warning'].includes(settings.ignoreLevel))
+            throw Error('[w3c-html-validator] Invalid ignoreLevel option: ' + settings.ignoreLevel);
         if (settings.output !== 'json' && settings.output !== 'html')
             throw Error('Option "output" must be "json" or "html".');
         const mode = settings.html ? 'html' : settings.filename ? 'filename' : 'website';
@@ -34,7 +37,14 @@ const w3cHtmlValidator = {
             filename: settings.filename,
             website: settings.website,
         };
-        return w3cRequest.then(response => ({
+        const filterMessages = (response) => {
+            const aboveInfo = (subType) => settings.ignoreLevel === 'info' && !!subType;
+            const aboveIgnoreLevel = (message) => !settings.ignoreLevel || message.type !== 'info' || aboveInfo(message.subType);
+            if (json)
+                response.body.messages = response.body.messages?.filter(aboveIgnoreLevel) ?? [];
+            return response;
+        };
+        const toValidatorResults = (response) => ({
             validates: json ? !response.body.messages.length : response.text.includes(success),
             mode: mode,
             title: titleLookup[mode],
@@ -45,23 +55,18 @@ const w3cHtmlValidator = {
             status: response.statusCode,
             messages: json ? response.body.messages : null,
             display: json ? null : response.text,
-        }));
+        });
+        return w3cRequest.then(filterMessages).then(toValidatorResults);
     },
     reporter(results, options) {
         const defaults = {
-            ignoreLevel: null,
             maxMessageLen: null,
             title: null,
         };
         const settings = { ...defaults, ...options };
         if (typeof results?.validates !== 'boolean')
             throw Error('[w3c-html-validator] Invalid results for reporter(): ' + String(results));
-        if (![null, 'info', 'warning'].includes(settings.ignoreLevel))
-            throw Error('[w3c-html-validator] Invalid ignoreLevel option: ' + settings.ignoreLevel);
-        const aboveIgnoreLevel = (message) => {
-            return !settings.ignoreLevel || message.type !== 'info' || (settings.ignoreLevel === 'info' && !!message.subType);
-        };
-        const messages = results.messages ? results.messages.filter(aboveIgnoreLevel) : [];
+        const messages = results.messages ?? [];
         const title = settings.title ?? results.title;
         const fail = 'fail (messages: ' + messages.length + ')';
         const status = results.validates ? color.green('pass') : color.red.bold(fail);
@@ -78,7 +83,8 @@ const w3cHtmlValidator = {
             const lineText = message.extract?.replace(/\n/g, '\\n');
             const maxLen = settings.maxMessageLen ?? undefined;
             log(typeColor('HTML ' + type + ':'), message.message.substring(0, maxLen));
-            log(color.gray(location), color.cyan(lineText));
+            if (message.lastLine)
+                log(color.gray(location), color.cyan(lineText));
         };
         messages.forEach(logMessage);
         return results;

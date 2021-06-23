@@ -1,11 +1,12 @@
-//! W3C HTML Validator v0.7.2 ~ github.com/center-key/w3c-html-validator ~ MIT License
+//! W3C HTML Validator v0.7.3 ~ github.com/center-key/w3c-html-validator ~ MIT License
 
 export declare type ValidatorOptions = {
     html?: string;
     filename?: string;
     website?: string;
     checkUrl?: string;
-    output?: ValidatorResults['output'];
+    ignoreLevel?: 'info' | 'warning';
+    output?: ValidatorResultsOutput;
 };
 export declare type ValidatorResultsMessage = {
     type: 'info' | 'error' | 'non-document-error';
@@ -18,6 +19,8 @@ export declare type ValidatorResultsMessage = {
     hiliteStart: number;
     hiliteLength: number;
 };
+export declare type ValidatorResultsMessageType = ValidatorResultsMessage['type'];
+export declare type ValidatorResultsMessageSubType = ValidatorResultsMessage['subType'];
 export declare type ValidatorResults = {
     validates: boolean;
     mode: 'html' | 'filename' | 'website';
@@ -30,8 +33,8 @@ export declare type ValidatorResults = {
     messages: ValidatorResultsMessage[] | null;
     display: string | null;
 };
+export declare type ValidatorResultsOutput = ValidatorResults['output'];
 export declare type ReporterOptions = {
-    ignoreLevel?: 'info' | 'warning';
     maxMessageLen?: number;
     title?: string;
 };

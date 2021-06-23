@@ -1,4 +1,4 @@
-//! W3C HTML Validator v0.7.2 ~ github.com/center-key/w3c-html-validator ~ MIT License
+//! W3C HTML Validator v0.7.3 ~ github.com/center-key/w3c-html-validator ~ MIT License
 
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -20,15 +20,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     const fancy_log_1 = __importDefault(require("fancy-log"));
     const superagent_1 = __importDefault(require("superagent"));
     const w3cHtmlValidator = {
-        version: '0.7.2',
+        version: '0.7.3',
         validate(options) {
             const defaults = {
                 checkUrl: 'https://validator.w3.org/nu/',
+                ignoreLevel: null,
                 output: 'json',
             };
             const settings = { ...defaults, ...options };
             if (!settings.html && !settings.filename && !settings.website)
                 throw Error('Must specify the "html", "filename", or "website" option.');
+            if (![null, 'info', 'warning'].includes(settings.ignoreLevel))
+                throw Error('[w3c-html-validator] Invalid ignoreLevel option: ' + settings.ignoreLevel);
             if (settings.output !== 'json' && settings.output !== 'html')
                 throw Error('Option "output" must be "json" or "html".');
             const mode = settings.html ? 'html' : settings.filename ? 'filename' : 'website';
@@ -49,7 +52,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
                 filename: settings.filename,
                 website: settings.website,
             };
-            return w3cRequest.then(response => ({
+            const filterMessages = (response) => {
+                const aboveInfo = (subType) => settings.ignoreLevel === 'info' && !!subType;
+                const aboveIgnoreLevel = (message) => !settings.ignoreLevel || message.type !== 'info' || aboveInfo(message.subType);
+                if (json)
+                    response.body.messages = response.body.messages?.filter(aboveIgnoreLevel) ?? [];
+                return response;
+            };
+            const toValidatorResults = (response) => ({
                 validates: json ? !response.body.messages.length : response.text.includes(success),
                 mode: mode,
                 title: titleLookup[mode],
@@ -60,23 +70,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
                 status: response.statusCode,
                 messages: json ? response.body.messages : null,
                 display: json ? null : response.text,
-            }));
+            });
+            return w3cRequest.then(filterMessages).then(toValidatorResults);
         },
         reporter(results, options) {
             const defaults = {
-                ignoreLevel: null,
                 maxMessageLen: null,
                 title: null,
             };
             const settings = { ...defaults, ...options };
             if (typeof results?.validates !== 'boolean')
                 throw Error('[w3c-html-validator] Invalid results for reporter(): ' + String(results));
-            if (![null, 'info', 'warning'].includes(settings.ignoreLevel))
-                throw Error('[w3c-html-validator] Invalid ignoreLevel option: ' + settings.ignoreLevel);
-            const aboveIgnoreLevel = (message) => {
-                return !settings.ignoreLevel || message.type !== 'info' || (settings.ignoreLevel === 'info' && !!message.subType);
-            };
-            const messages = results.messages ? results.messages.filter(aboveIgnoreLevel) : [];
+            const messages = results.messages ?? [];
             const title = settings.title ?? results.title;
             const fail = 'fail (messages: ' + messages.length + ')';
             const status = results.validates ? ansi_colors_1.default.green('pass') : ansi_colors_1.default.red.bold(fail);
@@ -93,7 +98,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
                 const lineText = message.extract?.replace(/\n/g, '\\n');
                 const maxLen = settings.maxMessageLen ?? undefined;
                 fancy_log_1.default(typeColor('HTML ' + type + ':'), message.message.substring(0, maxLen));
-                fancy_log_1.default(ansi_colors_1.default.gray(location), ansi_colors_1.default.cyan(lineText));
+                if (message.lastLine)
+                    fancy_log_1.default(ansi_colors_1.default.gray(location), ansi_colors_1.default.cyan(lineText));
             };
             messages.forEach(logMessage);
             return results;
