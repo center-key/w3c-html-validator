@@ -11,7 +11,7 @@ export type ValidatorOptions = {
    website?:     string   //example: 'https://pretty-print-json.js.org/'
    checkUrl?:    string,
    ignoreLevel?: 'info' | 'warning',  //skip unwanted messages ('warning' also skips 'info')
-   output?:      ValidatorResults['output'],
+   output?:      ValidatorResultsOutput,
    };
 export type ValidatorResultsMessage = {
    // type                  subType
@@ -29,6 +29,8 @@ export type ValidatorResultsMessage = {
    hiliteStart:  number,
    hiliteLength: number,
    };
+export type ValidatorResultsMessageType = ValidatorResultsMessage['type'];
+export type ValidatorResultsMessageSubType = ValidatorResultsMessage['subType'];
 export type ValidatorResults = {
    validates: boolean,
    mode:      'html' | 'filename' | 'website',
@@ -41,6 +43,7 @@ export type ValidatorResults = {
    messages:  ValidatorResultsMessage[] | null,
    display:   string | null,
    };
+export type ValidatorResultsOutput = ValidatorResults['output'];
 export type ReporterOptions = {
    maxMessageLen?: number,  //trim validation messages to not exceed a maximum length
    title?:         string,  //override display title (useful for naming HTML string inputs)
@@ -82,7 +85,7 @@ const w3cHtmlValidator = {
          website:  settings.website,
          };
       const filterMessages = (response: request.Response): request.Response => {
-         const aboveInfo = (subType: ValidatorResultsMessage['subType']): boolean =>
+         const aboveInfo = (subType: ValidatorResultsMessageSubType): boolean =>
             settings.ignoreLevel === 'info' && !!subType;
          const aboveIgnoreLevel = (message: ValidatorResultsMessage): boolean =>
             !settings.ignoreLevel || message.type !== 'info' || aboveInfo(message.subType);
@@ -97,7 +100,7 @@ const w3cHtmlValidator = {
          html:      inputHtml,
          filename:  settings.filename || null,
          website:   settings.website || null,
-         output:    <ValidatorResults['output']>settings.output,
+         output:    <ValidatorResultsOutput>settings.output,
          status:    response.statusCode,
          messages:  json ? response.body.messages : null,
          display:   json ? null : response.text,
