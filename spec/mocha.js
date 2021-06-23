@@ -2,13 +2,27 @@
 // Mocha Specification Cases
 
 // Imports
-import assert from 'assert';
+import { deepStrictEqual } from 'assert';
 import { readFileSync } from 'fs';
 
 // Setup
 import { w3cHtmlValidator } from '../dist/w3c-html-validator.js';
 const validHtml =   readFileSync('spec/html/valid.html',   'utf8');
 const invalidHtml = readFileSync('spec/html/invalid.html', 'utf8');
+const assertDeepStrictEqual = (actual, expected, done) => {
+   const toPlainObj = (obj) => JSON.parse(JSON.stringify(obj));
+   try {
+      deepStrictEqual(toPlainObj(actual), toPlainObj(expected));
+      if (done)
+         done();
+      }
+   catch(error) {
+      if (done)
+         done(error);
+      else
+         throw error;
+      }
+   };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 describe('Library version number', () => {
@@ -18,7 +32,7 @@ describe('Library version number', () => {
       const semVerPattern = /\d+[.]\d+[.]\d+/;
       const actual =   { version: data, valid: semVerPattern.test(data) };
       const expected = { version: data, valid: true };
-      assert.deepStrictEqual(actual, expected);
+      assertDeepStrictEqual(actual, expected);
       });
 
    });
@@ -29,13 +43,13 @@ describe('Library module', () => {
    it('is an object', () => {
       const actual =   { constructor: w3cHtmlValidator.constructor.name };
       const expected = { constructor: 'Object' };
-      assert.deepStrictEqual(actual, expected);
+      assertDeepStrictEqual(actual, expected);
       });
 
    it('has a validate() function', () => {
       const actual =   { validate: typeof w3cHtmlValidator.validate };
       const expected = { validate: 'function' };
-      assert.deepStrictEqual(actual, expected);
+      assertDeepStrictEqual(actual, expected);
       });
 
    });
@@ -58,8 +72,7 @@ describe('Pretty-Print JSON website', () => {
             messages:  [],
             display:   null,
             };
-         assert.deepStrictEqual(actual, expected);
-         done();
+         assertDeepStrictEqual(actual, expected, done);
          };
       w3cHtmlValidator.validate({ website: 'https://pretty-print-json.js.org/' }).then(handleData);
       });
@@ -84,8 +97,7 @@ describe('Valid HTML string', () => {
             messages:  [],
             display:   null,
             };
-         assert.deepStrictEqual(actual, expected);
-         done();
+         assertDeepStrictEqual(actual, expected, done);
          };
       w3cHtmlValidator.validate({ html: validHtml, output: 'json' }).then(handleData);
       });
@@ -105,8 +117,7 @@ describe('Valid HTML string', () => {
             status:    200,
             messages:  null,
             };
-         assert.deepStrictEqual(actual, expected);
-         done();
+         assertDeepStrictEqual(actual, expected, done);
          };
       w3cHtmlValidator.validate({ html: validHtml, output: 'html' }).then(handleData);
       });
@@ -153,8 +164,7 @@ describe('Invalid HTML string', () => {
                ],
             display:   null,
             };
-         assert.deepStrictEqual(actual, expected);
-         done();
+         assertDeepStrictEqual(actual, expected, done);
          };
       w3cHtmlValidator.validate({ html: invalidHtml, output: 'json' }).then(handleData);
       });
@@ -174,8 +184,7 @@ describe('Invalid HTML string', () => {
             status:    200,
             messages:  null,
             };
-         assert.deepStrictEqual(actual, expected);
-         done();
+         assertDeepStrictEqual(actual, expected, done);
          };
       w3cHtmlValidator.validate({ html: invalidHtml, output: 'html' }).then(handleData);
       });
@@ -200,8 +209,7 @@ describe('HTML file', () => {
             messages:  [],
             display:   null,
             };
-         assert.deepStrictEqual(actual, expected);
-         done();
+         assertDeepStrictEqual(actual, expected, done);
          };
       w3cHtmlValidator.validate({ filename: 'spec/html/valid.html' }).then(handleData);
       });
@@ -210,8 +218,7 @@ describe('HTML file', () => {
       const handleData = (data) => {
          const actual =   { validates: data.validates };
          const expected = { validates: false };
-         assert.deepStrictEqual(actual, expected);
-         done();
+         assertDeepStrictEqual(actual, expected, done);
          };
       w3cHtmlValidator.validate({ filename: 'spec/html/invalid.html' }).then(handleData);
       });
@@ -223,10 +230,15 @@ describe('Option ignoreLevel set to "warning"', () => {
 
    it('skips warning messages', (done) => {
       const handleData = (data) => {
-         const actual =   { validates: data.validates, messages: data.messages.map(message => message.type) };
-         const expected = { validates: false,          messages: ['error'] };
-         assert.deepStrictEqual(actual, expected);
-         done();
+         const actual = {
+            validates: data.validates,
+            messages:  data.messages.map(message => message.type),
+            };
+         const expected = {
+            validates: false,
+            messages: ['error'],
+            };
+         assertDeepStrictEqual(actual, expected, done);
          };
       const options = { filename: 'spec/html/invalid.html', ignoreLevel: 'warning' };
       w3cHtmlValidator.validate(options).then(handleData);
