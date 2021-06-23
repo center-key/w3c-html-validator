@@ -42,19 +42,21 @@ width=800 alt=screenshot>
 
 ## 3) Options
 ### validate()
-| Name (key) | Type                 | Default                          | Description                               |
-| :--------- | :------------------- | :------------------------------- | :---------------------------------------- |
-| `html`     | **string**           | `null`                           | HTML string to validate.                  |
-| `filename` | **string**           | `null`                           | HTML file to validate.                    |
-| `website`  | **string**           | `null`                           | URL of website to validate.               |
-| `checkUrl` | **string**           | `'https://validator.w3.org/nu/'` | W3C validation API endpoint.              |
-| `output`   | `'json'` or `'html'` | `'json'`                         | Get results as an array or as a web page. |
+| Name (key)    | Type                    | Default                          | Description                               |
+| :------------ | :---------------------- | :------------------------------- | :---------------------------------------- |
+| `html`        | **string**              | `null`                           | HTML string to validate.                  |
+| `filename`    | **string**              | `null`                           | HTML file to validate.                    |
+| `website`     | **string**              | `null`                           | URL of website to validate.               |
+| `checkUrl`    | **string**              | `'https://validator.w3.org/nu/'` | W3C validation API endpoint.              |
+| `ignoreLevel` | `'info'` or `'warning'` | `null`                           | Skip unwanted messages.*                  |
+| `output`      | `'json'` or `'html'`    | `'json'`                         | Get results as an array or as a web page. |
+*The `ignoreLevel` option only works for `'json'` output.&nbsp; Leven `'warning'` also skips `'info'`.
+
 ### reporter()
-| Name (key)      | Type                    | Default | Description                                                    |
-| :-------------- | :---------------------- | :------ | :------------------------------------------------------------- |
-| `ignoreLevel`   | `'info'` or `'warning'` | `null`  | Skip unwanted messages (`'warning'` also skips `'info'`).      |
-| `maxMessageLen` | **number**              | `null`  | Trim validation messages to not exceed a maximum length.       |
-| `title`         | **string**              | `null`  | Override display title (useful for naming HTML string inputs). |
+| Name (key)      | Type       | Default | Description                                                    |
+| :-------------- | :--------- | :------ | :------------------------------------------------------------- |
+| `maxMessageLen` | **number** | `null`  | Trim validation messages to not exceed a maximum length.       |
+| `title`         | **string** | `null`  | Override display title (useful for naming HTML string inputs). |
 
 ## 4) TypeScript Declarations
 The **TypeScript Declaration File** file is [w3c-html-validator.d.ts](dist/w3c-html-validator.d.ts)

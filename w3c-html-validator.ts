@@ -6,20 +6,21 @@ import log from 'fancy-log';
 import request from 'superagent';
 
 export type ValidatorOptions = {
-   html?:     string,  //example: '<!doctype html><html><head><title>Home</title></html>''
-   filename?: string,  //example: 'docs/index.html'
-   website?:  string   //example: 'https://pretty-print-json.js.org/'
-   checkUrl?: string,
-   output?:   ValidatorResults['output'],
+   html?:        string,  //example: '<!doctype html><html><head><title>Home</title></html>''
+   filename?:    string,  //example: 'docs/index.html'
+   website?:     string   //example: 'https://pretty-print-json.js.org/'
+   checkUrl?:    string,
+   ignoreLevel?: 'info' | 'warning',  //skip unwanted messages ('warning' also skips 'info')
+   output?:      ValidatorResults['output'],
    };
 export type ValidatorResultsMessage = {
-   type:         'info' | 'error' | 'non-document-error',
-   subType?:     'warning' | 'fatal' | 'io' | 'schema' | 'internal',
    // type                  subType
    // --------------------  --------------------------------------------------
    // 'info'                'warning' | undefined (informative)
    // 'error'               'fatal' | undefined (spec violation)
    // 'non-document-error'  'io' | 'schema' | 'internal' | undefined (external)
+   type:         'info' | 'error' | 'non-document-error',
+   subType?:     'warning' | 'fatal' | 'io' | 'schema' | 'internal',
    message:      string,
    extract:      string,
    lastLine:     number,
@@ -41,9 +42,8 @@ export type ValidatorResults = {
    display:   string | null,
    };
 export type ReporterOptions = {
-   ignoreLevel?:   'info' | 'warning',  //skip unwanted messages ('warning' also skips 'info')
-   maxMessageLen?: number,              //trim validation messages to not exceed a maximum length
-   title?:         string,              //override display title (useful for naming HTML string inputs)
+   maxMessageLen?: number,  //trim validation messages to not exceed a maximum length
+   title?:         string,  //override display title (useful for naming HTML string inputs)
    };
 
 const w3cHtmlValidator = {
@@ -52,12 +52,15 @@ const w3cHtmlValidator = {
 
    validate(options: ValidatorOptions): Promise<ValidatorResults> {
       const defaults = {
-         checkUrl: 'https://validator.w3.org/nu/',
-         output:   'json',
+         checkUrl:    'https://validator.w3.org/nu/',
+         ignoreLevel: null,
+         output:      'json',
          };
       const settings = { ...defaults, ...options };
       if (!settings.html && !settings.filename && !settings.website)
          throw Error('Must specify the "html", "filename", or "website" option.');
+      if (![null, 'info', 'warning'].includes(settings.ignoreLevel))
+         throw Error('[w3c-html-validator] Invalid ignoreLevel option: ' + settings.ignoreLevel);
       if (settings.output !== 'json' && settings.output !== 'html')
          throw Error('Option "output" must be "json" or "html".');
       const mode = settings.html ? 'html' : settings.filename ? 'filename' : 'website';
@@ -78,7 +81,16 @@ const w3cHtmlValidator = {
          filename: settings.filename,
          website:  settings.website,
          };
-      return w3cRequest.then(response => ({
+      const filterMessages = (response: request.Response): request.Response => {
+         const aboveInfo = (subType: ValidatorResultsMessage['subType']): boolean =>
+            settings.ignoreLevel === 'info' && !!subType;
+         const aboveIgnoreLevel = (message: ValidatorResultsMessage): boolean =>
+            !settings.ignoreLevel || message.type !== 'info' || aboveInfo(message.subType);
+         if (json)
+            response.body.messages = response.body.messages?.filter(aboveIgnoreLevel) ?? [];
+         return response;
+         };
+      const toValidatorResults = (response: request.Response): ValidatorResults => ({
          validates: json ? !response.body.messages.length : response.text.includes(success),
          mode:      mode,
          title:     <string>titleLookup[mode],
@@ -89,25 +101,19 @@ const w3cHtmlValidator = {
          status:    response.statusCode,
          messages:  json ? response.body.messages : null,
          display:   json ? null : response.text,
-         }));
+         });
+      return w3cRequest.then(filterMessages).then(toValidatorResults);
       },
 
    reporter(results: ValidatorResults, options?: ReporterOptions): ValidatorResults {
       const defaults = {
-         ignoreLevel:   null,
          maxMessageLen: null,
          title:         null,
          };
       const settings = { ...defaults, ...options };
       if (typeof results?.validates !== 'boolean')
          throw Error('[w3c-html-validator] Invalid results for reporter(): ' + String(results));
-      if (![null, 'info', 'warning'].includes(settings.ignoreLevel))
-         throw Error('[w3c-html-validator] Invalid ignoreLevel option: ' + settings.ignoreLevel);
-      const aboveInfo = (subType: ValidatorResultsMessage['subType']): boolean =>
-         settings.ignoreLevel === 'info' && !!subType;
-      const aboveIgnoreLevel = (message: ValidatorResultsMessage): boolean =>
-         !settings.ignoreLevel || message.type !== 'info' || aboveInfo(message.subType);
-      const messages = results.messages ? results.messages.filter(aboveIgnoreLevel) : [];
+      const messages = results.messages ?? [];
       const title =  settings.title ?? results.title;
       const fail =   'fail (messages: ' + messages!.length  + ')';
       const status = results.validates ? color.green('pass') : color.red.bold(fail);

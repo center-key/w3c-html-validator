@@ -131,22 +131,22 @@ describe('Invalid HTML string', () => {
             messages:  [
                {
                   type:         'info',
-                  lastLine:     9,
-                  lastColumn:   12,
-                  firstColumn:  4,
                   subType:      'warning',
                   message:      'Section lacks heading. Consider using “h2”-“h6” elements to add identifying headings to all sections.',
                   extract:      'e</h1>\n   <section>\n     ',
+                  lastLine:     9,
+                  firstColumn:  4,
+                  lastColumn:   12,
                   hiliteStart:  10,
                   hiliteLength: 9,
                   },
                {
                   type:         'error',
-                  lastLine:     12,
-                  lastColumn:   21,
-                  firstColumn:  10,
                   message:      'Element “blockquote” not allowed as child of element “span” in this context. (Suppressing further errors from this subtree.)',
                   extract:      '\n   <span><blockquote>Inside',
+                  lastLine:     12,
+                  firstColumn:  10,
+                  lastColumn:   21,
                   hiliteStart:  10,
                   hiliteLength: 12,
                   },
@@ -183,9 +183,9 @@ describe('Invalid HTML string', () => {
    });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-describe('Valid HTML file', () => {
+describe('HTML file', () => {
 
-   it('passes validator', (done) => {
+   it('that is valid passes validation', (done) => {
       const handleData = (data) => {
          const actual = data;
          const expected = {
@@ -206,12 +206,7 @@ describe('Valid HTML file', () => {
       w3cHtmlValidator.validate({ filename: 'spec/html/valid.html' }).then(handleData);
       });
 
-   });
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-describe('Invalid HTML file', () => {
-
-   it('fails validator', (done) => {
+   it('that is invalid fails validation', (done) => {
       const handleData = (data) => {
          const actual =   { validates: data.validates };
          const expected = { validates: false };
@@ -219,6 +214,22 @@ describe('Invalid HTML file', () => {
          done();
          };
       w3cHtmlValidator.validate({ filename: 'spec/html/invalid.html' }).then(handleData);
+      });
+
+   });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+describe('Option ignoreLevel set to "warning"', () => {
+
+   it('skips warning messages', (done) => {
+      const handleData = (data) => {
+         const actual =   { validates: data.validates, messages: data.messages.map(message => message.type) };
+         const expected = { validates: false,          messages: ['error'] };
+         assert.deepStrictEqual(actual, expected);
+         done();
+         };
+      const options = { filename: 'spec/html/invalid.html', ignoreLevel: 'warning' };
+      w3cHtmlValidator.validate(options).then(handleData);
       });
 
    });
