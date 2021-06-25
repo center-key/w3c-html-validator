@@ -2,27 +2,13 @@
 // Mocha Specification Cases
 
 // Imports
-import { deepStrictEqual } from 'assert';
+import { assertDeepStrictEqual } from 'assert-deep-strict-equal';
 import { readFileSync } from 'fs';
 
 // Setup
 import { w3cHtmlValidator } from '../dist/w3c-html-validator.js';
 const validHtml =   readFileSync('spec/html/valid.html',   'utf8');
 const invalidHtml = readFileSync('spec/html/invalid.html', 'utf8');
-const assertDeepStrictEqual = (actual, expected, done) => {
-   const toPlainObj = (obj) => JSON.parse(JSON.stringify(obj));
-   try {
-      deepStrictEqual(toPlainObj(actual), toPlainObj(expected));
-      if (done)
-         done();
-      }
-   catch(error) {
-      if (done)
-         done(error);
-      else
-         throw error;
-      }
-   };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 describe('Library version number', () => {

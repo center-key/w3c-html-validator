@@ -71,6 +71,7 @@
       "@types/superagent": "~4.1",
       "@typescript-eslint/eslint-plugin": "~4.28",
       "@typescript-eslint/parser": "~4.28",
+      "assert-deep-strict-equal": "~0.0",
       "eslint": "~7.29",
       "gulp": "~4.0",
       "gulp-header": "~2.0",
