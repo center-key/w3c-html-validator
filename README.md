@@ -42,16 +42,17 @@ width=800 alt=screenshot>
 
 ## 3) Options
 ### validate()
-| Name (key)    | Type                    | Default                          | Description                               |
-| :------------ | :---------------------- | :------------------------------- | :---------------------------------------- |
-| `html`        | **string**              | `null`                           | HTML string to validate.                  |
-| `filename`    | **string**              | `null`                           | HTML file to validate.                    |
-| `website`     | **string**              | `null`                           | URL of website to validate.               |
-| `checkUrl`    | **string**              | `'https://validator.w3.org/nu/'` | W3C validation API endpoint.              |
-| `ignoreLevel` | `'info'` or `'warning'` | `null`                           | Skip unwanted messages.*                  |
-| `output`      | `'json'` or `'html'`    | `'json'`                         | Get results as an array or as a web page. |
+| Name (key)      | Type                     | Default                          | Description                                                   |
+| :-------------- | :----------------------- | :------------------------------- | :------------------------------------------------------------ |
+| `html`          | **string**               | `null`                           | HTML string to validate.                                      |
+| `filename`      | **string**               | `null`                           | HTML file to validate.                                        |
+| `website`       | **string**               | `null`                           | URL of website to validate.                                   |
+| `checkUrl`      | **string**               | `'https://validator.w3.org/nu/'` | W3C validation API endpoint.                                  |
+| `ignoreMessage` | **string** or **RegExp** | `null`                           | Skip messages containing a string or matching an expression.* |
+| `ignoreLevel`   | `'info'` or `'warning'`  | `null`                           | Skip unwanted messages.*                                      |
+| `output`        | `'json'` or `'html'`     | `'json'`                         | Get results as an array or as a web page.                     |
 
-*The `ignoreLevel` option only works for `'json'` output.&nbsp;
+*The `ignoreMessage` and `ignoreLevel` options only work for `'json'` output.&nbsp;
 Option value `'warning'` also skips `'info'`.
 
 ### reporter()

@@ -231,3 +231,43 @@ describe('Option ignoreLevel set to "warning"', () => {
       });
 
    });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+describe.only('Option ignoreMessage', () => {
+   // Example validation messgaes:
+   // warning: 'Section lacks heading. Consider using “h2”-“h6” elements to add identifying headings to all sections.',
+   // error:   'Element “blockquote” not allowed as child of element “span” in this context. (Suppressing further errors from this subtree.)',
+
+   it('as a substring can skip "Section lacks heading" messages', (done) => {
+      const handleData = (data) => {
+         const actual = {
+            validates: data.validates,
+            messages:  data.messages.map(message => message.type),
+            };
+         const expected = {
+            validates: false,
+            messages: ['error'],
+            };
+         assertDeepStrictEqual(actual, expected, done);
+         };
+      const options = { filename: 'spec/html/invalid.html', ignoreMessage: 'Section lacks heading' };
+      w3cHtmlValidator.validate(options).then(handleData);
+      });
+
+   it('can skip messages matching a regular expression', (done) => {
+      const handleData = (data) => {
+         const actual = {
+            validates: data.validates,
+            messages:  data.messages.map(message => message.type),
+            };
+         const expected = {
+            validates: false,
+            messages: ['info'],
+            };
+         assertDeepStrictEqual(actual, expected, done);
+         };
+      const options = { filename: 'spec/html/invalid.html', ignoreMessage: /^Element .blockquote./ };
+      w3cHtmlValidator.validate(options).then(handleData);
+      });
+
+   });
