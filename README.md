@@ -48,8 +48,8 @@ width=800 alt=screenshot>
 | `filename`       | **string**              | `null`                           | HTML file to validate.                                               |
 | `website`        | **string**              | `null`                           | URL of website to validate.                                          |
 | `checkUrl`       | **string**              | `'https://validator.w3.org/nu/'` | W3C validation API endpoint.                                         |
-| `ignoreMessages` | **string** or **regex** | `null`                           | Skip messages containing a string or matching a regular expression.* |
 | `ignoreLevel`    | `'info'` or `'warning'` | `null`                           | Skip unwanted messages.*                                             |
+| `ignoreMessages` | **string** or **regex** | `null`                           | Skip messages containing a string or matching a regular expression.* |
 | `output`         | `'json'` or `'html'`    | `'json'`                         | Get results as an array or as a web page.                            |
 
 *The `ignoreMessages` and `ignoreLevel` options only work for `'json'` output.&nbsp;
