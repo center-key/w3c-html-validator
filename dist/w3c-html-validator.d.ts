@@ -1,4 +1,4 @@
-//! W3C HTML Validator v0.7.3 ~ github.com/center-key/w3c-html-validator ~ MIT License
+//! W3C HTML Validator v0.7.4 ~ github.com/center-key/w3c-html-validator ~ MIT License
 
 export declare type ValidatorOptions = {
     html?: string;
@@ -6,6 +6,7 @@ export declare type ValidatorOptions = {
     website?: string;
     checkUrl?: string;
     ignoreLevel?: 'info' | 'warning';
+    ignoreMessage?: string | RegExp;
     output?: ValidatorResultsOutput;
 };
 export declare type ValidatorResultsMessage = {

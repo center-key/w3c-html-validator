@@ -1,15 +1,16 @@
-//! W3C HTML Validator v0.7.3 ~ github.com/center-key/w3c-html-validator ~ MIT License
+//! W3C HTML Validator v0.7.4 ~ github.com/center-key/w3c-html-validator ~ MIT License
 
 import { readFileSync } from 'fs';
 import color from 'ansi-colors';
 import log from 'fancy-log';
 import request from 'superagent';
 const w3cHtmlValidator = {
-    version: '0.7.3',
+    version: '0.7.4',
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
             ignoreLevel: null,
+            ignoreMessage: null,
             output: 'json',
         };
         const settings = { ...defaults, ...options };
@@ -40,8 +41,12 @@ const w3cHtmlValidator = {
         const filterMessages = (response) => {
             const aboveInfo = (subType) => settings.ignoreLevel === 'info' && !!subType;
             const aboveIgnoreLevel = (message) => !settings.ignoreLevel || message.type !== 'info' || aboveInfo(message.subType);
+            const skipSubstr = (title) => typeof settings.ignoreMessage === 'string' && title.includes(settings.ignoreMessage);
+            const skipRegEx = (title) => settings.ignoreMessage?.constructor.name === 'RegExp' &&
+                settings.ignoreMessage.test(title);
+            const isImportant = (message) => aboveIgnoreLevel(message) && !skipSubstr(message.message) && !skipRegEx(message.message);
             if (json)
-                response.body.messages = response.body.messages?.filter(aboveIgnoreLevel) ?? [];
+                response.body.messages = response.body.messages?.filter(isImportant) ?? [];
             return response;
         };
         const toValidatorResults = (response) => ({

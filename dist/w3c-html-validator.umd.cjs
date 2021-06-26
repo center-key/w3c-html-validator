@@ -1,4 +1,4 @@
-//! W3C HTML Validator v0.7.3 ~ github.com/center-key/w3c-html-validator ~ MIT License
+//! W3C HTML Validator v0.7.4 ~ github.com/center-key/w3c-html-validator ~ MIT License
 
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -20,11 +20,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     const fancy_log_1 = __importDefault(require("fancy-log"));
     const superagent_1 = __importDefault(require("superagent"));
     const w3cHtmlValidator = {
-        version: '0.7.3',
+        version: '0.7.4',
         validate(options) {
             const defaults = {
                 checkUrl: 'https://validator.w3.org/nu/',
                 ignoreLevel: null,
+                ignoreMessage: null,
                 output: 'json',
             };
             const settings = { ...defaults, ...options };
@@ -55,8 +56,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             const filterMessages = (response) => {
                 const aboveInfo = (subType) => settings.ignoreLevel === 'info' && !!subType;
                 const aboveIgnoreLevel = (message) => !settings.ignoreLevel || message.type !== 'info' || aboveInfo(message.subType);
+                const skipSubstr = (title) => typeof settings.ignoreMessage === 'string' && title.includes(settings.ignoreMessage);
+                const skipRegEx = (title) => settings.ignoreMessage?.constructor.name === 'RegExp' &&
+                    settings.ignoreMessage.test(title);
+                const isImportant = (message) => aboveIgnoreLevel(message) && !skipSubstr(message.message) && !skipRegEx(message.message);
                 if (json)
-                    response.body.messages = response.body.messages?.filter(aboveIgnoreLevel) ?? [];
+                    response.body.messages = response.body.messages?.filter(isImportant) ?? [];
                 return response;
             };
             const toValidatorResults = (response) => ({
