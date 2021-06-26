@@ -6,13 +6,13 @@ import log from 'fancy-log';
 import request from 'superagent';
 
 export type ValidatorOptions = {
-   html?:          string,  //example: '<!doctype html><html><head><title>Home</title></html>''
-   filename?:      string,  //example: 'docs/index.html'
-   website?:       string   //example: 'https://pretty-print-json.js.org/'
-   checkUrl?:      string,
-   ignoreLevel?:   'info' | 'warning',  //skip unwanted messages ('warning' also skips 'info')
-   ignoreMessage?: string | RegExp,  //matcher to skip unwanted messages
-   output?:        ValidatorResultsOutput,
+   html?:           string,  //example: '<!doctype html><html><head><title>Home</title></html>''
+   filename?:       string,  //example: 'docs/index.html'
+   website?:        string   //example: 'https://pretty-print-json.js.org/'
+   checkUrl?:       string,
+   ignoreLevel?:    'info' | 'warning',  //skip unwanted messages ('warning' also skips 'info')
+   ignoreMessages?: string | RegExp,  //matcher to skip unwanted messages
+   output?:         ValidatorResultsOutput,
    };
 export type ValidatorResultsMessage = {
    // type                  subType
@@ -56,10 +56,10 @@ const w3cHtmlValidator = {
 
    validate(options: ValidatorOptions): Promise<ValidatorResults> {
       const defaults = {
-         checkUrl:      'https://validator.w3.org/nu/',
-         ignoreLevel:   null,
-         ignoreMessage: null,
-         output:        'json',
+         checkUrl:       'https://validator.w3.org/nu/',
+         ignoreLevel:    null,
+         ignoreMessages: null,
+         output:         'json',
          };
       const settings = { ...defaults, ...options };
       if (!settings.html && !settings.filename && !settings.website)
@@ -92,10 +92,10 @@ const w3cHtmlValidator = {
          const aboveIgnoreLevel = (message: ValidatorResultsMessage): boolean =>
             !settings.ignoreLevel || message.type !== 'info' || aboveInfo(message.subType);
          const skipSubstr = (title: string) =>
-            typeof settings.ignoreMessage === 'string' && title.includes(settings.ignoreMessage);
+            typeof settings.ignoreMessages === 'string' && title.includes(settings.ignoreMessages);
          const skipRegEx = (title: string) =>
-            settings.ignoreMessage?.constructor.name === 'RegExp' && 
-            (<RegExp>settings.ignoreMessage).test(title);
+            settings.ignoreMessages?.constructor.name === 'RegExp' &&
+            (<RegExp>settings.ignoreMessages).test(title);
          const isImportant = (message: ValidatorResultsMessage): boolean =>
             aboveIgnoreLevel(message) && !skipSubstr(message.message) && !skipRegEx(message.message);
          if (json)

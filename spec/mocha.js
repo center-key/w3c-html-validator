@@ -233,7 +233,7 @@ describe('Option ignoreLevel set to "warning"', () => {
    });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-describe.only('Option ignoreMessage', () => {
+describe.only('Option ignoreMessages', () => {
    // Example validation messgaes:
    // warning: 'Section lacks heading. Consider using “h2”-“h6” elements to add identifying headings to all sections.',
    // error:   'Element “blockquote” not allowed as child of element “span” in this context. (Suppressing further errors from this subtree.)',
@@ -250,7 +250,7 @@ describe.only('Option ignoreMessage', () => {
             };
          assertDeepStrictEqual(actual, expected, done);
          };
-      const options = { filename: 'spec/html/invalid.html', ignoreMessage: 'Section lacks heading' };
+      const options = { filename: 'spec/html/invalid.html', ignoreMessages: 'Section lacks heading' };
       w3cHtmlValidator.validate(options).then(handleData);
       });
 
@@ -266,7 +266,7 @@ describe.only('Option ignoreMessage', () => {
             };
          assertDeepStrictEqual(actual, expected, done);
          };
-      const options = { filename: 'spec/html/invalid.html', ignoreMessage: /^Element .blockquote./ };
+      const options = { filename: 'spec/html/invalid.html', ignoreMessages: /^Element .blockquote./ };
       w3cHtmlValidator.validate(options).then(handleData);
       });
 
