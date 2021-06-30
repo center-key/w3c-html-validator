@@ -4,9 +4,10 @@
    "description": "A package for testing HTML files or URLs against the W3C validator (written in TypeScript)",
    "license": "MIT",
    "type": "module",
-   "main": "dist/w3c-html-validator.umd.cjs",
-   "module": "dist/w3c-html-validator.js",
-   "types": "dist/w3c-html-validator.d.ts",
+   "module": "./dist/w3c-html-validator.js",
+   "exports": "./dist/w3c-html-validator.js",
+   "main": "./dist/w3c-html-validator.umd.cjs",
+   "types": "./dist/w3c-html-validator.d.ts",
    "files": [
       "dist"
    ],
