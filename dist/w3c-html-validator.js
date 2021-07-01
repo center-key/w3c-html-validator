@@ -1,11 +1,11 @@
-//! W3C HTML Validator v0.7.5 ~ github.com/center-key/w3c-html-validator ~ MIT License
+//! W3C HTML Validator v0.7.6 ~ github.com/center-key/w3c-html-validator ~ MIT License
 
 import { readFileSync } from 'fs';
 import color from 'ansi-colors';
 import log from 'fancy-log';
 import request from 'superagent';
 const w3cHtmlValidator = {
-    version: '0.7.5',
+    version: '0.7.6',
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
