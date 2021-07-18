@@ -62,7 +62,7 @@
    },
    "scripts": {
       "examples": "node examples.js",
-      "lint": "    jshint *.js spec && eslint --max-warnings 0 . --ext .ts",
+      "lint": "    jshint . --exclude node_modules,build,dist && eslint --max-warnings 0 . --ext .ts",
       "tsc": "     tsc --version && tsc --project . && tsc --project . --module UMD --outDir build/umd",
       "pretest": " npm run lint && rimraf build dist **/.DS_Store && npm run tsc && gulp make-dist",
       "test": "    mocha spec/*.spec.js --timeout 5000"
@@ -79,7 +79,7 @@
       "@typescript-eslint/eslint-plugin": "~4.28",
       "@typescript-eslint/parser": "~4.28",
       "assert-deep-strict-equal": "~0.0",
-      "eslint": "~7.30",
+      "eslint": "~7.31",
       "gulp": "~4.0",
       "gulp-header": "~2.0",
       "gulp-rename": "~2.0",
