@@ -21,6 +21,7 @@ Import into your application:
 ```javascript
 import { w3cHtmlValidator } from 'w3c-html-validator';
 ```
+or invoke directly [from the command line or from a **package.json** script](#6-command-line).
 
 ## 2) Usage
 Call the `validate()` function:
@@ -113,7 +114,7 @@ or as an npm script in **package.json**:
       "all":      "w3c-html-validator"
    },
 ```
-Passing no parameters default to validating all HTML files in the projects (skipping the
+Passing no parameters defaults to validating all HTML files in the projects (skipping the
 **node_modules** folder).
 
 ## 7) Gulp Task
