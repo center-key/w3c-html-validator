@@ -28,11 +28,11 @@ const files = args.filter(arg => !/^-/.test(arg));
 
 // Validator
 log('w3c-html-validator');
-log(chalk.gray('files:'), chalk.cyan(files.length));
 if (flags.length)
    log(chalk.red('Flags not supported:'), flags.join(' '));
 const keep =         (filename) => !filename.includes('node_modules/');
 const allHtmlFiles = () => glob.sync('**/*.html', { ignore: '**/node_modules/**/*' });
 const filenames =    files.length ? [...new Set(files.filter(keep))].sort() : allHtmlFiles();
+log(chalk.gray('files:'), chalk.cyan(filenames.length));
 filenames.forEach(file =>
    w3cHtmlValidator.validate({ filename: file }).then(w3cHtmlValidator.reporter));
