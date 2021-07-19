@@ -100,17 +100,21 @@ describe('Home page', () => {
 ```
 
 ## 6) Command Line
+Example CLI usage:
 ```shell
 $ npm install --save-dev w3c-html-validator
-$ w3c-html-validator docs/index.html
+$ npx w3c-html-validator docs/*.html flyer.html
+$ npx w3c-html-validator  #validate all html files in project
 ```
 or as an npm script in **package.json**:
 ```json
    "scripts": {
-      "validate": "w3c-html-validator docs/index.html",
+      "validate": "w3c-html-validator docs/*.html flyer.html",
+      "all":      "w3c-html-validator"
    },
-```   
-**Note:** This feature is currently just experimental.
+```
+Passing no parameters default to validating all HTML files in the projects (skipping the
+**node_modules** folder).
 
 ## 7) Gulp Task
 This library is available as a Gulp plugin:<br>
