@@ -1,6 +1,6 @@
 {
    "name": "w3c-html-validator",
-   "version": "0.7.6",
+   "version": "0.7.7",
    "description": "A package for testing HTML files or URLs against the W3C validator (written in TypeScript)",
    "license": "MIT",
    "type": "module",

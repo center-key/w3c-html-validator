@@ -1,4 +1,4 @@
-//! W3C HTML Validator v0.7.6 ~ github.com/center-key/w3c-html-validator ~ MIT License
+//! W3C HTML Validator v0.7.7 ~ github.com/center-key/w3c-html-validator ~ MIT License
 
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -9,18 +9,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "fs", "ansi-colors", "fancy-log", "superagent"], factory);
+        define(["require", "exports", "fs", "chalk", "fancy-log", "superagent"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.w3cHtmlValidator = void 0;
     const fs_1 = require("fs");
-    const ansi_colors_1 = __importDefault(require("ansi-colors"));
+    const chalk_1 = __importDefault(require("chalk"));
     const fancy_log_1 = __importDefault(require("fancy-log"));
     const superagent_1 = __importDefault(require("superagent"));
     const w3cHtmlValidator = {
-        version: '0.7.6',
+        version: '0.7.7',
         validate(options) {
             const defaults = {
                 checkUrl: 'https://validator.w3.org/nu/',
@@ -89,22 +89,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             const messages = results.messages ?? [];
             const title = settings.title ?? results.title;
             const fail = 'fail (messages: ' + messages.length + ')';
-            const status = results.validates ? ansi_colors_1.default.green('pass') : ansi_colors_1.default.red.bold(fail);
-            fancy_log_1.default(ansi_colors_1.default.blue.bold(title), ansi_colors_1.default.gray('validation:'), status);
+            const status = results.validates ? chalk_1.default.green('pass') : chalk_1.default.red.bold(fail);
+            fancy_log_1.default(chalk_1.default.blue.bold(title), chalk_1.default.gray('validation:'), status);
             const typeColorMap = {
-                error: ansi_colors_1.default.red.bold,
-                warning: ansi_colors_1.default.yellow.bold,
-                info: ansi_colors_1.default.white.bold,
+                error: chalk_1.default.red.bold,
+                warning: chalk_1.default.yellow.bold,
+                info: chalk_1.default.white.bold,
             };
             const logMessage = (message) => {
                 const type = message.subType || message.type;
-                const typeColor = typeColorMap[type] || ansi_colors_1.default.redBright.bold;
+                const typeColor = typeColorMap[type] || chalk_1.default.redBright.bold;
                 const location = `line ${message.lastLine}, column ${message.firstColumn}:`;
                 const lineText = message.extract?.replace(/\n/g, '\\n');
                 const maxLen = settings.maxMessageLen ?? undefined;
                 fancy_log_1.default(typeColor('HTML ' + type + ':'), message.message.substring(0, maxLen));
                 if (message.lastLine)
-                    fancy_log_1.default(ansi_colors_1.default.gray(location), ansi_colors_1.default.cyan(lineText));
+                    fancy_log_1.default(chalk_1.default.gray(location), chalk_1.default.cyan(lineText));
             };
             messages.forEach(logMessage);
             return results;

@@ -1,11 +1,11 @@
-//! W3C HTML Validator v0.7.6 ~ github.com/center-key/w3c-html-validator ~ MIT License
+//! W3C HTML Validator v0.7.7 ~ github.com/center-key/w3c-html-validator ~ MIT License
 
 import { readFileSync } from 'fs';
-import color from 'ansi-colors';
+import chalk from 'chalk';
 import log from 'fancy-log';
 import request from 'superagent';
 const w3cHtmlValidator = {
-    version: '0.7.6',
+    version: '0.7.7',
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
@@ -74,22 +74,22 @@ const w3cHtmlValidator = {
         const messages = results.messages ?? [];
         const title = settings.title ?? results.title;
         const fail = 'fail (messages: ' + messages.length + ')';
-        const status = results.validates ? color.green('pass') : color.red.bold(fail);
-        log(color.blue.bold(title), color.gray('validation:'), status);
+        const status = results.validates ? chalk.green('pass') : chalk.red.bold(fail);
+        log(chalk.blue.bold(title), chalk.gray('validation:'), status);
         const typeColorMap = {
-            error: color.red.bold,
-            warning: color.yellow.bold,
-            info: color.white.bold,
+            error: chalk.red.bold,
+            warning: chalk.yellow.bold,
+            info: chalk.white.bold,
         };
         const logMessage = (message) => {
             const type = message.subType || message.type;
-            const typeColor = typeColorMap[type] || color.redBright.bold;
+            const typeColor = typeColorMap[type] || chalk.redBright.bold;
             const location = `line ${message.lastLine}, column ${message.firstColumn}:`;
             const lineText = message.extract?.replace(/\n/g, '\\n');
             const maxLen = settings.maxMessageLen ?? undefined;
             log(typeColor('HTML ' + type + ':'), message.message.substring(0, maxLen));
             if (message.lastLine)
-                log(color.gray(location), color.cyan(lineText));
+                log(chalk.gray(location), chalk.cyan(lineText));
         };
         messages.forEach(logMessage);
         return results;
