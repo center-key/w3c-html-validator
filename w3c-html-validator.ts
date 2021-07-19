@@ -1,7 +1,7 @@
 // W3C HTML Validator ~ MIT License
 
 import { readFileSync } from 'fs';
-import color from 'ansi-colors';
+import chalk from 'chalk';
 import log from 'fancy-log';
 import request from 'superagent';
 
@@ -128,22 +128,22 @@ const w3cHtmlValidator = {
       const messages = results.messages ?? [];
       const title =  settings.title ?? results.title;
       const fail =   'fail (messages: ' + messages!.length  + ')';
-      const status = results.validates ? color.green('pass') : color.red.bold(fail);
-      log(color.blue.bold(title), color.gray('validation:'), status);
+      const status = results.validates ? chalk.green('pass') : chalk.red.bold(fail);
+      log(chalk.blue.bold(title), chalk.gray('validation:'), status);
       const typeColorMap = {
-         error:   color.red.bold,
-         warning: color.yellow.bold,
-         info:    color.white.bold,
+         error:   chalk.red.bold,
+         warning: chalk.yellow.bold,
+         info:    chalk.white.bold,
          };
       const logMessage = (message: ValidatorResultsMessage) => {
          const type =      message.subType || message.type;
-         const typeColor = typeColorMap[type] || color.redBright.bold;
+         const typeColor = typeColorMap[type] || chalk.redBright.bold;
          const location =  `line ${message.lastLine}, column ${message.firstColumn}:`;
          const lineText =  message.extract?.replace(/\n/g, '\\n');
          const maxLen =    settings.maxMessageLen ?? undefined;
          log(typeColor('HTML ' + type + ':'), message.message.substring(0, maxLen));
          if (message.lastLine)
-            log(color.gray(location), color.cyan(lineText));
+            log(chalk.gray(location), chalk.cyan(lineText));
          };
       messages.forEach(logMessage);
       return results;
