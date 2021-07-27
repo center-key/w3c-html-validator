@@ -105,12 +105,14 @@ Example CLI usage:
 ```shell
 $ npm install --save-dev w3c-html-validator
 $ npx w3c-html-validator docs/*.html flyer.html
+$ npx w3c-html-validator docs  #validate html files in a folder
 $ npx w3c-html-validator  #validate all html files in project
 ```
 or as an npm script in **package.json**:
 ```json
    "scripts": {
       "validate": "w3c-html-validator docs/*.html flyer.html",
+      "folder":   "w3c-html-validator docs",
       "all":      "w3c-html-validator"
    },
 ```
