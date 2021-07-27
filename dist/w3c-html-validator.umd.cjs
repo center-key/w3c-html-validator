@@ -1,4 +1,4 @@
-//! W3C HTML Validator v0.7.8 ~ github.com/center-key/w3c-html-validator ~ MIT License
+//! W3C HTML Validator v0.7.9 ~ github.com/center-key/w3c-html-validator ~ MIT License
 
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -20,7 +20,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     const fancy_log_1 = __importDefault(require("fancy-log"));
     const superagent_1 = __importDefault(require("superagent"));
     const w3cHtmlValidator = {
-        version: '0.7.8',
+        version: '0.7.9',
         validate(options) {
             const defaults = {
                 checkUrl: 'https://validator.w3.org/nu/',

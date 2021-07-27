@@ -1,11 +1,11 @@
-//! W3C HTML Validator v0.7.8 ~ github.com/center-key/w3c-html-validator ~ MIT License
+//! W3C HTML Validator v0.7.9 ~ github.com/center-key/w3c-html-validator ~ MIT License
 
 import { readFileSync } from 'fs';
 import chalk from 'chalk';
 import log from 'fancy-log';
 import request from 'superagent';
 const w3cHtmlValidator = {
-    version: '0.7.8',
+    version: '0.7.9',
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
