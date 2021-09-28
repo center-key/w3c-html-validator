@@ -46,8 +46,8 @@ export type ValidatorResults = {
    };
 export type ValidatorResultsOutput = ValidatorResults['output'];
 export type ReporterOptions = {
-   maxMessageLen?: number,  //trim validation messages to not exceed a maximum length
-   title?:         string,  //override display title (useful for naming HTML string inputs)
+   maxMessageLen?: number | null,  //trim validation messages to not exceed a maximum length
+   title?:         string | null,  //override display title (useful for naming HTML string inputs)
    };
 
 const w3cHtmlValidator = {
