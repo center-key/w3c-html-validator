@@ -1,4 +1,4 @@
-//! W3C HTML Validator v0.7.9 ~ github.com/center-key/w3c-html-validator ~ MIT License
+//! w3c-html-validator v0.8.0 ~ https://github.com/center-key/w3c-html-validator ~ MIT License
 
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -20,7 +20,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     const fancy_log_1 = __importDefault(require("fancy-log"));
     const superagent_1 = __importDefault(require("superagent"));
     const w3cHtmlValidator = {
-        version: '0.7.9',
+        version: '0.8.0',
         validate(options) {
             const defaults = {
                 checkUrl: 'https://validator.w3.org/nu/',
@@ -36,7 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             if (settings.output !== 'json' && settings.output !== 'html')
                 throw Error('Option "output" must be "json" or "html".');
             const mode = settings.html ? 'html' : settings.filename ? 'filename' : 'website';
-            const readFile = () => settings.filename ? fs_1.readFileSync(settings.filename, 'utf8') : null;
+            const readFile = () => settings.filename ? (0, fs_1.readFileSync)(settings.filename, 'utf8') : null;
             const inputHtml = settings.html || readFile();
             const makePostRequest = () => superagent_1.default.post(settings.checkUrl)
                 .set('Content-Type', 'text/html; encoding=utf-8')
@@ -90,7 +90,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             const title = settings.title ?? results.title;
             const fail = 'fail (messages: ' + messages.length + ')';
             const status = results.validates ? chalk_1.default.green('pass') : chalk_1.default.red.bold(fail);
-            fancy_log_1.default(chalk_1.default.blue.bold(title), chalk_1.default.gray('validation:'), status);
+            (0, fancy_log_1.default)(chalk_1.default.blue.bold(title), chalk_1.default.gray('validation:'), status);
             const typeColorMap = {
                 error: chalk_1.default.red.bold,
                 warning: chalk_1.default.yellow.bold,
@@ -102,9 +102,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
                 const location = `line ${message.lastLine}, column ${message.firstColumn}:`;
                 const lineText = message.extract?.replace(/\n/g, '\\n');
                 const maxLen = settings.maxMessageLen ?? undefined;
-                fancy_log_1.default(typeColor('HTML ' + type + ':'), message.message.substring(0, maxLen));
+                (0, fancy_log_1.default)(typeColor('HTML ' + type + ':'), message.message.substring(0, maxLen));
                 if (message.lastLine)
-                    fancy_log_1.default(chalk_1.default.gray(location), chalk_1.default.cyan(lineText));
+                    (0, fancy_log_1.default)(chalk_1.default.gray(location), chalk_1.default.cyan(lineText));
             };
             messages.forEach(logMessage);
             return results;

@@ -52,7 +52,7 @@ export type ReporterOptions = {
 
 const w3cHtmlValidator = {
 
-   version: '{{{version}}}',
+   version: '~~~version~~~',
 
    validate(options: ValidatorOptions): Promise<ValidatorResults> {
       const defaults = {
