@@ -1,10 +1,12 @@
 // W3C HTML Validator ~ MIT License
 
+// Imports
 import { readFileSync } from 'fs';
-import chalk from 'chalk';
-import log from 'fancy-log';
-import request from 'superagent';
+import chalk            from 'chalk';
+import log              from 'fancy-log';
+import request          from 'superagent';
 
+// Type Declarations
 export type ValidatorOptions = {
    html?:           string,  //example: '<!doctype html><html><head><title>Home</title></html>''
    filename?:       string,  //example: 'docs/index.html'
@@ -50,6 +52,7 @@ export type ReporterOptions = {
    title?:         string | null,  //override display title (useful for naming HTML string inputs)
    };
 
+// W3C HTML Validator
 const w3cHtmlValidator = {
 
    version: '~~~version~~~',
@@ -129,7 +132,7 @@ const w3cHtmlValidator = {
       const title =  settings.title ?? results.title;
       const fail =   'fail (messages: ' + messages!.length  + ')';
       const status = results.validates ? chalk.green('pass') : chalk.red.bold(fail);
-      log(chalk.blue.bold(title), chalk.gray('validation:'), status);
+      log('w3c-html-validator', chalk.blue.bold(title), chalk.gray('validation:'), status);
       const typeColorMap = {
          error:   chalk.red.bold,
          warning: chalk.yellow.bold,
