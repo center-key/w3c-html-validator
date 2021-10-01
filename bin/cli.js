@@ -28,14 +28,15 @@ const flags = args.filter(arg => /^-/.test(arg));
 const files = args.filter(arg => !/^-/.test(arg));
 
 // Validator
-log('w3c-html-validator');
+const exit = (message) => (console.error('[w3c-html-validator] ' + message), process.exit(1));
 if (flags.length)
-   log(chalk.red('Flags not supported:'), flags.join(' '));
+   exit('Flags not supported: ' + flags.join(' '));
 const keep =         (filename) => !filename.includes('node_modules/');
 const readFolder =   (folder) => glob.sync(folder + '**/*.html', { ignore: '**/node_modules/**/*' });
 const expandFolder = (file) => lstatSync(file).isDirectory() ? readFolder(file + '/') : file;
 const getFilenames = () => [...new Set(files.map(expandFolder).flat().filter(keep))].sort();
 const filenames =    files.length ? getFilenames() : readFolder('');
-log(chalk.gray('files:'), chalk.cyan(filenames.length));
+if (filenames.length > 1)
+   log(chalk.gray('w3c-html-validator'), chalk.magenta('files: ' + filenames.length));
 filenames.forEach(file =>
    w3cHtmlValidator.validate({ filename: file }).then(w3cHtmlValidator.reporter));

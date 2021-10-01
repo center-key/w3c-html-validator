@@ -132,7 +132,7 @@ const w3cHtmlValidator = {
       const title =  settings.title ?? results.title;
       const fail =   'fail (messages: ' + messages!.length  + ')';
       const status = results.validates ? chalk.green('pass') : chalk.red.bold(fail);
-      log('w3c-html-validator', chalk.blue.bold(title), chalk.gray('validation:'), status);
+      log(chalk.gray('w3c-html-validator'), chalk.blue.bold(title), status);
       const typeColorMap = {
          error:   chalk.red.bold,
          warning: chalk.yellow.bold,
@@ -146,7 +146,7 @@ const w3cHtmlValidator = {
          const maxLen =    settings.maxMessageLen ?? undefined;
          log(typeColor('HTML ' + type + ':'), message.message.substring(0, maxLen));
          if (message.lastLine)
-            log(chalk.gray(location), chalk.cyan(lineText));
+            log(chalk.white(location), chalk.magenta(lineText));
          };
       messages.forEach(logMessage);
       return results;
