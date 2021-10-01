@@ -1,11 +1,11 @@
-//! w3c-html-validator v0.8.0 ~ https://github.com/center-key/w3c-html-validator ~ MIT License
+//! w3c-html-validator v0.8.1 ~ https://github.com/center-key/w3c-html-validator ~ MIT License
 
 import { readFileSync } from 'fs';
 import chalk from 'chalk';
 import log from 'fancy-log';
 import request from 'superagent';
 const w3cHtmlValidator = {
-    version: '0.8.0',
+    version: '0.8.1',
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
@@ -75,7 +75,7 @@ const w3cHtmlValidator = {
         const title = settings.title ?? results.title;
         const fail = 'fail (messages: ' + messages.length + ')';
         const status = results.validates ? chalk.green('pass') : chalk.red.bold(fail);
-        log(chalk.blue.bold(title), chalk.gray('validation:'), status);
+        log(chalk.gray('w3c-html-validator'), chalk.blue.bold(title), status);
         const typeColorMap = {
             error: chalk.red.bold,
             warning: chalk.yellow.bold,
@@ -89,7 +89,7 @@ const w3cHtmlValidator = {
             const maxLen = settings.maxMessageLen ?? undefined;
             log(typeColor('HTML ' + type + ':'), message.message.substring(0, maxLen));
             if (message.lastLine)
-                log(chalk.gray(location), chalk.cyan(lineText));
+                log(chalk.white(location), chalk.magenta(lineText));
         };
         messages.forEach(logMessage);
         return results;
