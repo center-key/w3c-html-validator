@@ -1,4 +1,4 @@
-//! w3c-html-validator v0.8.1 ~ https://github.com/center-key/w3c-html-validator ~ MIT License
+//! w3c-html-validator v0.8.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };

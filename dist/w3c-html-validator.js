@@ -1,4 +1,4 @@
-//! w3c-html-validator v0.8.1 ~ https://github.com/center-key/w3c-html-validator ~ MIT License
+//! w3c-html-validator v0.8.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import { readFileSync } from 'fs';
 import chalk from 'chalk';
