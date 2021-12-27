@@ -4,6 +4,7 @@
 // Imports
 import { assertDeepStrictEqual } from 'assert-deep-strict-equal';
 import { readFileSync } from 'fs';
+import assert from 'assert';
 
 // Setup
 import { w3cHtmlValidator } from '../dist/w3c-html-validator.js';
@@ -233,7 +234,7 @@ describe('Option ignoreLevel set to "warning"', () => {
    });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-describe.only('Option ignoreMessages', () => {
+describe('Option ignoreMessages', () => {
    // Example validation messgaes:
    // warning: 'Section lacks heading. Consider using “h2”-“h6” elements to add identifying headings to all sections.',
    // error:   'Element “blockquote” not allowed as child of element “span” in this context. (Suppressing further errors from this subtree.)',
@@ -268,6 +269,32 @@ describe.only('Option ignoreMessages', () => {
          };
       const options = { filename: 'spec/html/invalid.html', ignoreMessages: /^Element .blockquote./ };
       w3cHtmlValidator.validate(options).then(handleData);
+      });
+
+   });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+describe('Correct error is thrown', () => {
+
+   it('when no input is specified', () => {
+      const options =         { };
+      const makeInvalidCall = () => w3cHtmlValidator.validate(options);
+      const exception =       { message: '[w3c-html-validator] Must specify the "html", "filename", or "website" option.' };
+      assert.throws(makeInvalidCall, exception);
+      });
+
+   it('when "ignoreLevel" option is bogus', () => {
+      const options =         { html: validHtml, ignoreLevel: 'bogus' };
+      const makeInvalidCall = () => w3cHtmlValidator.validate(options);
+      const exception =       { message: '[w3c-html-validator] Invalid ignoreLevel option: bogus' };
+      assert.throws(makeInvalidCall, exception);
+      });
+
+   it('when "output" option is bogus', () => {
+      const options =         { html: validHtml, output: 'bogus' };
+      const makeInvalidCall = () => w3cHtmlValidator.validate(options);
+      const exception =       { message: '[w3c-html-validator] Option "output" must be "json" or "html".' };
+      assert.throws(makeInvalidCall, exception);
       });
 
    });

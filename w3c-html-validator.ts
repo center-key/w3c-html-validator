@@ -66,11 +66,11 @@ const w3cHtmlValidator = {
          };
       const settings = { ...defaults, ...options };
       if (!settings.html && !settings.filename && !settings.website)
-         throw Error('Must specify the "html", "filename", or "website" option.');
+         throw Error('[w3c-html-validator] Must specify the "html", "filename", or "website" option.');
       if (![null, 'info', 'warning'].includes(settings.ignoreLevel))
          throw Error('[w3c-html-validator] Invalid ignoreLevel option: ' + settings.ignoreLevel);
       if (settings.output !== 'json' && settings.output !== 'html')
-         throw Error('Option "output" must be "json" or "html".');
+         throw Error('[w3c-html-validator] Option "output" must be "json" or "html".');
       const mode = settings.html ? 'html' : settings.filename ? 'filename' : 'website';
       const readFile = () => settings.filename ? readFileSync(settings.filename, 'utf8') : null;
       const inputHtml = settings.html || readFile();
