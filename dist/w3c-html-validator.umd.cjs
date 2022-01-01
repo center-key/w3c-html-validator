@@ -1,4 +1,4 @@
-//! w3c-html-validator v0.8.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v0.8.2 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -20,7 +20,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     const fancy_log_1 = __importDefault(require("fancy-log"));
     const superagent_1 = __importDefault(require("superagent"));
     const w3cHtmlValidator = {
-        version: '0.8.1',
+        version: '0.8.2',
         validate(options) {
             const defaults = {
                 checkUrl: 'https://validator.w3.org/nu/',
@@ -30,11 +30,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             };
             const settings = { ...defaults, ...options };
             if (!settings.html && !settings.filename && !settings.website)
-                throw Error('Must specify the "html", "filename", or "website" option.');
+                throw Error('[w3c-html-validator] Must specify the "html", "filename", or "website" option.');
             if (![null, 'info', 'warning'].includes(settings.ignoreLevel))
                 throw Error('[w3c-html-validator] Invalid ignoreLevel option: ' + settings.ignoreLevel);
             if (settings.output !== 'json' && settings.output !== 'html')
-                throw Error('Option "output" must be "json" or "html".');
+                throw Error('[w3c-html-validator] Option "output" must be "json" or "html".');
             const mode = settings.html ? 'html' : settings.filename ? 'filename' : 'website';
             const readFile = () => settings.filename ? (0, fs_1.readFileSync)(settings.filename, 'utf8') : null;
             const inputHtml = settings.html || readFile();
