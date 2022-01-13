@@ -78,6 +78,8 @@ buildProject() {
    cd $projectHome
    echo "Build:"
    npm test
+   echo "For sample validation output and results, run:"
+   echo "   node examples.js"
    echo
    }
 
