@@ -298,3 +298,33 @@ describe('Correct error is thrown', () => {
       });
 
    });
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+describe('Network request failure', () => {
+
+   it('for service unavailable (HTTP status 503) is handled gracefully', (done) => {
+      const handleData = (data) => {
+         const actual = data;
+         const networkError = {
+            type:    'network-error',
+            message: '503 SERVICE UNAVAILABLE https://httpbin.org/status/503?out=json',
+            };
+         const expected = {
+            validates: false,
+            mode:      'html',
+            title:     'HTML String (characters: ' + validHtml.length + ')',
+            html:      validHtml,
+            filename:  null,
+            website:   null,
+            output:    'json',
+            status:    503,
+            messages:  [networkError],
+            display:   null,
+            };
+         assertDeepStrictEqual(actual, expected, done);
+         };
+      const options = { html: validHtml, checkUrl: 'https://httpbin.org/status/503', output: 'json' };
+      w3cHtmlValidator.validate(options).then(handleData);
+      });
+
+   });

@@ -22,10 +22,11 @@ export type ValidatorResultsMessage = {
    // 'info'                'warning' | undefined (informative)
    // 'error'               'fatal' | undefined (spec violation)
    // 'non-document-error'  'io' | 'schema' | 'internal' | undefined (external)
-   type:         'info' | 'error' | 'non-document-error',
+   // 'network-error'        undefined (network request failure)
+   type:         'info' | 'error' | 'non-document-error' | 'network-error',
    subType?:     'warning' | 'fatal' | 'io' | 'schema' | 'internal',
-   message:      string,
-   extract:      string,
+   message:      string,  //example: 'Section lacks heading.'
+   extract:      string,  //example: '<section>Hi</section>'
    lastLine:     number,
    firstColumn:  number,
    lastColumn:   number,
@@ -117,7 +118,13 @@ const w3cHtmlValidator = {
          messages:  json ? response.body.messages : null,
          display:   json ? null : response.text,
          });
-      return w3cRequest.then(filterMessages).then(toValidatorResults);
+      const handleError = (reason: Error) => {
+         const response =     reason['response'];
+         const message =      [response.status, response.res.statusMessage, response.request.url];
+         const networkError = { type: 'network-error', message: message.join(' ') };
+         return toValidatorResults({ ...response, ...{ body: { messages: [networkError] } } });
+         };
+      return w3cRequest.then(filterMessages).then(toValidatorResults).catch(handleError);
       },
 
    reporter(results: ValidatorResults, options?: ReporterOptions): ValidatorResults {
