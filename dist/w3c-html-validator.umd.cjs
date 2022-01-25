@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.0.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.0.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -20,7 +20,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     const fancy_log_1 = __importDefault(require("fancy-log"));
     const superagent_1 = __importDefault(require("superagent"));
     const w3cHtmlValidator = {
-        version: '1.0.0',
+        version: '1.0.1',
         validate(options) {
             const defaults = {
                 checkUrl: 'https://validator.w3.org/nu/',
@@ -76,7 +76,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
                 messages: json ? response.body.messages : null,
                 display: json ? null : response.text,
             });
-            return w3cRequest.then(filterMessages).then(toValidatorResults);
+            const handleError = (reason) => {
+                const response = reason['response'];
+                const message = [response.status, response.res.statusMessage, response.request.url];
+                const networkError = { type: 'network-error', message: message.join(' ') };
+                return toValidatorResults({ ...response, ...{ body: { messages: [networkError] } } });
+            };
+            return w3cRequest.then(filterMessages).then(toValidatorResults).catch(handleError);
         },
         reporter(results, options) {
             const defaults = {

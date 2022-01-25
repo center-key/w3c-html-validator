@@ -1,11 +1,11 @@
-//! w3c-html-validator v1.0.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.0.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import { readFileSync } from 'fs';
 import chalk from 'chalk';
 import log from 'fancy-log';
 import request from 'superagent';
 const w3cHtmlValidator = {
-    version: '1.0.0',
+    version: '1.0.1',
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
@@ -61,7 +61,13 @@ const w3cHtmlValidator = {
             messages: json ? response.body.messages : null,
             display: json ? null : response.text,
         });
-        return w3cRequest.then(filterMessages).then(toValidatorResults);
+        const handleError = (reason) => {
+            const response = reason['response'];
+            const message = [response.status, response.res.statusMessage, response.request.url];
+            const networkError = { type: 'network-error', message: message.join(' ') };
+            return toValidatorResults({ ...response, ...{ body: { messages: [networkError] } } });
+        };
+        return w3cRequest.then(filterMessages).then(toValidatorResults).catch(handleError);
     },
     reporter(results, options) {
         const defaults = {

@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.0.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.0.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 export declare type ValidatorOptions = {
     html?: string;
@@ -10,7 +10,7 @@ export declare type ValidatorOptions = {
     output?: ValidatorResultsOutput;
 };
 export declare type ValidatorResultsMessage = {
-    type: 'info' | 'error' | 'non-document-error';
+    type: 'info' | 'error' | 'non-document-error' | 'network-error';
     subType?: 'warning' | 'fatal' | 'io' | 'schema' | 'internal';
     message: string;
     extract: string;
