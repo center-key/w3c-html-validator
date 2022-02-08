@@ -1,6 +1,9 @@
-// W3C HTML Validator ~ MIT License
-// Examples
-//
+#!/usr/bin/env node
+////////////////////////
+// W3C HTML Validator //
+// Examples           //
+////////////////////////
+
 // Command to run:
 //    $ node examples.js
 

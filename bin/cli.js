@@ -1,6 +1,9 @@
 #!/usr/bin/env node
-// w3c-html-validator ~~ MIT License
-//
+////////////////////////
+// w3c-html-validator //
+// MIT License        //
+////////////////////////
+
 // Usage in package.json:
 //    "scripts": {
 //       "validate": "w3c-html-validator docs/*.html flyer.html",

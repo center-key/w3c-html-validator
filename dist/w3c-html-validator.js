@@ -1,11 +1,11 @@
-//! w3c-html-validator v1.0.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.0.2 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import { readFileSync } from 'fs';
 import chalk from 'chalk';
 import log from 'fancy-log';
 import request from 'superagent';
 const w3cHtmlValidator = {
-    version: '1.0.1',
+    version: '1.0.2',
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
@@ -50,22 +50,23 @@ const w3cHtmlValidator = {
             return response;
         };
         const toValidatorResults = (response) => ({
-            validates: json ? !response.body.messages.length : response.text.includes(success),
+            validates: json ? !response.body.messages.length : !!response.text?.includes(success),
             mode: mode,
             title: titleLookup[mode],
             html: inputHtml,
             filename: settings.filename || null,
             website: settings.website || null,
             output: settings.output,
-            status: response.statusCode,
+            status: response.statusCode || -1,
             messages: json ? response.body.messages : null,
             display: json ? null : response.text,
         });
         const handleError = (reason) => {
             const response = reason['response'];
-            const message = [response.status, response.res.statusMessage, response.request.url];
-            const networkError = { type: 'network-error', message: message.join(' ') };
-            return toValidatorResults({ ...response, ...{ body: { messages: [networkError] } } });
+            const getMsg = () => [response.status, response.res.statusMessage, response.request.url];
+            const message = response ? getMsg() : [reason['errno'], reason.message];
+            const networkErr = { type: 'network-error', message: message.join(' ') };
+            return toValidatorResults({ ...response, ...{ body: { messages: [networkErr] } } });
         };
         return w3cRequest.then(filterMessages).then(toValidatorResults).catch(handleError);
     },
