@@ -107,22 +107,23 @@ const w3cHtmlValidator = {
          return response;
          };
       const toValidatorResults = (response: request.Response): ValidatorResults => ({
-         validates: json ? !response.body.messages.length : response.text.includes(success),
+         validates: json ? !response.body.messages.length : !!response.text?.includes(success),
          mode:      mode,
          title:     <string>titleLookup[mode],
          html:      inputHtml,
          filename:  settings.filename || null,
          website:   settings.website || null,
          output:    <ValidatorResultsOutput>settings.output,
-         status:    response.statusCode,
+         status:    response.statusCode || -1,
          messages:  json ? response.body.messages : null,
          display:   json ? null : response.text,
          });
-      const handleError = (reason: Error) => {
-         const response =     reason['response'];
-         const message =      [response.status, response.res.statusMessage, response.request.url];
-         const networkError = { type: 'network-error', message: message.join(' ') };
-         return toValidatorResults({ ...response, ...{ body: { messages: [networkError] } } });
+      const handleError = (reason: Error): ValidatorResults => {
+         const response =   reason['response'];
+         const getMsg =     () => [response.status, response.res.statusMessage, response.request.url];
+         const message =    response ? getMsg() : [reason['errno'], reason.message];
+         const networkErr = { type: 'network-error', message: message.join(' ') };
+         return toValidatorResults({ ...response, ...{ body: { messages: [networkErr] } } });
          };
       return w3cRequest.then(filterMessages).then(toValidatorResults).catch(handleError);
       },
