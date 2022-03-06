@@ -3,13 +3,28 @@
 
 // Imports
 import { assertDeepStrictEqual } from 'assert-deep-strict-equal';
-import { readFileSync } from 'fs';
+import { readdirSync, readFileSync } from 'fs';
 import assert from 'assert';
 
 // Setup
 import { w3cHtmlValidator } from '../dist/w3c-html-validator.js';
 const validHtml =   readFileSync('spec/html/valid.html',   'utf8');
 const invalidHtml = readFileSync('spec/html/invalid.html', 'utf8');
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+describe('The "dist" folder', () => {
+
+   it('contains the correct files', () => {
+      const actual = readdirSync('dist').sort();
+      const expected = [
+         'w3c-html-validator.d.ts',
+         'w3c-html-validator.js',
+         'w3c-html-validator.umd.cjs',
+         ];
+      assertDeepStrictEqual(actual, expected);
+      });
+
+   });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 describe('Library version number', () => {
