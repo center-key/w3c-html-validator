@@ -42,7 +42,7 @@ $ node examples.js
 width=800 alt=screenshot>
 
 ## 3) Options
-### validate()
+### w3cHtmlValidator.validate(options)
 | Name (key)       | Type                    | Default                          | Description                                                          |
 | :--------------- | :---------------------- | :------------------------------- | :------------------------------------------------------------------- |
 | `html`           | **string**              | `null`                           | HTML string to validate.                                             |
@@ -56,7 +56,7 @@ width=800 alt=screenshot>
 *The `ignoreMessages` and `ignoreLevel` options only work for `'json'` output.&nbsp;
 Option value `'warning'` also skips `'info'`.
 
-### reporter()
+### w3cHtmlValidator.reporter(options)
 | Name (key)      | Type       | Default | Description                                                    |
 | :-------------- | :--------- | :------ | :------------------------------------------------------------- |
 | `maxMessageLen` | **number** | `null`  | Trim validation messages to not exceed a maximum length.       |
@@ -119,6 +119,10 @@ or as an npm script in **package.json**:
 Passing no parameters defaults to validating all HTML files in the projects (skipping the
 **node_modules** folder).
 
-## 7) Gulp Task
-This library is available as a Gulp plugin:<br>
-https://github.com/center-key/gulp-w3c-html-validator
+<br>
+
+---
+Feel free to submit questions at:<br>
+[github.com/center-key/w3c-html-validator/issues](https://github.com/center-key/w3c-html-validator/issues)
+
+[MIT License](LICENSE.txt)
