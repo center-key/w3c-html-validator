@@ -130,6 +130,10 @@ describe('Valid HTML string', () => {
 describe('Invalid HTML string', () => {
 
    it('fails validator with JSON output', (done) => {
+      const message = {
+         heading: 'Section lacks heading. Consider using “h2”-“h6” elements to add identifying headings to all sections, or else use a “div” element instead for any cases where no heading is needed.',
+         child:   'Element “blockquote” not allowed as child of element “span” in this context. (Suppressing further errors from this subtree.)',
+         };
       const handleData = (data) => {
          const actual = data;
          const expected = {
@@ -145,7 +149,7 @@ describe('Invalid HTML string', () => {
                {
                   type:         'info',
                   subType:      'warning',
-                  message:      'Section lacks heading. Consider using “h2”-“h6” elements to add identifying headings to all sections.',
+                  message:      message.heading,
                   extract:      'e</h1>\n   <section>\n     ',
                   lastLine:     9,
                   firstColumn:  4,
@@ -155,7 +159,7 @@ describe('Invalid HTML string', () => {
                   },
                {
                   type:         'error',
-                  message:      'Element “blockquote” not allowed as child of element “span” in this context. (Suppressing further errors from this subtree.)',
+                  message:      message.child,
                   extract:      '\n   <span><blockquote>Inside',
                   lastLine:     12,
                   firstColumn:  10,
