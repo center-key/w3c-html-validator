@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.0.3 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.0.4 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 export declare type ValidatorOptions = {
     html?: string;
@@ -42,6 +42,6 @@ export declare type ReporterOptions = {
 declare const w3cHtmlValidator: {
     version: string;
     validate(options: ValidatorOptions): Promise<ValidatorResults>;
-    reporter(results: ValidatorResults, options?: ReporterOptions | undefined): ValidatorResults;
+    reporter(results: ValidatorResults, options?: ReporterOptions): ValidatorResults;
 };
 export { w3cHtmlValidator };
