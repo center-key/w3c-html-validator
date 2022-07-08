@@ -137,10 +137,10 @@ const w3cHtmlValidator = {
       if (typeof results?.validates !== 'boolean')
          throw Error('[w3c-html-validator] Invalid results for reporter(): ' + String(results));
       const messages = results.messages ?? [];
-      const title =  settings.title ?? results.title;
-      const fail =   'fail (messages: ' + messages!.length  + ')';
-      const status = results.validates ? chalk.green('pass') : chalk.red.bold(fail);
-      log(chalk.gray('w3c-html-validator'), chalk.blue.bold(title), status);
+      const title =    settings.title ?? results.title;
+      const status =   results.validates ? chalk.green.bold('✔ pass') : chalk.red.bold('✘ fail');
+      const count =    results.validates ? '' : '(messages: ' + messages!.length + ')';
+      log(chalk.gray('w3c-html-validator'), status, chalk.blue.bold(title), chalk.white(count));
       const typeColorMap = {
          error:   chalk.red.bold,
          warning: chalk.yellow.bold,
