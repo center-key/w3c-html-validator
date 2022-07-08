@@ -1,11 +1,11 @@
-//! w3c-html-validator v1.0.4 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.1.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import { readFileSync } from 'fs';
 import chalk from 'chalk';
 import log from 'fancy-log';
 import request from 'superagent';
 const w3cHtmlValidator = {
-    version: '1.0.4',
+    version: '1.1.0',
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
@@ -88,9 +88,9 @@ const w3cHtmlValidator = {
             throw Error('[w3c-html-validator] Invalid results for reporter(): ' + String(results));
         const messages = (_a = results.messages) !== null && _a !== void 0 ? _a : [];
         const title = (_b = settings.title) !== null && _b !== void 0 ? _b : results.title;
-        const fail = 'fail (messages: ' + messages.length + ')';
-        const status = results.validates ? chalk.green('pass') : chalk.red.bold(fail);
-        log(chalk.gray('w3c-html-validator'), chalk.blue.bold(title), status);
+        const status = results.validates ? chalk.green.bold('✔ pass') : chalk.red.bold('✘ fail');
+        const count = results.validates ? '' : '(messages: ' + messages.length + ')';
+        log(chalk.gray('w3c-html-validator'), status, chalk.blue.bold(title), chalk.white(count));
         const typeColorMap = {
             error: chalk.red.bold,
             warning: chalk.yellow.bold,
