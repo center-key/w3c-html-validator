@@ -73,8 +73,8 @@ const w3cHtmlValidator = {
       if (settings.output !== 'json' && settings.output !== 'html')
          throw Error('[w3c-html-validator] Option "output" must be "json" or "html".');
       const mode = settings.html ? 'html' : settings.filename ? 'filename' : 'website';
-      const readFile = () => settings.filename ? readFileSync(settings.filename, 'utf8') : null;
-      const inputHtml = settings.html || readFile();
+      const readFile = (filename: string) => readFileSync(filename, 'utf8').replace(/\r/g, '');
+      const inputHtml = settings.html ?? (settings.filename ? readFile(settings.filename) : null);
       const makePostRequest = () => request.post(settings.checkUrl)
          .set('Content-Type', 'text/html; encoding=utf-8')
          .send(<string>inputHtml);

@@ -8,8 +8,8 @@ import assert from 'assert';
 
 // Setup
 import { w3cHtmlValidator } from '../dist/w3c-html-validator.js';
-const validHtml =   readFileSync('spec/html/valid.html',   'utf8');
-const invalidHtml = readFileSync('spec/html/invalid.html', 'utf8');
+const validHtml =   readFileSync('spec/html/valid.html',   'utf8').replace(/\r/g, '');
+const invalidHtml = readFileSync('spec/html/invalid.html', 'utf8').replace(/\r/g, '');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 describe('The "dist" folder', () => {
@@ -90,7 +90,7 @@ describe('Valid HTML string', () => {
          const expected = {
             validates: true,
             mode:      'html',
-            title:     'HTML String (characters: ' + validHtml.length + ')',
+            title:     'HTML String (characters: 153)',
             html:      validHtml,
             filename:  null,
             website:   null,
@@ -111,7 +111,7 @@ describe('Valid HTML string', () => {
          const expected = {
             validates: true,
             mode:      'html',
-            title:     'HTML String (characters: ' + validHtml.length + ')',
+            title:     'HTML String (characters: 153)',
             html:      validHtml,
             filename:  null,
             website:   null,
@@ -139,7 +139,7 @@ describe('Invalid HTML string', () => {
          const expected = {
             validates: false,
             mode:      'html',
-            title:     'HTML String (characters: ' + invalidHtml.length + ')',
+            title:     'HTML String (characters: 275)',
             html:      invalidHtml,
             filename:  null,
             website:   null,
@@ -182,7 +182,7 @@ describe('Invalid HTML string', () => {
          const expected = {
             validates: false,
             mode:      'html',
-            title:     'HTML String (characters: ' + invalidHtml.length + ')',
+            title:     'HTML String (characters: 275)',
             html:      invalidHtml,
             filename:  null,
             website:   null,
@@ -331,7 +331,7 @@ describe('Network request failure', () => {
          const expected = {
             validates: false,
             mode:      'html',
-            title:     'HTML String (characters: ' + validHtml.length + ')',
+            title:     'HTML String (characters: 153)',
             html:      validHtml,
             filename:  null,
             website:   null,
