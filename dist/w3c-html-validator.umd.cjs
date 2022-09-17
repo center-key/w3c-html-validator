@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.1.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.1.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -20,8 +20,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     const fancy_log_1 = __importDefault(require("fancy-log"));
     const superagent_1 = __importDefault(require("superagent"));
     const w3cHtmlValidator = {
-        version: '1.1.0',
+        version: '1.1.1',
         validate(options) {
+            var _a;
             const defaults = {
                 checkUrl: 'https://validator.w3.org/nu/',
                 ignoreLevel: null,
@@ -36,8 +37,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             if (settings.output !== 'json' && settings.output !== 'html')
                 throw Error('[w3c-html-validator] Option "output" must be "json" or "html".');
             const mode = settings.html ? 'html' : settings.filename ? 'filename' : 'website';
-            const readFile = () => settings.filename ? (0, fs_1.readFileSync)(settings.filename, 'utf8') : null;
-            const inputHtml = settings.html || readFile();
+            const readFile = (filename) => (0, fs_1.readFileSync)(filename, 'utf8').replace(/\r/g, '');
+            const inputHtml = (_a = settings.html) !== null && _a !== void 0 ? _a : (settings.filename ? readFile(settings.filename) : null);
             const makePostRequest = () => superagent_1.default.post(settings.checkUrl)
                 .set('Content-Type', 'text/html; encoding=utf-8')
                 .send(inputHtml);
