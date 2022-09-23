@@ -8,7 +8,7 @@ _Check the markup validity of HTML files using the W3C validator_
 [![Vulnerabilities](https://snyk.io/test/github/center-key/w3c-html-validator/badge.svg)](https://snyk.io/test/github/center-key/w3c-html-validator)
 [![Build](https://github.com/center-key/w3c-html-validator/workflows/build/badge.svg)](https://github.com/center-key/w3c-html-validator/actions/workflows/run-spec-on-push.yaml)
 
-## 1) Setup
+## A) Setup
 
 ### Install
 Install package for node:
@@ -23,7 +23,7 @@ import { w3cHtmlValidator } from 'w3c-html-validator';
 ```
 or invoke directly [from the command line or from a **package.json** script](#6-command-line).
 
-## 2) Usage
+## B) Usage
 Call the `validate()` function:
 ```javascript
 const options = { filename: 'docs/index.html' };
@@ -41,7 +41,7 @@ $ node examples.js
 <img src=https://raw.githubusercontent.com/center-key/w3c-html-validator/main/examples.png
 width=800 alt=screenshot>
 
-## 3) Options
+## C) Options
 ### w3cHtmlValidator.validate(options)
 | Name (key)       | Type                    | Default                          | Description                                                          |
 | :--------------- | :---------------------- | :------------------------------- | :------------------------------------------------------------------- |
@@ -63,7 +63,7 @@ Option value `'warning'` also skips `'info'`.
 | `quiet`         | **boolean** | `false` | Suppress messages for successful validations.                  |
 | `title`         | **string**  | `null`  | Override display title (useful for naming HTML string inputs). |
 
-## 4) TypeScript Declarations
+## D) TypeScript Declarations
 The **TypeScript Declaration File** file is [w3c-html-validator.d.ts](dist/w3c-html-validator.d.ts)
 in the **dist** folder.
 
@@ -83,7 +83,7 @@ type ValidatorResults = {
    };
 ```
 
-## 5) Mocha Example
+## E) Mocha Example
 ```javascript
 import assert from 'assert';
 import { w3cHtmlValidator } from 'w3c-html-validator';
@@ -101,22 +101,24 @@ describe('Home page', () => {
    });
 ```
 
-## 6) Command Line
+## F) Command Line
 You can install **w3c-html-validator** globally and then run it anywhere directly from the terminal.
 
 Example terminal commands:
 ```shell
 $ npm install --global w3c-html-validator
-$ html-validator docs/*.html flyer.html
-$ html-validator docs  #validate html files in a folder
 $ html-validator       #validate all html files in project
+$ html-validator docs  #validate html files in a folder
+$ html-validator docs/*.html flyer.html
+$ html-validator docs --quiet    #suppress "pass" messages
+$ html-validator docs --trim=30  #truncate messages to 30 characters
 ```
 or as an npm script in **package.json**:
 ```json
    "scripts": {
       "validate":   "html-validator docs/*.html flyer.html",
       "one-folder": "html-validator docs",
-      "all":        "html-validator"
+      "all":        "html-validator --quiet"
    },
 ```
 Passing no parameters defaults to validating all HTML files in the project (skipping the
