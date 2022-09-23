@@ -1,7 +1,7 @@
 # W3C HTML Validator
 <img src=https://centerkey.com/graphics/center-key-logo.svg align=right width=200 alt=logo>
 
-_A package for testing HTML files or URLs against the W3C validator_
+_Check the markup validity of HTML files using the W3C validator_
 
 [![License:MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/center-key/w3c-html-validator/blob/main/LICENSE.txt)
 [![npm](https://img.shields.io/npm/v/w3c-html-validator.svg)](https://www.npmjs.com/package/w3c-html-validator)
@@ -57,10 +57,11 @@ width=800 alt=screenshot>
 Option value `'warning'` also skips `'info'`.
 
 ### w3cHtmlValidator.reporter(options)
-| Name (key)      | Type       | Default | Description                                                    |
-| :-------------- | :--------- | :------ | :------------------------------------------------------------- |
-| `maxMessageLen` | **number** | `null`  | Trim validation messages to not exceed a maximum length.       |
-| `title`         | **string** | `null`  | Override display title (useful for naming HTML string inputs). |
+| Name (key)      | Type        | Default | Description                                                    |
+| :-------------- | :---------- | :------ | :------------------------------------------------------------- |
+| `maxMessageLen` | **number**  | `null`  | Trim validation messages to not exceed a maximum length.       |
+| `quiet`         | **boolean** | `false` | Suppress messages for successful validations.                  |
+| `title`         | **string**  | `null`  | Override display title (useful for naming HTML string inputs). |
 
 ## 4) TypeScript Declarations
 The **TypeScript Declaration File** file is [w3c-html-validator.d.ts](dist/w3c-html-validator.d.ts)
@@ -101,27 +102,35 @@ describe('Home page', () => {
 ```
 
 ## 6) Command Line
-Example CLI usage:
+You can install **w3c-html-validator** globally and then run it anywhere directly from the terminal.
+
+Example terminal commands:
 ```shell
-$ npm install --save-dev w3c-html-validator
-$ npx w3c-html-validator docs/*.html flyer.html
-$ npx w3c-html-validator docs  #validate html files in a folder
-$ npx w3c-html-validator  #validate all html files in project
+$ npm install --global w3c-html-validator
+$ html-validator docs/*.html flyer.html
+$ html-validator docs  #validate html files in a folder
+$ html-validator       #validate all html files in project
 ```
 or as an npm script in **package.json**:
 ```json
    "scripts": {
-      "validate": "w3c-html-validator docs/*.html flyer.html",
-      "folder":   "w3c-html-validator docs",
-      "all":      "w3c-html-validator"
+      "validate":   "html-validator docs/*.html flyer.html",
+      "one-folder": "html-validator docs",
+      "all":        "html-validator"
    },
 ```
-Passing no parameters defaults to validating all HTML files in the projects (skipping the
+Passing no parameters defaults to validating all HTML files in the project (skipping the
 **node_modules** folder).
 
 <br>
 
 ---
+**Build Tools**
+   - 🎋 [add-dist-header](https://github.com/center-key/add-dist-header):&nbsp; _Prepend a one-line header comment (with license notice) to distribution files_
+   - 📄 [copy-file-util](https://github.com/center-key/copy-file-util):&nbsp; _Copy or rename a file (CLI tool designed for use in npm scripts)_
+   - 📂 [copy-folder-cli](https://github.com/center-key/copy-folder-cli):&nbsp; _Recursively copy a folder (CLI tool designed for use in npm scripts)_
+   - 🚦 [w3c-html-validator](https://github.com/center-key/w3c-html-validator):&nbsp; _Check the markup validity of HTML files using the W3C validator_
+
 Feel free to submit questions at:<br>
 [github.com/center-key/w3c-html-validator/issues](https://github.com/center-key/w3c-html-validator/issues)
 

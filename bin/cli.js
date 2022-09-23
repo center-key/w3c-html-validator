@@ -6,40 +6,53 @@
 
 // Usage in package.json:
 //    "scripts": {
-//       "validate": "w3c-html-validator docs/*.html flyer.html",
-//       "all":      "w3c-html-validator"
+//       "validate": "html-validator docs/*.html flyer.html",
+//       "all":      "html-validator"
 //    },
 //
 // Usage from command line:
-//    $ npx w3c-html-validator docs/*.html flyer.html
-//    $ npx w3c-html-validator  #validate all html files in project
+//    $ npm install --global w3c-html-validator
+//    $ html-validator docs/*.html flyer.html
+//    $ html-validator  #validate all html files in the project
 //
 // Contributors to this project:
 //    $ cd w3c-html-validator
-//    $ node bin/cli.js spec/**/*.html
+//    $ node bin/cli.js spec/**/*.html --quiet
 
 // Imports
+import { w3cHtmlValidator } from '../dist/w3c-html-validator.js';
+import { lstatSync }        from 'fs';
 import chalk                from 'chalk';
 import glob                 from 'glob';
 import log                  from 'fancy-log';
-import { lstatSync }        from 'fs';
-import { w3cHtmlValidator } from '../dist/w3c-html-validator.js';
 
 // Parameters
-const args =  process.argv.slice(2);
-const flags = args.filter(arg => /^-/.test(arg));
-const files = args.filter(arg => !/^-/.test(arg));
+const validFlags =  ['quiet'];
+const args =        process.argv.slice(2);
+const flags =       args.filter(arg => /^--/.test(arg));
+const flagMap =     Object.fromEntries(flags.map(flag => flag.replace(/^--/, '').split('=')));
+const invalidFlag = Object.keys(flagMap).find(key => !validFlags.includes(key));
+const params =      args.filter(arg => !/^--/.test(arg));
+
+// Data
+const files = params;
+const mode =  { quiet: 'quiet' in flagMap };
 
 // Validator
-const exit = (message) => (console.error('[w3c-html-validator] ' + message), process.exit(1));
-if (flags.length)
-   exit('Flags not supported: ' + flags.join(' '));
 const keep =         (filename) => !filename.includes('node_modules/');
 const readFolder =   (folder) => glob.sync(folder + '**/*.html', { ignore: '**/node_modules/**/*' });
 const expandFolder = (file) => lstatSync(file).isDirectory() ? readFolder(file + '/') : file;
 const getFilenames = () => [...new Set(files.map(expandFolder).flat().filter(keep))].sort();
 const filenames =    files.length ? getFilenames() : readFolder('');
-if (filenames.length > 1)
+const error =
+   invalidFlag ?       'Invalid flag: ' + invalidFlag :
+   !files.length ?     'Missing file parameter.' :
+   !filenames.length ? 'No files to validate.' :
+   null;
+if (error)
+   throw Error('[w3c-html-validator] ' + error);
+if (filenames.length > 1 && !mode.quiet)
    log(chalk.gray('w3c-html-validator'), chalk.magenta('files: ' + filenames.length));
-filenames.forEach(file =>
-   w3cHtmlValidator.validate({ filename: file }).then(w3cHtmlValidator.reporter));
+const reporterOptions = { quiet: mode.quiet };
+const handleReport = (report) => w3cHtmlValidator.reporter(report, reporterOptions);
+filenames.forEach(file => w3cHtmlValidator.validate({ filename: file }).then(handleReport));

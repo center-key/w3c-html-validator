@@ -50,6 +50,7 @@ export type ValidatorResults = {
 export type ValidatorResultsOutput = ValidatorResults['output'];
 export type ReporterOptions = {
    maxMessageLen?: number | null,  //trim validation messages to not exceed a maximum length
+   quiet?:         boolean,        //
    title?:         string | null,  //override display title (useful for naming HTML string inputs)
    };
 
@@ -131,6 +132,7 @@ const w3cHtmlValidator = {
    reporter(results: ValidatorResults, options?: ReporterOptions): ValidatorResults {
       const defaults = {
          maxMessageLen: null,
+         quiet:         false,
          title:         null,
          };
       const settings = { ...defaults, ...options };
@@ -140,7 +142,8 @@ const w3cHtmlValidator = {
       const title =    settings.title ?? results.title;
       const status =   results.validates ? chalk.green.bold('✔ pass') : chalk.red.bold('✘ fail');
       const count =    results.validates ? '' : '(messages: ' + messages!.length + ')';
-      log(chalk.gray('w3c-html-validator'), status, chalk.blue.bold(title), chalk.white(count));
+      if (!results.validates || !settings.quiet)
+         log(chalk.gray('w3c-html-validator'), status, chalk.blue.bold(title), chalk.white(count));
       const typeColorMap = {
          error:   chalk.red.bold,
          warning: chalk.yellow.bold,
