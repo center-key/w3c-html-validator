@@ -46,7 +46,6 @@ const getFilenames = () => [...new Set(files.map(expandFolder).flat().filter(kee
 const filenames =    files.length ? getFilenames() : readFolder('');
 const error =
    invalidFlag ?       'Invalid flag: ' + invalidFlag :
-   !files.length ?     'Missing file parameter.' :
    !filenames.length ? 'No files to validate.' :
    null;
 if (error)
