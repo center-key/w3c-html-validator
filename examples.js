@@ -16,6 +16,6 @@ w3cHtmlValidator.validate({ filename: 'spec/html/valid.html' }).then(w3cHtmlVali
 w3cHtmlValidator.validate({ filename: 'spec/html/invalid.html' }).then(customReporter);
 
 // JSON output
-const sleep = (data) => new Promise(resolve => setTimeout(() => resolve(data), 1000));
+const sleep = (data) => new Promise(resolve => setTimeout(() => resolve(data), 2000));
 const log =   (results) => console.log('\nValidatorResults:', results);
 w3cHtmlValidator.validate({ filename: 'spec/html/invalid.html' }).then(sleep).then(log);

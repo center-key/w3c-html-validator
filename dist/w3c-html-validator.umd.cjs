@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.1.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.1.2 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -20,7 +20,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     const fancy_log_1 = __importDefault(require("fancy-log"));
     const superagent_1 = __importDefault(require("superagent"));
     const w3cHtmlValidator = {
-        version: '1.1.1',
+        version: '1.1.2',
         validate(options) {
             var _a;
             const defaults = {
@@ -97,6 +97,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             var _a, _b;
             const defaults = {
                 maxMessageLen: null,
+                quiet: false,
                 title: null,
             };
             const settings = Object.assign(Object.assign({}, defaults), options);
@@ -106,7 +107,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             const title = (_b = settings.title) !== null && _b !== void 0 ? _b : results.title;
             const status = results.validates ? chalk_1.default.green.bold('✔ pass') : chalk_1.default.red.bold('✘ fail');
             const count = results.validates ? '' : '(messages: ' + messages.length + ')';
-            (0, fancy_log_1.default)(chalk_1.default.gray('w3c-html-validator'), status, chalk_1.default.blue.bold(title), chalk_1.default.white(count));
+            if (!results.validates || !settings.quiet)
+                (0, fancy_log_1.default)(chalk_1.default.gray('w3c-html-validator'), status, chalk_1.default.blue.bold(title), chalk_1.default.white(count));
             const typeColorMap = {
                 error: chalk_1.default.red.bold,
                 warning: chalk_1.default.yellow.bold,

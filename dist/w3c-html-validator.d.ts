@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.1.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.1.2 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 export declare type ValidatorOptions = {
     html?: string;
@@ -37,6 +37,7 @@ export declare type ValidatorResults = {
 export declare type ValidatorResultsOutput = ValidatorResults['output'];
 export declare type ReporterOptions = {
     maxMessageLen?: number | null;
+    quiet?: boolean;
     title?: string | null;
 };
 declare const w3cHtmlValidator: {

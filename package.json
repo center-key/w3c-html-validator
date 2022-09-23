@@ -1,7 +1,7 @@
 {
    "name": "w3c-html-validator",
-   "version": "1.1.1",
-   "description": "A package for testing HTML files or URLs against the W3C validator (written in functional TypeScript)",
+   "version": "1.1.2",
+   "description": "Check the markup validity of HTML files using the W3C validator",
    "license": "MIT",
    "type": "module",
    "module": "dist/w3c-html-validator.js",
@@ -18,6 +18,7 @@
       "./": "./dist/"
    },
    "bin": {
+      "html-validator": "bin/cli.js",
       "w3c-html-validator": "bin/cli.js"
    },
    "repository": "github:center-key/w3c-html-validator",
@@ -62,11 +63,11 @@
    },
    "scripts": {
       "step:01": "rimraf build dist **/.DS_Store",
-      "step:02": "jshint . --exclude node_modules,build,dist",
+      "step:02": "jshint . --exclude-path .gitignore",
       "step:03": "eslint --max-warnings 0 . --ext .ts",
       "step:04": "tsc",
       "step:05": "tsc --module UMD --outDir build/umd",
-      "step:06": "cpy build/umd/w3c-html-validator.js build --rename=w3c-html-validator.umd.cjs --flat=true",
+      "step:06": "copy-file build/umd/w3c-html-validator.js build/w3c-html-validator.umd.cjs",
       "step:07": "add-dist-header build dist",
       "pretest": "npm-run-all step:*",
       "test": "mocha spec/*.spec.js --timeout 5000",
@@ -83,11 +84,12 @@
       "@types/glob": "~8.0",
       "@types/node": "~18.7",
       "@types/superagent": "~4.1",
-      "@typescript-eslint/eslint-plugin": "~5.37",
-      "@typescript-eslint/parser": "~5.37",
+      "@typescript-eslint/eslint-plugin": "~5.38",
+      "@typescript-eslint/parser": "~5.38",
       "add-dist-header": "~0.2",
       "assert-deep-strict-equal": "~1.0",
-      "cpy-cli": "~4.2",
+      "copy-file-util": "~0.1",
+      "copy-folder-cli": "~0.1",
       "eslint": "~8.23",
       "jshint": "~2.13",
       "merge-stream": "~2.0",
