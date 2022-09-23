@@ -1,11 +1,11 @@
-//! w3c-html-validator v1.1.2 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.1.3 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import { readFileSync } from 'fs';
 import chalk from 'chalk';
 import log from 'fancy-log';
 import request from 'superagent';
 const w3cHtmlValidator = {
-    version: '1.1.2',
+    version: '1.1.3',
     validate(options) {
         var _a;
         const defaults = {
