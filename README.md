@@ -8,31 +8,72 @@ _Check the markup validity of HTML files using the W3C validator_
 [![Vulnerabilities](https://snyk.io/test/github/center-key/w3c-html-validator/badge.svg)](https://snyk.io/test/github/center-key/w3c-html-validator)
 [![Build](https://github.com/center-key/w3c-html-validator/workflows/build/badge.svg)](https://github.com/center-key/w3c-html-validator/actions/workflows/run-spec-on-push.yaml)
 
-## A) Setup
+**w3c-html-validator** takes HTML files and returns detailed validation results.  The reporter produces formatted output indended for use in build scripts and test suites.
 
-### Install
+## A) Setup
 Install package for node:
 ```shell
 $ npm install --save-dev w3c-html-validator
 ```
 
-### Import
-Import into your application:
-```javascript
-import { w3cHtmlValidator } from 'w3c-html-validator';
-```
-or invoke directly [from the command line or from a **package.json** script](#6-command-line).
-
 ## B) Usage
-Call the `validate()` function:
-```javascript
+### 1. npm scripts
+Run `html-validator` from the `"scripts"` section of your **package.json** file.
+
+The parameters are files to be validated.
+
+Example **package.json** scripts:
+```json
+   "scripts": {
+      "validate":   "html-validator docs/*.html flyer.html",
+      "one-folder": "html-validator docs",
+      "all":        "html-validator --quiet"
+   },
+```
+
+Try out the script with the command: `npm run validate`
+
+Passing no parameters defaults to validating all HTML files in the project (skipping the
+**node_modules** folder).
+
+### 2. Global
+You can install **w3c-html-validator** globally and then run it anywhere directly from the terminal.
+
+Example terminal commands:
+```shell
+$ npm install --global w3c-html-validator
+$ html-validator docs/*.html flyer.html
+```
+
+### 3. CLI Flags
+Command-line flags:
+| Flag      | Description                                                  | Value      |
+| --------- | ------------------------------------------------------------ | ---------- |
+| `--quiet` | Suppress messages for successful validations.                | N/A        |
+| `--trim`  | Truncate validation messages to not exceed a maximum length. | **number** |
+
+Examples:
+   - `html-validator`                &nbsp; Validate all HTML files in the project
+   - `html-validator --quiet`        &nbsp; Suppress "pass" messages
+   - `html-validator docs`           &nbsp; Validate HTML files in a folder
+   - `html-validator docs --trim=30` &nbsp; Truncate messages to 30 characters
+
+## D) Application Code and Testing Frameworks
+In addition to the CLI interface, the **w3c-html-validator** package can also be imported and called directly in ESM and TypeScript projects.
+
+### 1. Import
+Example call to the `validate()` function:
+```typescript
+import { w3cHtmlValidator } from 'w3c-html-validator';
+
 const options = { filename: 'docs/index.html' };
 w3cHtmlValidator.validate(options).then(console.log);
 ```
 To display formatted output, replace `console.log` with `w3cHtmlValidator.reporter`:
-```javascript
+```typescript
 w3cHtmlValidator.validate(options).then(w3cHtmlValidator.reporter);
 ```
+
 To see some example validation results, run the commands:
 ```shell
 $ cd w3c-html-validator
@@ -41,8 +82,8 @@ $ node examples.js
 <img src=https://raw.githubusercontent.com/center-key/w3c-html-validator/main/examples.png
 width=800 alt=screenshot>
 
-## C) Options
-### w3cHtmlValidator.validate(options)
+### 2. Options
+#### w3cHtmlValidator.validate(options)
 | Name (key)       | Type                    | Default                          | Description                                                          |
 | :--------------- | :---------------------- | :------------------------------- | :------------------------------------------------------------------- |
 | `html`           | **string**              | `null`                           | HTML string to validate.                                             |
@@ -56,14 +97,14 @@ width=800 alt=screenshot>
 *The `ignoreMessages` and `ignoreLevel` options only work for `'json'` output.&nbsp;
 Option value `'warning'` also skips `'info'`.
 
-### w3cHtmlValidator.reporter(options)
+#### w3cHtmlValidator.reporter(options)
 | Name (key)      | Type        | Default | Description                                                    |
 | :-------------- | :---------- | :------ | :------------------------------------------------------------- |
 | `maxMessageLen` | **number**  | `null`  | Trim validation messages to not exceed a maximum length.       |
 | `quiet`         | **boolean** | `false` | Suppress messages for successful validations.                  |
 | `title`         | **string**  | `null`  | Override display title (useful for naming HTML string inputs). |
 
-## D) TypeScript Declarations
+### 3. TypeScript Declarations
 The **TypeScript Declaration File** file is [w3c-html-validator.d.ts](dist/w3c-html-validator.d.ts)
 in the **dist** folder.
 
@@ -83,12 +124,13 @@ type ValidatorResults = {
    };
 ```
 
-## E) Mocha Example
+### 4. Mocha Example
 ```javascript
 import assert from 'assert';
 import { w3cHtmlValidator } from 'w3c-html-validator';
 
 describe('Home page', () => {
+
    it('validates', (done) => {
       const handleResults = (results) => {
          assert(results.status === 200, 'Request succeeded');
@@ -98,31 +140,9 @@ describe('Home page', () => {
       const options = { filename: 'docs/index.html' };
       w3cHtmlValidator.validate(options).then(handleResults);
       });
+
    });
 ```
-
-## F) Command Line
-You can install **w3c-html-validator** globally and then run it anywhere directly from the terminal.
-
-Example terminal commands:
-```shell
-$ npm install --global w3c-html-validator
-$ html-validator       #validate all html files in project
-$ html-validator docs  #validate html files in a folder
-$ html-validator docs/*.html flyer.html
-$ html-validator docs --quiet    #suppress "pass" messages
-$ html-validator docs --trim=30  #truncate messages to 30 characters
-```
-or as an npm script in **package.json**:
-```json
-   "scripts": {
-      "validate":   "html-validator docs/*.html flyer.html",
-      "one-folder": "html-validator docs",
-      "all":        "html-validator --quiet"
-   },
-```
-Passing no parameters defaults to validating all HTML files in the project (skipping the
-**node_modules** folder).
 
 <br>
 
