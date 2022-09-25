@@ -90,7 +90,7 @@
       "assert-deep-strict-equal": "~1.0",
       "copy-file-util": "~0.1",
       "copy-folder-cli": "~0.1",
-      "eslint": "~8.23",
+      "eslint": "~8.24",
       "jshint": "~2.13",
       "merge-stream": "~2.0",
       "mocha": "~10.0",

@@ -10,6 +10,9 @@ _Check the markup validity of HTML files using the W3C validator_
 
 **w3c-html-validator** takes HTML files and returns detailed validation results.  The reporter produces formatted output indended for use in build scripts and test suites.
 
+<img src=https://raw.githubusercontent.com/center-key/w3c-html-validator/main/examples.png
+width=800 alt=screenshot>
+
 ## A) Setup
 Install package for node:
 ```shell
@@ -79,8 +82,6 @@ To see some example validation results, run the commands:
 $ cd w3c-html-validator
 $ node examples.js
 ```
-<img src=https://raw.githubusercontent.com/center-key/w3c-html-validator/main/examples.png
-width=800 alt=screenshot>
 
 ### 2. Options
 #### w3cHtmlValidator.validate(options)
