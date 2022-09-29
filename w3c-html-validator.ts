@@ -7,15 +7,16 @@ import log              from 'fancy-log';
 import request          from 'superagent';
 
 // Type Declarations
-export type ValidatorOptions = {
-   html?:           string,  //example: '<!doctype html><html><head><title>Home</title></html>''
-   filename?:       string,  //example: 'docs/index.html'
-   website?:        string   //example: 'https://pretty-print-json.js.org/'
-   checkUrl?:       string,
-   ignoreLevel?:    'info' | 'warning',  //skip unwanted messages ('warning' also skips 'info')
-   ignoreMessages?: string | RegExp,  //matcher to skip unwanted messages
-   output?:         ValidatorResultsOutput,
+export type ValidatorSettings = {
+   html:           string,  //example: '<!doctype html><html><head><title>Home</title></html>''
+   filename:       string,  //example: 'docs/index.html'
+   website:        string   //example: 'https://pretty-print-json.js.org/'
+   checkUrl:       string,
+   ignoreLevel:    'info' | 'warning',  //skip unwanted messages ('warning' also skips 'info')
+   ignoreMessages: string | RegExp,  //matcher to skip unwanted messages
+   output:         ValidatorResultsOutput,
    };
+export type ValidatorOptions = Partial<ValidatorSettings>;
 export type ValidatorResultsMessage = {
    // type                  subType
    // --------------------  --------------------------------------------------
@@ -48,11 +49,12 @@ export type ValidatorResults = {
    display:   string | null,
    };
 export type ValidatorResultsOutput = ValidatorResults['output'];
-export type ReporterOptions = {
-   maxMessageLen?: number | null,  //trim validation messages to not exceed a maximum length
-   quiet?:         boolean,        //suppress messages for successful validations
-   title?:         string | null,  //override display title (useful for naming HTML string inputs)
+export type ReporterSettings = {
+   maxMessageLen: number | null,  //trim validation messages to not exceed a maximum length
+   quiet:         boolean,        //suppress messages for successful validations
+   title:         string | null,  //override display title (useful for naming HTML string inputs)
    };
+export type ReporterOptions = Partial<ReporterSettings>;
 
 // W3C HTML Validator
 const w3cHtmlValidator = {
@@ -74,7 +76,7 @@ const w3cHtmlValidator = {
       if (settings.output !== 'json' && settings.output !== 'html')
          throw Error('[w3c-html-validator] Option "output" must be "json" or "html".');
       const mode = settings.html ? 'html' : settings.filename ? 'filename' : 'website';
-      const readFile = (filename: string) => readFileSync(filename, 'utf8').replace(/\r/g, '');
+      const readFile = (filename: string) => readFileSync(filename, 'utf-8').replace(/\r/g, '');
       const inputHtml = settings.html ?? (settings.filename ? readFile(settings.filename) : null);
       const makePostRequest = () => request.post(settings.checkUrl)
          .set('Content-Type', 'text/html; encoding=utf-8')
