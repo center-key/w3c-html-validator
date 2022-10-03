@@ -21,10 +21,10 @@
 
 // Imports
 import { w3cHtmlValidator } from '../dist/w3c-html-validator.js';
-import { lstatSync }        from 'fs';
-import chalk                from 'chalk';
-import glob                 from 'glob';
-import log                  from 'fancy-log';
+import chalk from 'chalk';
+import fs    from 'fs';
+import glob  from 'glob';
+import log   from 'fancy-log';
 
 // Parameters
 const validFlags =  ['quiet', 'trim'];
@@ -42,7 +42,7 @@ const trim =  parseInt(flagMap.trim) || null;
 // Validator
 const keep =         (filename) => !filename.includes('node_modules/');
 const readFolder =   (folder) => glob.sync(folder + '**/*.html', { ignore: '**/node_modules/**/*' });
-const expandFolder = (file) => lstatSync(file).isDirectory() ? readFolder(file + '/') : file;
+const expandFolder = (file) => fs.lstatSync(file).isDirectory() ? readFolder(file + '/') : file;
 const getFilenames = () => [...new Set(files.map(expandFolder).flat().filter(keep))].sort();
 const filenames =    files.length ? getFilenames() : readFolder('');
 const error =

@@ -3,19 +3,19 @@
 
 // Imports
 import { assertDeepStrictEqual } from 'assert-deep-strict-equal';
-import { readdirSync, readFileSync } from 'fs';
 import assert from 'assert';
+import fs from 'fs';
 
 // Setup
 import { w3cHtmlValidator } from '../dist/w3c-html-validator.js';
-const validHtml =   readFileSync('spec/html/valid.html',   'utf8').replace(/\r/g, '');
-const invalidHtml = readFileSync('spec/html/invalid.html', 'utf8').replace(/\r/g, '');
+const validHtml =   fs.readFileSync('spec/html/valid.html',   'utf-8').replace(/\r/g, '');
+const invalidHtml = fs.readFileSync('spec/html/invalid.html', 'utf-8').replace(/\r/g, '');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 describe('The "dist" folder', () => {
 
    it('contains the correct files', () => {
-      const actual = readdirSync('dist').sort();
+      const actual = fs.readdirSync('dist').sort();
       const expected = [
          'w3c-html-validator.d.ts',
          'w3c-html-validator.js',
