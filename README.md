@@ -8,7 +8,8 @@ _Check the markup validity of HTML files using the W3C validator_
 [![Vulnerabilities](https://snyk.io/test/github/center-key/w3c-html-validator/badge.svg)](https://snyk.io/test/github/center-key/w3c-html-validator)
 [![Build](https://github.com/center-key/w3c-html-validator/workflows/build/badge.svg)](https://github.com/center-key/w3c-html-validator/actions/workflows/run-spec-on-push.yaml)
 
-**w3c-html-validator** takes HTML files and returns detailed validation results.  The reporter produces formatted output indended for use in build scripts and test suites.
+**w3c-html-validator** takes HTML files and returns detailed validation results.&nbsp;
+The reporter produces formatted output indended for use in build scripts and test suites.
 
 <img src=https://raw.githubusercontent.com/center-key/w3c-html-validator/main/examples.png
 width=800 alt=screenshot>
@@ -33,8 +34,6 @@ Example **package.json** scripts:
       "all":        "html-validator --quiet"
    },
 ```
-
-Try out the script with the command: `npm run validate`
 
 Passing no parameters defaults to validating all HTML files in the project (skipping the
 **node_modules** folder).
@@ -148,10 +147,11 @@ describe('Home page', () => {
 <br>
 
 ---
-**Build Tools**
-   - 🎋 [add-dist-header](https://github.com/center-key/add-dist-header):&nbsp; _Prepend a one-line header comment (with license notice) to distribution files_
-   - 📄 [copy-file-util](https://github.com/center-key/copy-file-util):&nbsp; _Copy or rename a file (CLI tool designed for use in npm scripts)_
-   - 📂 [copy-folder-cli](https://github.com/center-key/copy-folder-cli):&nbsp; _Recursively copy a folder (CLI tool designed for use in npm scripts)_
+**CLI Build Tools**
+   - 🎋 [add-dist-header](https://github.com/center-key/add-dist-header):&nbsp; _Prepend a one-line banner comment (with license notice) to distribution files_
+   - 📄 [copy-file-util](https://github.com/center-key/copy-file-util):&nbsp; _Copy or rename a file with optional package version number_
+   - 📂 [copy-folder-util](https://github.com/center-key/copy-folder-util):&nbsp; _Recursively copy files from one folder to another folder_
+   - 🔍 [replacer-util](https://github.com/center-key/replacer-util):&nbsp; _Find and replace strings or template outputs in text files_
    - 🔢 [rev-web-assets](https://github.com/center-key/rev-web-assets):&nbsp; _Revision web asset filenames with cache busting content hash fingerprints_
    - 🚦 [w3c-html-validator](https://github.com/center-key/w3c-html-validator):&nbsp; _Check the markup validity of HTML files using the W3C validator_
 
