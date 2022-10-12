@@ -31,12 +31,12 @@ const validFlags =  ['quiet', 'trim'];
 const args =        process.argv.slice(2);
 const flags =       args.filter(arg => /^--/.test(arg));
 const flagMap =     Object.fromEntries(flags.map(flag => flag.replace(/^--/, '').split('=')));
+const flagOn =      Object.fromEntries(validFlags.map(flag => [flag, flag in flagMap]));
 const invalidFlag = Object.keys(flagMap).find(key => !validFlags.includes(key));
 const params =      args.filter(arg => !/^--/.test(arg));
 
 // Data
 const files = params;
-const mode =  { quiet: 'quiet' in flagMap, trim: 'trim' in flagMap };
 const trim =  parseInt(flagMap.trim) || null;
 
 // Validator
@@ -46,16 +46,16 @@ const expandFolder = (file) => fs.lstatSync(file).isDirectory() ? readFolder(fil
 const getFilenames = () => [...new Set(files.map(expandFolder).flat().filter(keep))].sort();
 const filenames =    files.length ? getFilenames() : readFolder('');
 const error =
-   invalidFlag ?        'Invalid flag: ' + invalidFlag :
-   !filenames.length ?  'No files to validate.' :
-   mode.trim && !trim ? 'Value of "trim" must be a positive whole number.' :
+   invalidFlag ?          'Invalid flag: ' + invalidFlag :
+   !filenames.length ?    'No files to validate.' :
+   flagOn.trim && !trim ? 'Value of "trim" must be a positive whole number.' :
    null;
 if (error)
    throw Error('[w3c-html-validator] ' + error);
-if (filenames.length > 1 && !mode.quiet)
+if (filenames.length > 1 && !flagOn.quiet)
    log(chalk.gray('w3c-html-validator'), chalk.magenta('files: ' + filenames.length));
 const reporterOptions = {
-   quiet:         mode.quiet,
+   quiet:         flagOn.quiet,
    maxMessageLen: trim,
    };
 const handleReport = (report) => w3cHtmlValidator.reporter(report, reporterOptions);
