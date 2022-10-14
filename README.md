@@ -49,16 +49,24 @@ $ html-validator docs/*.html flyer.html
 
 ### 3. CLI Flags
 Command-line flags:
-| Flag      | Description                                                  | Value      |
-| --------- | ------------------------------------------------------------ | ---------- |
-| `--quiet` | Suppress messages for successful validations.                | N/A        |
-| `--trim`  | Truncate validation messages to not exceed a maximum length. | **number** |
+| Flag        | Description                                                  | Value      |
+| ----------- | ------------------------------------------------------------ | ---------- |
+| `--exclude` | Comma separated list of strings to match in paths to skip.   | **string** |
+| `--quiet`   | Suppress messages for successful validations.                | N/A        |
+| `--trim`    | Truncate validation messages to not exceed a maximum length. | **number** |
 
+### 4. Example CLI Usage
 Examples:
-   - `html-validator`                &nbsp; Validate all HTML files in the project
-   - `html-validator --quiet`        &nbsp; Suppress "pass" messages
-   - `html-validator docs`           &nbsp; Validate HTML files in a folder
-   - `html-validator docs --trim=30` &nbsp; Truncate messages to 30 characters
+   - `html-validator`<br>
+   Validate all HTML files in the project.
+   - `html-validator --exlucde=build,tmp`<br>
+   Slip all files which have "build" or "tmp" anywhere in their pathname or filename.
+   - `html-validator --quiet`<br>
+   Suppress "pass" messages.
+   - `html-validator docs`<br>
+   Validate HTML files in a folder.
+   - `html-validator docs --trim=30`<br>
+   Truncate messages to 30 characters.
 
 ## D) Application Code and Testing Frameworks
 In addition to the CLI interface, the **w3c-html-validator** package can also be imported and called directly in ESM and TypeScript projects.

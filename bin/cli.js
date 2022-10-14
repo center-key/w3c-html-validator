@@ -27,7 +27,7 @@ import glob  from 'glob';
 import log   from 'fancy-log';
 
 // Parameters
-const validFlags =  ['quiet', 'trim'];
+const validFlags =  ['exclude', 'quiet', 'trim'];
 const args =        process.argv.slice(2);
 const flags =       args.filter(arg => /^--/.test(arg));
 const flagMap =     Object.fromEntries(flags.map(flag => flag.replace(/^--/, '').split('=')));
@@ -44,7 +44,9 @@ const keep =         (filename) => !filename.includes('node_modules/');
 const readFolder =   (folder) => glob.sync(folder + '**/*.html', { ignore: '**/node_modules/**/*' });
 const expandFolder = (file) => fs.lstatSync(file).isDirectory() ? readFolder(file + '/') : file;
 const getFilenames = () => [...new Set(files.map(expandFolder).flat().filter(keep))].sort();
-const filenames =    files.length ? getFilenames() : readFolder('');
+const list =         files.length ? getFilenames() : readFolder('');
+const excludes =     flagMap.exclude?.split(',') ?? [];
+const filenames =    list.filter(name => !excludes.find(exclude => name.includes(exclude)));
 const error =
    invalidFlag ?          'Invalid flag: ' + invalidFlag :
    !filenames.length ?    'No files to validate.' :
