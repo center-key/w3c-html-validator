@@ -8,8 +8,8 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout
-      - uses: actions/create-release
+      - uses: actions/checkout@v3
+      - uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:

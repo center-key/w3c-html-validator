@@ -59,7 +59,7 @@ Command-line flags:
 Examples:
    - `html-validator`<br>
    Validate all HTML files in the project.
-   - `html-validator --exlucde=build,tmp`<br>
+   - `html-validator --exclude=build,tmp`<br>
    Slip all files which have "build" or "tmp" anywhere in their pathname or filename.
    - `html-validator --quiet`<br>
    Suppress "pass" messages.
