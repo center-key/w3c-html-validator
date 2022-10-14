@@ -33,7 +33,7 @@
       "w3c"
    ],
    "jshintConfig": {
-      "esversion": 9,
+      "esversion": 11,
       "strict": "implied",
       "eqeqeq": true,
       "undef": true,
