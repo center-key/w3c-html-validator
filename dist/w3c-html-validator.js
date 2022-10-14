@@ -1,11 +1,11 @@
-//! w3c-html-validator v1.1.3 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.2.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
-import { readFileSync } from 'fs';
 import chalk from 'chalk';
+import fs from 'fs';
 import log from 'fancy-log';
 import request from 'superagent';
 const w3cHtmlValidator = {
-    version: '1.1.3',
+    version: '1.2.0',
     validate(options) {
         var _a;
         const defaults = {
@@ -22,7 +22,7 @@ const w3cHtmlValidator = {
         if (settings.output !== 'json' && settings.output !== 'html')
             throw Error('[w3c-html-validator] Option "output" must be "json" or "html".');
         const mode = settings.html ? 'html' : settings.filename ? 'filename' : 'website';
-        const readFile = (filename) => readFileSync(filename, 'utf8').replace(/\r/g, '');
+        const readFile = (filename) => fs.readFileSync(filename, 'utf-8').replace(/\r/g, '');
         const inputHtml = (_a = settings.html) !== null && _a !== void 0 ? _a : (settings.filename ? readFile(settings.filename) : null);
         const makePostRequest = () => request.post(settings.checkUrl)
             .set('Content-Type', 'text/html; encoding=utf-8')

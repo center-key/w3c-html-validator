@@ -1,14 +1,15 @@
-//! w3c-html-validator v1.1.3 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.2.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
-export declare type ValidatorOptions = {
-    html?: string;
-    filename?: string;
-    website?: string;
-    checkUrl?: string;
-    ignoreLevel?: 'info' | 'warning';
-    ignoreMessages?: string | RegExp;
-    output?: ValidatorResultsOutput;
+export declare type ValidatorSettings = {
+    html: string;
+    filename: string;
+    website: string;
+    checkUrl: string;
+    ignoreLevel: 'info' | 'warning';
+    ignoreMessages: string | RegExp;
+    output: ValidatorResultsOutput;
 };
+export declare type ValidatorOptions = Partial<ValidatorSettings>;
 export declare type ValidatorResultsMessage = {
     type: 'info' | 'error' | 'non-document-error' | 'network-error';
     subType?: 'warning' | 'fatal' | 'io' | 'schema' | 'internal';
@@ -35,11 +36,12 @@ export declare type ValidatorResults = {
     display: string | null;
 };
 export declare type ValidatorResultsOutput = ValidatorResults['output'];
-export declare type ReporterOptions = {
-    maxMessageLen?: number | null;
-    quiet?: boolean;
-    title?: string | null;
+export declare type ReporterSettings = {
+    maxMessageLen: number | null;
+    quiet: boolean;
+    title: string | null;
 };
+export declare type ReporterOptions = Partial<ReporterSettings>;
 declare const w3cHtmlValidator: {
     version: string;
     validate(options: ValidatorOptions): Promise<ValidatorResults>;

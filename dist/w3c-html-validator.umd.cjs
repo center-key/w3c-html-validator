@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.1.3 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.2.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -9,18 +9,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "fs", "chalk", "fancy-log", "superagent"], factory);
+        define(["require", "exports", "chalk", "fs", "fancy-log", "superagent"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.w3cHtmlValidator = void 0;
-    const fs_1 = require("fs");
     const chalk_1 = __importDefault(require("chalk"));
+    const fs_1 = __importDefault(require("fs"));
     const fancy_log_1 = __importDefault(require("fancy-log"));
     const superagent_1 = __importDefault(require("superagent"));
     const w3cHtmlValidator = {
-        version: '1.1.3',
+        version: '1.2.0',
         validate(options) {
             var _a;
             const defaults = {
@@ -37,7 +37,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             if (settings.output !== 'json' && settings.output !== 'html')
                 throw Error('[w3c-html-validator] Option "output" must be "json" or "html".');
             const mode = settings.html ? 'html' : settings.filename ? 'filename' : 'website';
-            const readFile = (filename) => (0, fs_1.readFileSync)(filename, 'utf8').replace(/\r/g, '');
+            const readFile = (filename) => fs_1.default.readFileSync(filename, 'utf-8').replace(/\r/g, '');
             const inputHtml = (_a = settings.html) !== null && _a !== void 0 ? _a : (settings.filename ? readFile(settings.filename) : null);
             const makePostRequest = () => superagent_1.default.post(settings.checkUrl)
                 .set('Content-Type', 'text/html; encoding=utf-8')
