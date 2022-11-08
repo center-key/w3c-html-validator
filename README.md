@@ -52,6 +52,7 @@ Command-line flags:
 | Flag        | Description                                                  | Value      |
 | ----------- | ------------------------------------------------------------ | ---------- |
 | `--exclude` | Comma separated list of strings to match in paths to skip.   | **string** |
+| `--note`    | Place to add a comment only for humans.                      | **string** |
 | `--quiet`   | Suppress messages for successful validations.                | N/A        |
 | `--trim`    | Truncate validation messages to not exceed a maximum length. | **number** |
 

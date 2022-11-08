@@ -59,7 +59,7 @@ export type ReporterOptions = Partial<ReporterSettings>;
 // W3C HTML Validator
 const w3cHtmlValidator = {
 
-   version: '~~~version~~~',
+   version: '{{pkg.version}}',
 
    validate(options: ValidatorOptions): Promise<ValidatorResults> {
       const defaults = {
