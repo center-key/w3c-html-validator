@@ -1,6 +1,6 @@
-//! w3c-html-validator v1.2.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.2.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
-export declare type ValidatorSettings = {
+export type ValidatorSettings = {
     html: string;
     filename: string;
     website: string;
@@ -9,8 +9,8 @@ export declare type ValidatorSettings = {
     ignoreMessages: string | RegExp;
     output: ValidatorResultsOutput;
 };
-export declare type ValidatorOptions = Partial<ValidatorSettings>;
-export declare type ValidatorResultsMessage = {
+export type ValidatorOptions = Partial<ValidatorSettings>;
+export type ValidatorResultsMessage = {
     type: 'info' | 'error' | 'non-document-error' | 'network-error';
     subType?: 'warning' | 'fatal' | 'io' | 'schema' | 'internal';
     message: string;
@@ -21,9 +21,9 @@ export declare type ValidatorResultsMessage = {
     hiliteStart: number;
     hiliteLength: number;
 };
-export declare type ValidatorResultsMessageType = ValidatorResultsMessage['type'];
-export declare type ValidatorResultsMessageSubType = ValidatorResultsMessage['subType'];
-export declare type ValidatorResults = {
+export type ValidatorResultsMessageType = ValidatorResultsMessage['type'];
+export type ValidatorResultsMessageSubType = ValidatorResultsMessage['subType'];
+export type ValidatorResults = {
     validates: boolean;
     mode: 'html' | 'filename' | 'website';
     title: string;
@@ -35,13 +35,13 @@ export declare type ValidatorResults = {
     messages: ValidatorResultsMessage[] | null;
     display: string | null;
 };
-export declare type ValidatorResultsOutput = ValidatorResults['output'];
-export declare type ReporterSettings = {
+export type ValidatorResultsOutput = ValidatorResults['output'];
+export type ReporterSettings = {
     maxMessageLen: number | null;
     quiet: boolean;
     title: string | null;
 };
-export declare type ReporterOptions = Partial<ReporterSettings>;
+export type ReporterOptions = Partial<ReporterSettings>;
 declare const w3cHtmlValidator: {
     version: string;
     validate(options: ValidatorOptions): Promise<ValidatorResults>;
