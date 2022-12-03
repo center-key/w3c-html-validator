@@ -47,7 +47,7 @@ $ npm install --global w3c-html-validator
 $ html-validator docs/*.html flyer.html
 ```
 
-### 3. CLI Flags
+### 3. CLI flags
 Command-line flags:
 | Flag        | Description                                                  | Value      |
 | ----------- | ------------------------------------------------------------ | ---------- |
@@ -56,7 +56,7 @@ Command-line flags:
 | `--quiet`   | Suppress messages for successful validations.                | N/A        |
 | `--trim`    | Truncate validation messages to not exceed a maximum length. | **number** |
 
-### 4. Example CLI Usage
+### 4. Example CLI usage
 Examples:
    - `html-validator`<br>
    Validate all HTML files in the project.
@@ -113,12 +113,12 @@ Option value `'warning'` also skips `'info'`.
 | `quiet`         | **boolean** | `false` | Suppress messages for successful validations.                  |
 | `title`         | **string**  | `null`  | Override display title (useful for naming HTML string inputs). |
 
-### 3. TypeScript Declarations
-The **TypeScript Declaration File** file is [w3c-html-validator.d.ts](dist/w3c-html-validator.d.ts)
-in the **dist** folder.
+### 3. TypeScript declarations
+See the TypeScript declarations at the top of the
+[w3c-html-validator.ts](w3c-html-validator.ts) file.
 
 The output of the `w3cHtmlValidator.validate(options: ValidatorOptions)` function is a **promise**
-for `ValidatorResults` object:
+for a `ValidatorResults` object:
 ```typescript
 type ValidatorResults = {
    validates: boolean,
@@ -133,7 +133,7 @@ type ValidatorResults = {
    };
 ```
 
-### 4. Mocha Example
+### 4. Mocha example
 ```javascript
 import assert from 'assert';
 import { w3cHtmlValidator } from 'w3c-html-validator';
