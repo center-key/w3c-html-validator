@@ -49,12 +49,13 @@ $ html-validator docs/*.html flyer.html
 
 ### 3. CLI flags
 Command-line flags:
-| Flag        | Description                                                  | Value      |
-| ----------- | ------------------------------------------------------------ | ---------- |
-| `--exclude` | Comma separated list of strings to match in paths to skip.   | **string** |
-| `--note`    | Place to add a comment only for humans.                      | **string** |
-| `--quiet`   | Suppress messages for successful validations.                | N/A        |
-| `--trim`    | Truncate validation messages to not exceed a maximum length. | **number** |
+| Flag         | Description                                                     | Value      |
+| ------------ | --------------------------------------------------------------- | ---------- |
+| `--continue` | Report messages but do not throw an error if validation failed. | N/A        |
+| `--exclude`  | Comma separated list of strings to match in paths to skip.      | **string** |
+| `--note`     | Place to add a comment only for humans.                         | **string** |
+| `--quiet`    | Suppress messages for successful validations.                   | N/A        |
+| `--trim`     | Truncate validation messages to not exceed a maximum length.    | **number** |
 
 ### 4. Example CLI usage
 Examples:
@@ -66,8 +67,8 @@ Examples:
    Suppress "pass" messages.
    - `html-validator docs`<br>
    Validate HTML files in a folder.
-   - `html-validator docs --trim=30`<br>
-   Truncate messages to 30 characters.
+   - `html-validator docs --trim=30 --continue`<br>
+   Truncate messages to 30 characters and do not abort CI if validation fails.
 
 ## D) Application Code and Testing Frameworks
 In addition to the CLI interface, the **w3c-html-validator** package can also be imported and called directly in ESM and TypeScript projects.
@@ -107,11 +108,12 @@ $ node examples.js
 Option value `'warning'` also skips `'info'`.
 
 #### w3cHtmlValidator.reporter(options)
-| Name (key)      | Type        | Default | Description                                                    |
-| :-------------- | :---------- | :------ | :------------------------------------------------------------- |
-| `maxMessageLen` | **number**  | `null`  | Trim validation messages to not exceed a maximum length.       |
-| `quiet`         | **boolean** | `false` | Suppress messages for successful validations.                  |
-| `title`         | **string**  | `null`  | Override display title (useful for naming HTML string inputs). |
+| Name (key)       | Type        | Default | Description                                                     |
+| :--------------- | :---------- | :------ | :-------------------------------------------------------------- |
+| `continueOnFail` | **boolean** | `false` | Report messages but do not throw an error if validation failed. |
+| `maxMessageLen`  | **number**  | `null`  | Trim validation messages to not exceed a maximum length.        |
+| `quiet`          | **boolean** | `false` | Suppress messages for successful validations.                   |
+| `title`          | **string**  | `null`  | Override display title (useful for naming HTML string inputs).  |
 
 ### 3. TypeScript declarations
 See the TypeScript declarations at the top of the

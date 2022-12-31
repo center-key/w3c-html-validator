@@ -17,7 +17,7 @@
 //
 // Contributors to this project:
 //    $ cd w3c-html-validator
-//    $ node bin/cli.js spec/**/*.html --quiet
+//    $ node bin/cli.js spec/**/*.html --continue
 
 // Imports
 import { cliArgvUtil } from 'cli-argv-util';
@@ -28,7 +28,7 @@ import glob  from 'glob';
 import log   from 'fancy-log';
 
 // Parameters and flags
-const validFlags = ['exclude', 'note', 'quiet', 'trim'];
+const validFlags = ['continue', 'exclude', 'note', 'quiet', 'trim'];
 const cli =        cliArgvUtil.parse(validFlags);
 const files =      cli.params;
 const trim =       parseInt(cli.flagMap.trim) || null;
@@ -51,8 +51,9 @@ if (error)
 if (filenames.length > 1 && !cli.flagOn.quiet)
    log(chalk.gray('w3c-html-validator'), chalk.magenta('files: ' + filenames.length));
 const reporterOptions = {
-   quiet:         cli.flagOn.quiet,
-   maxMessageLen: trim,
+   continueOnFail: cli.flagOn.continue,
+   quiet:          cli.flagOn.quiet,
+   maxMessageLen:  trim,
    };
 const handleReport = (report) => w3cHtmlValidator.reporter(report, reporterOptions);
 filenames.forEach(file => w3cHtmlValidator.validate({ filename: file }).then(handleReport));

@@ -50,9 +50,10 @@ export type ValidatorResults = {
    };
 export type ValidatorResultsOutput = ValidatorResults['output'];
 export type ReporterSettings = {
-   maxMessageLen: number | null,  //trim validation messages to not exceed a maximum length
-   quiet:         boolean,        //suppress messages for successful validations
-   title:         string | null,  //override display title (useful for naming HTML string inputs)
+   continueOnFail: boolean,        //report messages but do not throw an error if validation failed
+   maxMessageLen:  number | null,  //trim validation messages to not exceed a maximum length
+   quiet:          boolean,        //suppress messages for successful validations
+   title:          string | null,  //override display title (useful for naming HTML string inputs)
    };
 export type ReporterOptions = Partial<ReporterSettings>;
 
@@ -133,9 +134,10 @@ const w3cHtmlValidator = {
 
    reporter(results: ValidatorResults, options?: ReporterOptions): ValidatorResults {
       const defaults = {
-         maxMessageLen: null,
-         quiet:         false,
-         title:         null,
+         continueOnFail: false,
+         maxMessageLen:  null,
+         quiet:          false,
+         title:          null,
          };
       const settings = { ...defaults, ...options };
       if (typeof results?.validates !== 'boolean')
@@ -152,8 +154,8 @@ const w3cHtmlValidator = {
          info:    chalk.white.bold,
          };
       const logMessage = (message: ValidatorResultsMessage) => {
-         const type =      message.subType || message.type;
-         const typeColor = typeColorMap[type] || chalk.redBright.bold;
+         const type =      message.subType ?? message.type;
+         const typeColor = typeColorMap[type] ?? chalk.redBright.bold;
          const location =  `line ${message.lastLine}, column ${message.firstColumn}:`;
          const lineText =  message.extract?.replace(/\n/g, '\\n');
          const maxLen =    settings.maxMessageLen ?? undefined;
@@ -162,6 +164,16 @@ const w3cHtmlValidator = {
             log(chalk.white(location), chalk.magenta(lineText));
          };
       messages.forEach(logMessage);
+      const failDetails = () => {
+         // Example: 'spec/html/invalid.html -- warning line 9 column 4, error line 12 column 10'
+         const toString = (message: ValidatorResultsMessage) =>
+            `${message.subType ?? message.type} line ${message.lastLine} column ${message.firstColumn}`;
+         const fileDetails = () =>
+            results.filename + ' -- ' + results.messages!.map(toString).join(', ');
+         return !results.filename ? results.messages![0]!.message : fileDetails();
+         };
+      if (!settings.continueOnFail && !results.validates)
+         throw Error('[w3c-html-validator] Failed: ' + failDetails());
       return results;
       },
 
