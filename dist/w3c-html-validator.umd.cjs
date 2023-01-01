@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.2.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.3.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -20,7 +20,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     const fancy_log_1 = __importDefault(require("fancy-log"));
     const superagent_1 = __importDefault(require("superagent"));
     const w3cHtmlValidator = {
-        version: '1.2.1',
+        version: '1.3.0',
         validate(options) {
             var _a;
             const defaults = {
@@ -96,6 +96,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
         reporter(results, options) {
             var _a, _b;
             const defaults = {
+                continueOnFail: false,
                 maxMessageLen: null,
                 quiet: false,
                 title: null,
@@ -115,17 +116,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
                 info: chalk_1.default.white.bold,
             };
             const logMessage = (message) => {
-                var _a, _b;
-                const type = message.subType || message.type;
-                const typeColor = typeColorMap[type] || chalk_1.default.redBright.bold;
+                var _a, _b, _c, _d;
+                const type = (_a = message.subType) !== null && _a !== void 0 ? _a : message.type;
+                const typeColor = (_b = typeColorMap[type]) !== null && _b !== void 0 ? _b : chalk_1.default.redBright.bold;
                 const location = `line ${message.lastLine}, column ${message.firstColumn}:`;
-                const lineText = (_a = message.extract) === null || _a === void 0 ? void 0 : _a.replace(/\n/g, '\\n');
-                const maxLen = (_b = settings.maxMessageLen) !== null && _b !== void 0 ? _b : undefined;
+                const lineText = (_c = message.extract) === null || _c === void 0 ? void 0 : _c.replace(/\n/g, '\\n');
+                const maxLen = (_d = settings.maxMessageLen) !== null && _d !== void 0 ? _d : undefined;
                 (0, fancy_log_1.default)(typeColor('HTML ' + type + ':'), message.message.substring(0, maxLen));
                 if (message.lastLine)
                     (0, fancy_log_1.default)(chalk_1.default.white(location), chalk_1.default.magenta(lineText));
             };
             messages.forEach(logMessage);
+            const failDetails = () => {
+                const toString = (message) => { var _a; return `${(_a = message.subType) !== null && _a !== void 0 ? _a : message.type} line ${message.lastLine} column ${message.firstColumn}`; };
+                const fileDetails = () => results.filename + ' -- ' + results.messages.map(toString).join(', ');
+                return !results.filename ? results.messages[0].message : fileDetails();
+            };
+            if (!settings.continueOnFail && !results.validates)
+                throw Error('[w3c-html-validator] Failed: ' + failDetails());
             return results;
         },
     };

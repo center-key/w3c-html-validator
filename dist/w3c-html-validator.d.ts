@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.2.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.3.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 export type ValidatorSettings = {
     html: string;
@@ -37,6 +37,7 @@ export type ValidatorResults = {
 };
 export type ValidatorResultsOutput = ValidatorResults['output'];
 export type ReporterSettings = {
+    continueOnFail: boolean;
     maxMessageLen: number | null;
     quiet: boolean;
     title: string | null;

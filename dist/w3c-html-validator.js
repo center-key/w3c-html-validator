@@ -1,11 +1,11 @@
-//! w3c-html-validator v1.2.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.3.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import chalk from 'chalk';
 import fs from 'fs';
 import log from 'fancy-log';
 import request from 'superagent';
 const w3cHtmlValidator = {
-    version: '1.2.1',
+    version: '1.3.0',
     validate(options) {
         var _a;
         const defaults = {
@@ -81,6 +81,7 @@ const w3cHtmlValidator = {
     reporter(results, options) {
         var _a, _b;
         const defaults = {
+            continueOnFail: false,
             maxMessageLen: null,
             quiet: false,
             title: null,
@@ -100,17 +101,24 @@ const w3cHtmlValidator = {
             info: chalk.white.bold,
         };
         const logMessage = (message) => {
-            var _a, _b;
-            const type = message.subType || message.type;
-            const typeColor = typeColorMap[type] || chalk.redBright.bold;
+            var _a, _b, _c, _d;
+            const type = (_a = message.subType) !== null && _a !== void 0 ? _a : message.type;
+            const typeColor = (_b = typeColorMap[type]) !== null && _b !== void 0 ? _b : chalk.redBright.bold;
             const location = `line ${message.lastLine}, column ${message.firstColumn}:`;
-            const lineText = (_a = message.extract) === null || _a === void 0 ? void 0 : _a.replace(/\n/g, '\\n');
-            const maxLen = (_b = settings.maxMessageLen) !== null && _b !== void 0 ? _b : undefined;
+            const lineText = (_c = message.extract) === null || _c === void 0 ? void 0 : _c.replace(/\n/g, '\\n');
+            const maxLen = (_d = settings.maxMessageLen) !== null && _d !== void 0 ? _d : undefined;
             log(typeColor('HTML ' + type + ':'), message.message.substring(0, maxLen));
             if (message.lastLine)
                 log(chalk.white(location), chalk.magenta(lineText));
         };
         messages.forEach(logMessage);
+        const failDetails = () => {
+            const toString = (message) => { var _a; return `${(_a = message.subType) !== null && _a !== void 0 ? _a : message.type} line ${message.lastLine} column ${message.firstColumn}`; };
+            const fileDetails = () => results.filename + ' -- ' + results.messages.map(toString).join(', ');
+            return !results.filename ? results.messages[0].message : fileDetails();
+        };
+        if (!settings.continueOnFail && !results.validates)
+            throw Error('[w3c-html-validator] Failed: ' + failDetails());
         return results;
     },
 };
