@@ -28,9 +28,10 @@ import glob  from 'glob';
 import log   from 'fancy-log';
 
 // Parameters and flags
-const validFlags = ['continue', 'exclude', 'note', 'quiet', 'trim'];
+const validFlags = ['continue', 'delay', 'exclude', 'note', 'quiet', 'trim'];
 const cli =        cliArgvUtil.parse(validFlags);
 const files =      cli.params;
+const delay =      parseInt(cli.flagMap.delay) || 500;  //default half second debounce pause
 const trim =       parseInt(cli.flagMap.trim) || null;
 
 // Validator
@@ -56,4 +57,5 @@ const reporterOptions = {
    maxMessageLen:  trim,
    };
 const handleReport = (report) => w3cHtmlValidator.reporter(report, reporterOptions);
-filenames.forEach(file => w3cHtmlValidator.validate({ filename: file }).then(handleReport));
+const getReport =    (file) => w3cHtmlValidator.validate({ filename: file }).then(handleReport);
+filenames.forEach((file, i) => globalThis.setTimeout(() => getReport(file), i * delay));

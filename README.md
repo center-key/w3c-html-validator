@@ -52,6 +52,7 @@ Command-line flags:
 | Flag         | Description                                                     | Value      |
 | ------------ | --------------------------------------------------------------- | ---------- |
 | `--continue` | Report messages but do not throw an error if validation failed. | N/A        |
+| `--delay`    | Debounce pause in milliseconds between each file validation.    | **number** |
 | `--exclude`  | Comma separated list of strings to match in paths to skip.      | **string** |
 | `--note`     | Place to add a comment only for humans.                         | **string** |
 | `--quiet`    | Suppress messages for successful validations.                   | N/A        |
