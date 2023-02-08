@@ -1,11 +1,11 @@
-//! w3c-html-validator v1.3.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.3.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import chalk from 'chalk';
 import fs from 'fs';
 import log from 'fancy-log';
 import request from 'superagent';
 const w3cHtmlValidator = {
-    version: '1.3.0',
+    version: '1.3.1',
     validate(options) {
         var _a;
         const defaults = {
