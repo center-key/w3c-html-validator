@@ -66,8 +66,8 @@ Examples:
    Slip all files which have "build" or "tmp" anywhere in their pathname or filename.
    - `html-validator --quiet`<br>
    Suppress "pass" messages.
-   - `html-validator docs`<br>
-   Validate HTML files in a folder.
+   - `html-validator docs --delay=200`<br>
+   Validate all HTML files in the "docs" folder at a rate of 1 file per 200 ms (default is 500 ms).
    - `html-validator docs --trim=30 --continue`<br>
    Truncate messages to 30 characters and do not abort CI if validation fails.
 
