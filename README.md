@@ -54,6 +54,7 @@ Command-line flags:
 | `--continue` | Report messages but do not throw an error if validation failed. | N/A        |
 | `--delay`    | Debounce pause in milliseconds between each file validation.    | **number** |
 | `--exclude`  | Comma separated list of strings to match in paths to skip.      | **string** |
+| `--ignore`   | Skip messages containing a string or matching a RegEx.          | **string** |
 | `--note`     | Place to add a comment only for humans.                         | **string** |
 | `--quiet`    | Suppress messages for successful validations.                   | N/A        |
 | `--trim`     | Truncate validation messages to not exceed a maximum length.    | **number** |
@@ -64,6 +65,10 @@ Examples:
    Validate all HTML files in the project.
    - `html-validator --exclude=build,tmp`<br>
    Slip all files which have "build" or "tmp" anywhere in their pathname or filename.
+   - `html-validator docs/*.html "--ignore=Trailing slash on void elements"`<br>
+   Allow the ugly slashes of self-closing tags despite XHTML being a hideous scourge on the web.
+   - `html-validator docs/*.html "--ignore=/^Duplicate ID/"`<br>
+   Use a RegEx (regular expression) to skip all messages that start with "Duplicate ID".
    - `html-validator --quiet`<br>
    Suppress "pass" messages.
    - `html-validator docs --delay=200`<br>
@@ -97,13 +102,13 @@ $ node examples.js
 #### w3cHtmlValidator.validate(options)
 | Name (key)       | Type                    | Default                          | Description                                                          |
 | :--------------- | :---------------------- | :------------------------------- | :------------------------------------------------------------------- |
-| `html`           | **string**              | `null`                           | HTML string to validate.                                             |
-| `filename`       | **string**              | `null`                           | HTML file to validate.                                               |
-| `website`        | **string**              | `null`                           | URL of website to validate.                                          |
 | `checkUrl`       | **string**              | `'https://validator.w3.org/nu/'` | W3C validation API endpoint.                                         |
+| `filename`       | **string**              | `null`                           | HTML file to validate.                                               |
+| `html`           | **string**              | `null`                           | HTML string to validate.                                             |
 | `ignoreLevel`    | `'info'` or `'warning'` | `null`                           | Skip unwanted messages.*                                             |
 | `ignoreMessages` | **string** or **regex** | `null`                           | Skip messages containing a string or matching a regular expression.* |
 | `output`         | `'json'` or `'html'`    | `'json'`                         | Get results as an array or as a web page.                            |
+| `website`        | **string**              | `null`                           | URL of website to validate.                                          |
 
 *The `ignoreMessages` and `ignoreLevel` options only work for `'json'` output.&nbsp;
 Option value `'warning'` also skips `'info'`.

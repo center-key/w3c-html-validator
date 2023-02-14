@@ -8,12 +8,12 @@ import request from 'superagent';
 
 // Type Declarations
 export type ValidatorSettings = {
-   html:           string,  //example: '<!doctype html><html><head><title>Home</title></html>''
-   filename:       string,  //example: 'docs/index.html'
-   website:        string   //example: 'https://pretty-print-json.js.org/'
-   checkUrl:       string,
+   html:           string,              //example: '<!doctype html><html><head><title>Home</title></html>''
+   filename:       string,              //example: 'docs/index.html'
+   website:        string,              //example: 'https://pretty-print-json.js.org/'
+   checkUrl:       string,              //default: 'https://validator.w3.org/nu/'
    ignoreLevel:    'info' | 'warning',  //skip unwanted messages ('warning' also skips 'info')
-   ignoreMessages: string | RegExp,  //matcher to skip unwanted messages
+   ignoreMessages: string | RegExp,     //matcher to skip unwanted messages
    output:         ValidatorResultsOutput,
    };
 export type ValidatorOptions = Partial<ValidatorSettings>;

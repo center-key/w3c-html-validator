@@ -28,9 +28,10 @@ import glob  from 'glob';
 import log   from 'fancy-log';
 
 // Parameters and flags
-const validFlags = ['continue', 'delay', 'exclude', 'note', 'quiet', 'trim'];
+const validFlags = ['continue', 'delay', 'exclude', 'ignore', 'note', 'quiet', 'trim'];
 const cli =        cliArgvUtil.parse(validFlags);
 const files =      cli.params;
+const ignore =     cli.flagMap.ignore ?? null;
 const delay =      parseInt(cli.flagMap.delay) || 500;  //default half second debounce pause
 const trim =       parseInt(cli.flagMap.trim) || null;
 
@@ -56,6 +57,9 @@ const reporterOptions = {
    quiet:          cli.flagOn.quiet,
    maxMessageLen:  trim,
    };
+const slashed =      /^\/.*\/$/;  //starts and ends with a slash indicating it's a regex
+const skip =         slashed.test(ignore) ? new RegExp(ignore.slice(1, -1)) : ignore;
 const handleReport = (report) => w3cHtmlValidator.reporter(report, reporterOptions);
-const getReport =    (file) => w3cHtmlValidator.validate({ filename: file }).then(handleReport);
-filenames.forEach((file, i) => globalThis.setTimeout(() => getReport(file), i * delay));
+const options =      (file) => ({ filename: file, ignoreMessages: skip });
+const getReport =    (file) => w3cHtmlValidator.validate(options(file)).then(handleReport);
+filenames.forEach((filename, i) => globalThis.setTimeout(() => getReport(filename), i * delay));
