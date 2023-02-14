@@ -63,16 +63,22 @@ Command-line flags:
 Examples:
    - `html-validator`<br>
    Validate all HTML files in the project.
+
    - `html-validator --exclude=build,tmp`<br>
    Slip all files which have "build" or "tmp" anywhere in their pathname or filename.
-   - `html-validator docs/*.html "--ignore=Trailing slash on void elements"`<br>
+
+   - `html-validator docs/*.html '--ignore=Trailing slash on void elements'`<br>
    Allow the ugly slashes of self-closing tags despite XHTML being a hideous scourge on the web.
-   - `html-validator docs/*.html "--ignore=/^Duplicate ID/"`<br>
+
+   - `html-validator docs/*.html '--ignore=/^Duplicate ID/'`<br>
    Use a RegEx (regular expression) to skip all messages that start with "Duplicate ID".
+
    - `html-validator --quiet`<br>
    Suppress "pass" messages.
+
    - `html-validator docs --delay=200`<br>
    Validate all HTML files in the "docs" folder at a rate of 1 file per 200 ms (default is 500 ms).
+
    - `html-validator docs --trim=30 --continue`<br>
    Truncate messages to 30 characters and do not abort CI if validation fails.
 
