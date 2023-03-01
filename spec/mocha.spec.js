@@ -270,7 +270,10 @@ describe('Option ignoreMessages', () => {
             };
          assertDeepStrictEqual(actual, expected, done);
          };
-      const options = { filename: 'spec/html/invalid.html', ignoreMessages: 'Section lacks heading' };
+      const options = {
+         filename:       'spec/html/invalid.html',
+         ignoreMessages: 'Section lacks heading',
+         };
       w3cHtmlValidator.validate(options).then(handleData);
       });
 
@@ -286,7 +289,10 @@ describe('Option ignoreMessages', () => {
             };
          assertDeepStrictEqual(actual, expected, done);
          };
-      const options = { filename: 'spec/html/invalid.html', ignoreMessages: /^Element .blockquote./ };
+      const options = {
+         filename:      'spec/html/invalid.html',
+         ignoreMessages: /^Element .blockquote./,
+         };
       w3cHtmlValidator.validate(options).then(handleData);
       });
 
@@ -342,7 +348,11 @@ describe('Network request failure', () => {
             };
          assertDeepStrictEqual(actual, expected, done);
          };
-      const options = { html: validHtml, checkUrl: 'https://httpbin.org/status/503', output: 'json' };
+      const options = {
+         html:     validHtml,
+         checkUrl: 'https://httpbin.org/status/503',
+         output:   'json',
+         };
       w3cHtmlValidator.validate(options).then(handleData);
       });
 

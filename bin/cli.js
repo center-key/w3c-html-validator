@@ -21,10 +21,10 @@
 
 // Imports
 import { cliArgvUtil } from 'cli-argv-util';
+import { globSync } from 'glob';
 import { w3cHtmlValidator } from '../dist/w3c-html-validator.js';
 import chalk from 'chalk';
 import fs    from 'fs';
-import glob  from 'glob';
 import log   from 'fancy-log';
 
 // Parameters and flags
@@ -37,7 +37,7 @@ const trim =       parseInt(cli.flagMap.trim) || null;
 
 // Validator
 const keep =         (filename) => !filename.includes('node_modules/');
-const readFolder =   (folder) => glob.sync(folder + '**/*.html', { ignore: '**/node_modules/**/*' });
+const readFolder =   (folder) => globSync(folder + '**/*.html', { ignore: '**/node_modules/**/*' });
 const expandFolder = (file) => fs.lstatSync(file).isDirectory() ? readFolder(file + '/') : file;
 const getFilenames = () => [...new Set(files.map(expandFolder).flat().filter(keep))].sort();
 const list =         files.length ? getFilenames() : readFolder('');

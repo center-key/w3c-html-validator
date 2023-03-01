@@ -71,16 +71,16 @@ Examples:
    Allow the ugly slashes of self-closing tags despite XHTML being a hideous scourge on the web.
 
    - `html-validator docs/*.html '--ignore=/^Duplicate ID/'`<br>
-   Use a RegEx (regular expression) to skip all messages that start with "Duplicate ID".
+   Use a RegEx (regular expression) to skip all validation messages that start with "Duplicate ID".
 
    - `html-validator --quiet`<br>
-   Suppress "pass" messages.
+   Suppress "pass" status messages.
 
    - `html-validator docs --delay=200`<br>
    Validate all HTML files in the "docs" folder at a rate of 1 file per 200 ms (default is 500 ms).
 
    - `html-validator docs --trim=30 --continue`<br>
-   Truncate messages to 30 characters and do not abort CI if validation fails.
+   Truncate validation messages to 30 characters and do not abort CI if validation fails.
 
 ## D) Application Code and Testing Frameworks
 In addition to the CLI interface, the **w3c-html-validator** package can also be imported and called directly in ESM and TypeScript projects.
@@ -124,7 +124,7 @@ Option value `'warning'` also skips `'info'`.
 | :--------------- | :---------- | :------ | :-------------------------------------------------------------- |
 | `continueOnFail` | **boolean** | `false` | Report messages but do not throw an error if validation failed. |
 | `maxMessageLen`  | **number**  | `null`  | Trim validation messages to not exceed a maximum length.        |
-| `quiet`          | **boolean** | `false` | Suppress messages for successful validations.                   |
+| `quiet`          | **boolean** | `false` | Suppress status messages for successful validations.            |
 | `title`          | **string**  | `null`  | Override display title (useful for naming HTML string inputs).  |
 
 ### 3. TypeScript declarations
