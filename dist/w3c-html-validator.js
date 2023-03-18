@@ -1,11 +1,11 @@
-//! w3c-html-validator v1.3.2 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.3.3 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import chalk from 'chalk';
 import fs from 'fs';
 import log from 'fancy-log';
 import request from 'superagent';
 const w3cHtmlValidator = {
-    version: '1.3.2',
+    version: '1.3.3',
     validate(options) {
         var _a;
         const defaults = {
@@ -102,7 +102,7 @@ const w3cHtmlValidator = {
         };
         const logMessage = (message) => {
             var _a, _b, _c, _d;
-            const type = (_a = message.subType) !== null && _a !== void 0 ? _a : message.type;
+            const type = ((_a = message.subType) !== null && _a !== void 0 ? _a : message.type);
             const typeColor = (_b = typeColorMap[type]) !== null && _b !== void 0 ? _b : chalk.redBright.bold;
             const location = `line ${message.lastLine}, column ${message.firstColumn}:`;
             const lineText = (_c = message.extract) === null || _c === void 0 ? void 0 : _c.replace(/\n/g, '\\n');
