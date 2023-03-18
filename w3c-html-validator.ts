@@ -123,9 +123,9 @@ const w3cHtmlValidator = {
          display:   json ? null : response.text,
          });
       const handleError = (reason: Error): ValidatorResults => {
-         const response =   reason['response'];
+         const response =   reason['response'];  //suppressImplicitAnyIndexErrors
          const getMsg =     () => [response.status, response.res.statusMessage, response.request.url];
-         const message =    response ? getMsg() : [reason['errno'], reason.message];
+         const message =    response ? getMsg() : [reason['errno'], reason.message];  //suppressImplicitAnyIndexErrors
          const networkErr = { type: 'network-error', message: message.join(' ') };
          return toValidatorResults({ ...response, ...{ body: { messages: [networkErr] } } });
          };
@@ -154,7 +154,7 @@ const w3cHtmlValidator = {
          info:    chalk.white.bold,
          };
       const logMessage = (message: ValidatorResultsMessage) => {
-         const type =      message.subType ?? message.type;
+         const type =      <keyof typeof typeColorMap>(message.subType ?? message.type);
          const typeColor = typeColorMap[type] ?? chalk.redBright.bold;
          const location =  `line ${message.lastLine}, column ${message.firstColumn}:`;
          const lineText =  message.extract?.replace(/\n/g, '\\n');
