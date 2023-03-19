@@ -122,10 +122,12 @@ const w3cHtmlValidator = {
          messages:  json ? response.body.messages : null,
          display:   json ? null : response.text,
          });
-      const handleError = (reason: Error): ValidatorResults => {
-         const response =   reason['response'];  //suppressImplicitAnyIndexErrors
+      type ReasonResponse = { request: { url: string }, res: { statusMessage: string }};
+      type ReasonError =    Error & { errno: number, response: request.Response & ReasonResponse };
+      const handleError = (reason: ReasonError): ValidatorResults => {
+         const response =   reason.response;
          const getMsg =     () => [response.status, response.res.statusMessage, response.request.url];
-         const message =    response ? getMsg() : [reason['errno'], reason.message];  //suppressImplicitAnyIndexErrors
+         const message =    response ? getMsg() : [reason.errno, reason.message];
          const networkErr = { type: 'network-error', message: message.join(' ') };
          return toValidatorResults({ ...response, ...{ body: { messages: [networkErr] } } });
          };
