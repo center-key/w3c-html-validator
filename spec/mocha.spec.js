@@ -3,11 +3,13 @@
 
 // Imports
 import { assertDeepStrictEqual } from 'assert-deep-strict-equal';
+import { execSync } from 'node:child_process';
 import assert from 'assert';
 import fs from 'fs';
 
 // Setup
 import { w3cHtmlValidator } from '../dist/w3c-html-validator.js';
+const pkg =         JSON.parse(fs.readFileSync('package.json', 'utf-8'));
 const validHtml =   fs.readFileSync('spec/html/valid.html',   'utf-8').replace(/\r/g, '');
 const invalidHtml = fs.readFileSync('spec/html/invalid.html', 'utf-8').replace(/\r/g, '');
 
@@ -19,7 +21,6 @@ describe('The "dist" folder', () => {
       const expected = [
          'w3c-html-validator.d.ts',
          'w3c-html-validator.js',
-         'w3c-html-validator.umd.cjs',
          ];
       assertDeepStrictEqual(actual, expected);
       });
@@ -302,7 +303,7 @@ describe('Option ignoreMessages', () => {
 describe('Correct error is thrown', () => {
 
    it('when no input is specified', () => {
-      const options =         { };
+      const options =         {};
       const makeInvalidCall = () => w3cHtmlValidator.validate(options);
       const exception =       { message: '[w3c-html-validator] Must specify the "html", "filename", or "website" option.' };
       assert.throws(makeInvalidCall, exception);
@@ -391,6 +392,22 @@ describe('The reporter() function', () => {
          message: '[w3c-html-validator] Failed: spec/html/invalid.html -- warning line 9 column 4, error line 12 column 10',
          };
       return assert.rejects(fail, expected);
+      });
+
+   });
+
+////////////////////////////////////////////////////////////////////////////////
+describe('Executing the CLI', () => {
+   const run = (posix) => {
+      const name =    Object.keys(pkg.bin).sort()[0];
+      const command = process.platform === 'win32' ? posix.replaceAll('\\ ', '" "') : posix;
+      return execSync(command.replace(name, 'node bin/cli.js'), { stdio: 'inherit' });
+      };
+
+   it('to check a valid HTML file correctly outputs a "pass" message', () => {
+      const actual =   run('html-validator spec/html/valid.html --note=cli');
+      const expected = null;
+      assertDeepStrictEqual(actual, expected);
       });
 
    });

@@ -5,15 +5,14 @@
    "license": "MIT",
    "type": "module",
    "module": "dist/w3c-html-validator.js",
-   "main": "dist/w3c-html-validator.umd.cjs",
+   "main": "dist/w3c-html-validator.js",
    "types": "dist/w3c-html-validator.d.ts",
    "files": [
       "dist"
    ],
    "exports": {
       ".": {
-         "import": "./dist/w3c-html-validator.js",
-         "require": "./dist/w3c-html-validator.umd.cjs"
+         "import": "./dist/w3c-html-validator.js"
       },
       "./": "./dist/"
    },
@@ -69,8 +68,6 @@
          "jshint . --exclude-path .gitignore",
          "eslint --max-warnings 0 . --ext .ts",
          "tsc",
-         "tsc --module UMD --outDir build/umd",
-         "copy-file build/umd/w3c-html-validator.js build/w3c-html-validator.umd.cjs",
          "add-dist-header build dist"
       ]
    },
@@ -83,26 +80,26 @@
       "chalk": "~5.2",
       "cli-argv-util": "~1.0",
       "fancy-log": "~2.0",
-      "glob": "~10.0",
+      "glob": "~10.2",
       "superagent": "~8.0"
    },
    "devDependencies": {
       "@types/fancy-log": "~2.0",
       "@types/glob": "~8.1",
-      "@types/node": "~18.15",
+      "@types/node": "~20.3",
       "@types/superagent": "~4.1",
-      "@typescript-eslint/eslint-plugin": "~5.58",
-      "@typescript-eslint/parser": "~5.58",
+      "@typescript-eslint/eslint-plugin": "~5.60",
+      "@typescript-eslint/parser": "~5.60",
       "add-dist-header": "~1.0",
       "assert-deep-strict-equal": "~1.0",
       "copy-file-util": "~1.0",
       "copy-folder-util": "~1.0",
-      "eslint": "~8.38",
+      "eslint": "~8.43",
       "jshint": "~2.13",
       "merge-stream": "~2.0",
       "mocha": "~10.2",
       "rimraf": "~5.0",
       "run-scripts-util": "~1.1",
-      "typescript": "~5.0"
+      "typescript": "~5.1"
    }
 }

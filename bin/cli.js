@@ -32,8 +32,8 @@ const validFlags = ['continue', 'delay', 'exclude', 'ignore', 'note', 'quiet', '
 const cli =        cliArgvUtil.parse(validFlags);
 const files =      cli.params;
 const ignore =     cli.flagMap.ignore ?? null;
-const delay =      parseInt(cli.flagMap.delay) || 500;  //default half second debounce pause
-const trim =       parseInt(cli.flagMap.trim) || null;
+const delay =      Number(cli.flagMap.delay) || 500;  //default half second debounce pause
+const trim =       Number(cli.flagMap.trim) || null;
 
 // Validator
 const keep =         (filename) => !filename.includes('node_modules/');
