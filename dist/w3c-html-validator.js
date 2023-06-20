@@ -1,11 +1,11 @@
-//! w3c-html-validator v1.3.3 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.4.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import chalk from 'chalk';
 import fs from 'fs';
 import log from 'fancy-log';
 import request from 'superagent';
 const w3cHtmlValidator = {
-    version: '1.3.3',
+    version: '1.4.0',
     validate(options) {
         var _a;
         const defaults = {
@@ -70,9 +70,9 @@ const w3cHtmlValidator = {
             });
         };
         const handleError = (reason) => {
-            const response = reason['response'];
+            const response = reason.response;
             const getMsg = () => [response.status, response.res.statusMessage, response.request.url];
-            const message = response ? getMsg() : [reason['errno'], reason.message];
+            const message = response ? getMsg() : [reason.errno, reason.message];
             const networkErr = { type: 'network-error', message: message.join(' ') };
             return toValidatorResults(Object.assign(Object.assign({}, response), { body: { messages: [networkErr] } }));
         };
