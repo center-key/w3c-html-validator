@@ -77,29 +77,29 @@
       "examples": "node examples.js"
    },
    "dependencies": {
-      "chalk": "~5.2",
-      "cli-argv-util": "~1.0",
+      "chalk": "~5.3",
+      "cli-argv-util": "~1.2",
       "fancy-log": "~2.0",
-      "glob": "~10.2",
+      "glob": "~10.3",
       "superagent": "~8.0"
    },
    "devDependencies": {
       "@types/fancy-log": "~2.0",
       "@types/glob": "~8.1",
-      "@types/node": "~20.3",
+      "@types/node": "~20.4",
       "@types/superagent": "~4.1",
-      "@typescript-eslint/eslint-plugin": "~5.60",
-      "@typescript-eslint/parser": "~5.60",
-      "add-dist-header": "~1.0",
-      "assert-deep-strict-equal": "~1.0",
-      "copy-file-util": "~1.0",
-      "copy-folder-util": "~1.0",
-      "eslint": "~8.43",
+      "@typescript-eslint/eslint-plugin": "~6.0",
+      "@typescript-eslint/parser": "~6.0",
+      "add-dist-header": "~1.1",
+      "assert-deep-strict-equal": "~1.1",
+      "copy-file-util": "~1.1",
+      "copy-folder-util": "~1.1",
+      "eslint": "~8.44",
       "jshint": "~2.13",
       "merge-stream": "~2.0",
       "mocha": "~10.2",
       "rimraf": "~5.0",
-      "run-scripts-util": "~1.1",
+      "run-scripts-util": "~1.2",
       "typescript": "~5.1"
    }
 }

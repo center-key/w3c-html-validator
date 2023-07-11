@@ -3,7 +3,7 @@
 
 // Imports
 import { assertDeepStrictEqual } from 'assert-deep-strict-equal';
-import { execSync } from 'node:child_process';
+import { cliArgvUtil } from 'cli-argv-util';
 import assert from 'assert';
 import fs from 'fs';
 
@@ -398,11 +398,7 @@ describe('The reporter() function', () => {
 
 ////////////////////////////////////////////////////////////////////////////////
 describe('Executing the CLI', () => {
-   const run = (posix) => {
-      const name =    Object.keys(pkg.bin).sort()[0];
-      const command = process.platform === 'win32' ? posix.replaceAll('\\ ', '" "') : posix;
-      return execSync(command.replace(name, 'node bin/cli.js'), { stdio: 'inherit' });
-      };
+   const run = (posix) => cliArgvUtil.run(pkg, posix);
 
    it('to check a valid HTML file correctly outputs a "pass" message', () => {
       const actual =   run('html-validator spec/html/valid.html --note=cli');
