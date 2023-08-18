@@ -64,15 +64,17 @@
       "clean": [
          "rimraf build dist"
       ],
-      "build": [
+      "lint": [
          "jshint . --exclude-path .gitignore",
-         "eslint --max-warnings 0 . --ext .ts",
+         "eslint --max-warnings 0 . --ext .ts"
+      ],
+      "build": [
          "tsc",
          "add-dist-header build dist"
       ]
    },
    "scripts": {
-      "pretest": "run-scripts clean build",
+      "pretest": "run-scripts clean lint build",
       "test": "mocha spec/*.spec.js --timeout 5000",
       "examples": "node examples.js"
    },
@@ -81,20 +83,20 @@
       "cli-argv-util": "~1.2",
       "fancy-log": "~2.0",
       "glob": "~10.3",
-      "superagent": "~8.0"
+      "superagent": "~8.1"
    },
    "devDependencies": {
       "@types/fancy-log": "~2.0",
       "@types/glob": "~8.1",
-      "@types/node": "~20.4",
+      "@types/node": "~20.5",
       "@types/superagent": "~4.1",
-      "@typescript-eslint/eslint-plugin": "~6.0",
-      "@typescript-eslint/parser": "~6.0",
-      "add-dist-header": "~1.1",
+      "@typescript-eslint/eslint-plugin": "~6.4",
+      "@typescript-eslint/parser": "~6.4",
+      "add-dist-header": "~1.2",
       "assert-deep-strict-equal": "~1.1",
       "copy-file-util": "~1.1",
       "copy-folder-util": "~1.1",
-      "eslint": "~8.44",
+      "eslint": "~8.47",
       "jshint": "~2.13",
       "merge-stream": "~2.0",
       "mocha": "~10.2",

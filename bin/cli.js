@@ -6,18 +6,18 @@
 
 // Usage in package.json:
 //    "scripts": {
-//       "validate": "html-validator docs/*.html flyer.html",
+//       "validate": "html-validator docs flyer.html",
 //       "all":      "html-validator"
 //    },
 //
 // Usage from command line:
-//    $ npm install --global w3c-html-validator
-//    $ html-validator docs/*.html flyer.html
-//    $ html-validator  #validate all html files in the project
+//    $ npm install --save-dev w3c-html-validator
+//    $ npx html-validator dist  #validate all html files in the dist folder
+//    $ npx html-validator docs flyer.html
 //
 // Contributors to this project:
 //    $ cd w3c-html-validator
-//    $ node bin/cli.js spec/**/*.html --continue
+//    $ node bin/cli.js spec --continue
 
 // Imports
 import { cliArgvUtil } from 'cli-argv-util';
