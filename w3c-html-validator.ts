@@ -16,7 +16,6 @@ export type ValidatorSettings = {
    ignoreMessages: string | RegExp,     //matcher to skip unwanted messages
    output:         ValidatorResultsOutput,
    };
-export type ValidatorOptions = Partial<ValidatorSettings>;
 export type ValidatorResultsMessage = {
    // type                  subType
    // --------------------  --------------------------------------------------
@@ -55,14 +54,13 @@ export type ReporterSettings = {
    quiet:          boolean,        //suppress messages for successful validations
    title:          string | null,  //override display title (useful for naming HTML string inputs)
    };
-export type ReporterOptions = Partial<ReporterSettings>;
 
 // W3C HTML Validator
 const w3cHtmlValidator = {
 
    version: '{{pkg.version}}',
 
-   validate(options: ValidatorOptions): Promise<ValidatorResults> {
+   validate(options: Partial<ValidatorSettings>): Promise<ValidatorResults> {
       const defaults = {
          checkUrl:       'https://validator.w3.org/nu/',
          ignoreLevel:    null,
@@ -134,7 +132,7 @@ const w3cHtmlValidator = {
       return w3cRequest.then(filterMessages).then(toValidatorResults).catch(handleError);
       },
 
-   reporter(results: ValidatorResults, options?: ReporterOptions): ValidatorResults {
+   reporter(results: ValidatorResults, options?: Partial<ReporterSettings>): ValidatorResults {
       const defaults = {
          continueOnFail: false,
          maxMessageLen:  null,

@@ -333,7 +333,7 @@ describe('Network request failure', () => {
          const actual = data;
          const networkError = {
             type:    'network-error',
-            message: '503 SERVICE UNAVAILABLE https://httpbin.org/status/503?out=json',
+            message: '503 Service Unavailable https://mockbin.org/status/503/Service Unavailable?out=json',
             };
          const expected = {
             validates: false,
@@ -351,7 +351,7 @@ describe('Network request failure', () => {
          };
       const options = {
          html:     validHtml,
-         checkUrl: 'https://httpbin.org/status/503',
+         checkUrl: 'https://mockbin.org/status/503/Service Unavailable',
          output:   'json',
          };
       w3cHtmlValidator.validate(options).then(handleData);

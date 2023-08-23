@@ -23,12 +23,12 @@ $ npm install --save-dev w3c-html-validator
 ### 1. npm scripts
 Run `html-validator` from the `"scripts"` section of your **package.json** file.
 
-The parameters are files to be validated.
+The parameters are folders and files to be validated.
 
 Example **package.json** scripts:
 ```json
    "scripts": {
-      "validate":   "html-validator docs/*.html flyer.html",
+      "validate":   "html-validator docs flyer.html",
       "one-folder": "html-validator docs",
       "all":        "html-validator --quiet"
    },
@@ -41,7 +41,7 @@ Passing no parameters defaults to validating all HTML files in the project (skip
 Example terminal commands:
 ```shell
 $ npm install --save-dev w3c-html-validator
-$ npx html-validator docs/*.html flyer.html
+$ npx html-validator docs
 ```
 You can also install **w3c-html-validator** globally (`--global`) and then run it anywhere directly from the terminal.
 
