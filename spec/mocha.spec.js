@@ -49,9 +49,15 @@ describe('Library module', () => {
       assertDeepStrictEqual(actual, expected);
       });
 
-   it('has a validate() function', () => {
-      const actual =   { validate: typeof w3cHtmlValidator.validate };
-      const expected = { validate: 'function' };
+   it('has functions named validate(), summary(), and reporter()', () => {
+      const module = w3cHtmlValidator;
+      const actual = Object.keys(module).sort().map(key => [key, typeof module[key]]);
+      const expected = [
+         ['reporter', 'function'],
+         ['summary', 'function'],
+         ['validate', 'function'],
+         ['version',  'string'],
+         ];
       assertDeepStrictEqual(actual, expected);
       });
 

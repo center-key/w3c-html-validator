@@ -23,9 +23,7 @@
 import { cliArgvUtil } from 'cli-argv-util';
 import { globSync } from 'glob';
 import { w3cHtmlValidator } from '../dist/w3c-html-validator.js';
-import chalk from 'chalk';
-import fs    from 'fs';
-import log   from 'fancy-log';
+import fs from 'fs';
 
 // Parameters and flags
 const validFlags = ['continue', 'delay', 'exclude', 'ignore', 'note', 'quiet', 'trim'];
@@ -51,7 +49,7 @@ const error =
 if (error)
    throw Error('[w3c-html-validator] ' + error);
 if (filenames.length > 1 && !cli.flagOn.quiet)
-   log(chalk.gray('w3c-html-validator'), chalk.magenta('files: ' + filenames.length));
+   w3cHtmlValidator.summary(filenames.length);
 const reporterOptions = {
    continueOnFail: cli.flagOn.continue,
    quiet:          cli.flagOn.quiet,

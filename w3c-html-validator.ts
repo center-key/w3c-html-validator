@@ -132,6 +132,10 @@ const w3cHtmlValidator = {
       return w3cRequest.then(filterMessages).then(toValidatorResults).catch(handleError);
       },
 
+   summary(numFiles: number) {
+      log(chalk.gray('w3c-html-validator'), chalk.magenta('files: ' + numFiles));
+      },
+
    reporter(results: ValidatorResults, options?: Partial<ReporterSettings>): ValidatorResults {
       const defaults = {
          continueOnFail: false,
