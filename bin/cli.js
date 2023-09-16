@@ -55,9 +55,9 @@ const reporterOptions = {
    quiet:          cli.flagOn.quiet,
    maxMessageLen:  trim,
    };
-const slashed =      /^\/.*\/$/;  //starts and ends with a slash indicating it's a regex
-const skip =         slashed.test(ignore) ? new RegExp(ignore.slice(1, -1)) : ignore;
+const isRegex =      /^\/.*\/$/;  //starts and ends with a slash indicating it's a regex
+const skip =         isRegex.test(ignore) ? new RegExp(ignore.slice(1, -1)) : ignore;
 const handleReport = (report) => w3cHtmlValidator.reporter(report, reporterOptions);
-const options =      (file) => ({ filename: file, ignoreMessages: skip });
-const getReport =    (file) => w3cHtmlValidator.validate(options(file)).then(handleReport);
+const options =      (filename) => ({ filename: filename, ignoreMessages: skip });
+const getReport =    (filename) => w3cHtmlValidator.validate(options(filename)).then(handleReport);
 filenames.forEach((filename, i) => globalThis.setTimeout(() => getReport(filename), i * delay));

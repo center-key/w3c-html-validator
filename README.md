@@ -43,6 +43,8 @@ Example terminal commands:
 $ npm install --save-dev w3c-html-validator
 $ npx html-validator docs
 ```
+The above `npx` line validates all the HTML files in the **docs** folder.
+
 You can also install **w3c-html-validator** globally (`--global`) and then run it anywhere directly from the terminal.
 
 ### 3. CLI flags
@@ -62,17 +64,17 @@ Examples:
    - `html-validator`<br>
    Validate all HTML files in the project.
 
-   - `html-validator --exclude=build,tmp`<br>
-   Slip all files which have "build" or "tmp" anywhere in their pathname or filename.
+   - `html-validator docs --exclude=build,tmp`<br>
+   Validate all HTML files in the **docs** folder except files which have "build" or "tmp" anywhere in their pathname or filename.
 
-   - `html-validator docs/*.html '--ignore=Trailing slash on void elements'`<br>
+   - `html-validator docs '--ignore=Trailing slash on void elements'`<br>
    Allow the ugly slashes of self-closing tags despite XHTML being a hideous scourge on the web.
 
-   - `html-validator docs/*.html '--ignore=/^Duplicate ID/'`<br>
+   - `html-validator docs '--ignore=/^Duplicate ID/'`<br>
    Use a RegEx (regular expression) to skip all validation messages that start with "Duplicate ID".
 
-  - `html-validator docs '--ignore=/^Duplicate ID|^Section lacks|^Element .blockquote. not allowed/'`<br>
-   Use a RegEx with "or" operations to skip multiple validation messages.
+   - `html-validator docs '--ignore=/^Duplicate ID|^Section lacks|^Element .blockquote. not allowed/'`<br>
+   Use a RegEx with "or" operators (`|`) to skip multiple validation messages.
 
    - `html-validator --quiet`<br>
    Suppress "pass" status messages.
@@ -158,7 +160,7 @@ describe('Home page', () => {
    it('validates', (done) => {
       const handleResults = (results) => {
          assert(results.status === 200, 'Request succeeded');
-         assert(results.validates, 'Home page validates');
+         assert(results.validates,      'Home page validates');
          done();
          };
       const options = { filename: 'docs/index.html' };
@@ -171,7 +173,7 @@ describe('Home page', () => {
 <br>
 
 ---
-**CLI Build Tools**
+**CLI Build Tools for package.json**
    - 🎋 [add-dist-header](https://github.com/center-key/add-dist-header):&nbsp; _Prepend a one-line banner comment (with license notice) to distribution files_
    - 📄 [copy-file-util](https://github.com/center-key/copy-file-util):&nbsp; _Copy or rename a file with optional package version number_
    - 📂 [copy-folder-util](https://github.com/center-key/copy-folder-util):&nbsp; _Recursively copy files from one folder to another folder_
