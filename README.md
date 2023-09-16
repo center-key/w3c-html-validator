@@ -71,6 +71,9 @@ Examples:
    - `html-validator docs/*.html '--ignore=/^Duplicate ID/'`<br>
    Use a RegEx (regular expression) to skip all validation messages that start with "Duplicate ID".
 
+  - `html-validator docs '--ignore=/^Duplicate ID|^Section lacks|^Element .blockquote. not allowed/'`<br>
+   Use a RegEx with "or" operations to skip multiple validation messages.
+
    - `html-validator --quiet`<br>
    Suppress "pass" status messages.
 
