@@ -1,4 +1,4 @@
-// Ignore Config for w3c-html-validator
+# Ignore Config for w3c-html-validator
 
 ^Duplicate ID
 ^Element .blockquote. not allowed

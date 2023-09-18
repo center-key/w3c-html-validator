@@ -49,16 +49,16 @@ You can also install **w3c-html-validator** globally (`--global`) and then run i
 
 ### 3. CLI flags
 Command-line flags:
-| Flag              | Description                                                     | Value      |
-| ----------------- | --------------------------------------------------------------- | ---------- |
-| `--continue`      | Report messages but do not throw an error if validation failed. | N/A        |
-| `--delay`         | Debounce pause in milliseconds between each file validation.    | **number** |
-| `--exclude`       | Comma separated list of strings to match in paths to skip.      | **string** |
-| `--ignore`        | Skip messages containing a string or matching a regex.          | **string** |
-| `--ignore-config` | File listing regex patterns of messages to skip.                | **string** |
-| `--note`          | Place to add a comment only for humans.                         | **string** |
-| `--quiet`         | Suppress messages for successful validations.                   | N/A        |
-| `--trim`          | Truncate validation messages to not exceed a maximum length.    | **number** |
+| Flag              | Description                                                       | Value      |
+| ----------------- | ----------------------------------------------------------------- | ---------- |
+| `--continue`      | Report messages but do not throw an error if validation failed.   | N/A        |
+| `--delay`         | Debounce pause in milliseconds between each file validation.      | **number** |
+| `--exclude`       | Comma separated list of strings to match in paths to skip.        | **string** |
+| `--ignore`        | Skip validation messages containing a string or matching a regex. | **string** |
+| `--ignore-config` | File containing regex patterns of messages to skip.               | **string** |
+| `--note`          | Place to add a comment only for humans.                           | **string** |
+| `--quiet`         | Suppress messages for successful validations.                     | N/A        |
+| `--trim`          | Truncate validation messages to not exceed a maximum length.      | **number** |
 
 ### 4. Example CLI usage
 Examples:
@@ -72,10 +72,10 @@ Examples:
    Allow the ugly slashes of self-closing tags despite XHTML being a hideous scourge on the web.
 
    - `html-validator docs '--ignore=/^Duplicate ID/'`<br>
-   Use a regex (regular expression) to skip all validation messages that start with "Duplicate ID".
+   Use a regex (regular expression) to skip all HTML validation messages that start with "Duplicate ID".
 
    - `html-validator docs '--ignore=/^Duplicate ID|^Section lacks|^Element .blockquote. not allowed/'`<br>
-   Use a regex with "or" operators (`|`) to skip multiple validation messages.
+   Use a regex with "or" operators (`|`) to skip multiple HTML validation messages.
 
    - `html-validator docs --ignore-config=config/regex-patterns.txt`<br>
    Similar to the pervious command but regex patterns are stored in a configuration file (see the _Ignore Configuration File_ section below).
@@ -91,17 +91,19 @@ Examples:
 
 ### 5. Ignore Configuration File
 The optional `--ignore-config=FILENAME` flag specifies a configuration file with one regex pattern per line.&nbsp;
-Empty lines and lines starting with a double slash (`//`) are considered comments.
-Validation messages matching any of the regex patterns will be skipped.
+Empty lines and lines starting with a hash sign (`#`) are considered comments and do nothing.
+HTML validation messages matching any of the regex patterns will be skipped.
 
 Example configuration file with 3 regex patterns:
 ```config
-// Ignore Config for w3c-html-validator
+# Ignore Config for w3c-html-validator
 
 ^Duplicate ID
 ^Element .blockquote. not allowed
 ^Element .style. not allowed
 ```
+The caret (`^`) regex operator says to match from the beginning of the validation message.&nbsp;
+The dot (`.`) regex operator says to match any one character which is a handy way to avoid typing the special quote characters in some of the validation messages.
 
 ## D) Application Code and Testing Frameworks
 In addition to the CLI interface, the **w3c-html-validator** package can also be imported and called directly in ESM and TypeScript projects.
