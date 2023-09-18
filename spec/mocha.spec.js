@@ -412,4 +412,10 @@ describe('Executing the CLI', () => {
       assertDeepStrictEqual(actual, expected);
       });
 
+   it('skips validation message matching --ignore and --ignore-config regex patterns', () => {
+      const actual =   run('html-validator spec/html "--ignore=/^Section lacks heading/" --ignore-config=spec/ignore-config.txt');
+      const expected = null;
+      assertDeepStrictEqual(actual, expected);
+      });
+
    });

@@ -26,12 +26,13 @@ import { w3cHtmlValidator } from '../dist/w3c-html-validator.js';
 import fs from 'fs';
 
 // Parameters and flags
-const validFlags = ['continue', 'delay', 'exclude', 'ignore', 'note', 'quiet', 'trim'];
-const cli =        cliArgvUtil.parse(validFlags);
-const files =      cli.params;
-const ignore =     cli.flagMap.ignore ?? null;
-const delay =      Number(cli.flagMap.delay) || 500;  //default half second debounce pause
-const trim =       Number(cli.flagMap.trim) || null;
+const validFlags = ['continue', 'delay', 'exclude', 'ignore', 'ignore-config', 'note', 'quiet', 'trim'];
+const cli =          cliArgvUtil.parse(validFlags);
+const files =        cli.params;
+const ignore =       cli.flagMap.ignore ?? null;
+const ignoreConfig = cli.flagMap.ignoreConfig ?? null;
+const delay =        Number(cli.flagMap.delay) || 500;  //default half second debounce pause
+const trim =         Number(cli.flagMap.trim) || null;
 
 // Validator
 const keep =         (filename) => !filename.includes('node_modules/');
@@ -55,9 +56,19 @@ const reporterOptions = {
    quiet:          cli.flagOn.quiet,
    maxMessageLen:  trim,
    };
-const isRegex =      /^\/.*\/$/;  //starts and ends with a slash indicating it's a regex
-const skip =         isRegex.test(ignore) ? new RegExp(ignore.slice(1, -1)) : ignore;
+const getIgnoreMessages = () => {
+   const toLines =    (text) => text.replace(/\r/g, '').split('\n').map(line => line.trim());
+   const readLines =  (file) => toLines(fs.readFileSync(file).toString());
+   const notComment = (line) => line.length > 1 && !line.startsWith('//');
+   const lines =      ignoreConfig ? readLines(ignoreConfig).filter(notComment) : [];
+   const regexes =    lines.map(line => new RegExp(line));
+   const isRegex =    /^\/.*\/$/;  //starts and ends with a slash indicating it's a regex
+   if (isRegex.test(ignore))
+      regexes.push(new RegExp(ignore.slice(1, -1)));
+   return regexes.length ? regexes : ignore;
+   };
 const handleReport = (report) => w3cHtmlValidator.reporter(report, reporterOptions);
-const options =      (filename) => ({ filename: filename, ignoreMessages: skip });
+const options =      (filename) => ({ filename: filename, ignoreMessages: getIgnoreMessages() });
 const getReport =    (filename) => w3cHtmlValidator.validate(options(filename)).then(handleReport);
-filenames.forEach((filename, i) => globalThis.setTimeout(() => getReport(filename), i * delay));
+const processFile =  (filename, i) => globalThis.setTimeout(() => getReport(filename), i * delay);
+filenames.forEach(processFile);

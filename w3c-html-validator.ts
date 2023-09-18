@@ -8,12 +8,12 @@ import request from 'superagent';
 
 // Type Declarations
 export type ValidatorSettings = {
-   html:           string,              //example: '<!doctype html><html><head><title>Home</title></html>''
-   filename:       string,              //example: 'docs/index.html'
-   website:        string,              //example: 'https://pretty-print-json.js.org/'
-   checkUrl:       string,              //default: 'https://validator.w3.org/nu/'
-   ignoreLevel:    'info' | 'warning',  //skip unwanted messages ('warning' also skips 'info')
-   ignoreMessages: string | RegExp,     //matcher to skip unwanted messages
+   html:           string,                      //example: '<!doctype html><html><head><title>Home</title></html>''
+   filename:       string,                      //example: 'docs/index.html'
+   website:        string,                      //example: 'https://pretty-print-json.js.org/'
+   checkUrl:       string,                      //default: 'https://validator.w3.org/nu/'
+   ignoreLevel:    'info' | 'warning',          //skip unwanted messages ('warning' also skips 'info')
+   ignoreMessages: string | RegExp | RegExp[],  //matcher to skip unwanted messages
    output:         ValidatorResultsOutput,
    };
 export type ValidatorResultsMessage = {
@@ -74,8 +74,8 @@ const w3cHtmlValidator = {
          throw Error('[w3c-html-validator] Invalid ignoreLevel option: ' + settings.ignoreLevel);
       if (settings.output !== 'json' && settings.output !== 'html')
          throw Error('[w3c-html-validator] Option "output" must be "json" or "html".');
-      const mode = settings.html ? 'html' : settings.filename ? 'filename' : 'website';
-      const readFile = (filename: string) => fs.readFileSync(filename, 'utf-8').replace(/\r/g, '');
+      const mode =      settings.html ? 'html' : settings.filename ? 'filename' : 'website';
+      const readFile =  (filename: string) => fs.readFileSync(filename, 'utf-8').replace(/\r/g, '');
       const inputHtml = settings.html ?? (settings.filename ? readFile(settings.filename) : null);
       const makePostRequest = () => request.post(settings.checkUrl)
          .set('Content-Type', 'text/html; encoding=utf-8')
@@ -85,13 +85,15 @@ const w3cHtmlValidator = {
       const w3cRequest = inputHtml ? makePostRequest() : makeGetRequest();
       w3cRequest.set('User-Agent', 'W3C HTML Validator ~ github.com/center-key/w3c-html-validator');
       w3cRequest.query({ out: settings.output });
-      const json = settings.output === 'json';
+      const json =    settings.output === 'json';
       const success = '<p class="success">';
       const titleLookup = {
          html:     'HTML String (characters: ' + inputHtml?.length + ')',
          filename: settings.filename,
          website:  settings.website,
          };
+      const noRegex = !settings.ignoreMessages || typeof settings.ignoreMessages === 'string';
+      const regexes = noRegex ? [] : <RegExp[]>[settings.ignoreMessages].flat();
       const filterMessages = (response: request.Response): request.Response => {
          const aboveInfo = (subType: ValidatorResultsMessageSubType): boolean =>
             settings.ignoreLevel === 'info' && !!subType;
@@ -99,11 +101,10 @@ const w3cHtmlValidator = {
             !settings.ignoreLevel || message.type !== 'info' || aboveInfo(message.subType);
          const skipSubstr = (title: string) =>
             typeof settings.ignoreMessages === 'string' && title.includes(settings.ignoreMessages);
-         const skipRegEx = (title: string) =>
-            settings.ignoreMessages?.constructor.name === 'RegExp' &&
-            (<RegExp>settings.ignoreMessages).test(title);
+         const skipRegex = (title: string) =>
+            regexes.some(regex => regex.test(title));
          const isImportant = (message: ValidatorResultsMessage): boolean =>
-            aboveIgnoreLevel(message) && !skipSubstr(message.message) && !skipRegEx(message.message);
+            aboveIgnoreLevel(message) && !skipSubstr(message.message) && !skipRegex(message.message);
          if (json)
             response.body.messages = response.body.messages?.filter(isImportant) ?? [];
          return response;
