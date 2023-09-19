@@ -103,7 +103,7 @@ Example configuration file with 3 regexes:
 /^Element .style. not allowed/
 ```
 The caret (`^`) regex operator says to match from the beginning of the validation message.&nbsp;
-The dot (`.`) regex operator says to match any one character which is a handy way to avoid typing the special curly quote characters in some of the validation messages.
+The dot (`.`) regex operator says to match any one character, which is a handy way to avoid typing the special curly quote characters in some of the validation messages.
 
 ## D) Application Code and Testing Frameworks
 In addition to the CLI interface, the **w3c-html-validator** package can also be imported and called directly in ESM and TypeScript projects.
