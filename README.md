@@ -49,16 +49,16 @@ You can also install **w3c-html-validator** globally (`--global`) and then run i
 
 ### 3. CLI flags
 Command-line flags:
-| Flag              | Description                                                       | Value      |
-| ----------------- | ----------------------------------------------------------------- | ---------- |
-| `--continue`      | Report messages but do not throw an error if validation failed.   | N/A        |
-| `--delay`         | Debounce pause in milliseconds between each file validation.      | **number** |
-| `--exclude`       | Comma separated list of strings to match in paths to skip.        | **string** |
-| `--ignore`        | Skip validation messages containing a string or matching a regex. | **string** |
-| `--ignore-config` | File containing regex patterns of messages to skip.               | **string** |
-| `--note`          | Place to add a comment only for humans.                           | **string** |
-| `--quiet`         | Suppress messages for successful validations.                     | N/A        |
-| `--trim`          | Truncate validation messages to not exceed a maximum length.      | **number** |
+| Flag              | Description                                                         | Value      |
+| ----------------- | ------------------------------------------------------------------- | ---------- |
+| `--continue`      | Report messages but do not throw an error if validation failed.     | N/A        |
+| `--delay`         | Debounce pause in milliseconds between each file validation.        | **number** |
+| `--exclude`       | Comma separated list of strings to match in paths to skip.          | **string** |
+| `--ignore`        | Skip validation messages containing a string or matching a regex.   | **string** |
+| `--ignore-config` | File containing strings and regexes of validation messages to skip. | **string** |
+| `--note`          | Place to add a comment only for humans.                             | **string** |
+| `--quiet`         | Suppress messages for successful validations.                       | N/A        |
+| `--trim`          | Truncate validation messages to not exceed a maximum length.        | **number** |
 
 ### 4. Example CLI usage
 Examples:
@@ -90,20 +90,20 @@ Examples:
    Truncate validation messages to 30 characters and do not abort CI if validation fails.
 
 ### 5. Ignore Configuration File
-The optional `--ignore-config=FILENAME` flag specifies a configuration file with one regex pattern per line.&nbsp;
-Empty lines and lines starting with a hash sign (`#`) are considered comments and do nothing.
-HTML validation messages matching any of the regex patterns will be skipped.
+The optional `--ignore-config=FILENAME` flag specifies a configuration file with one string or regex per line.&nbsp;
+HTML validation messages containing any of the strings or matching any of the regexes will be skipped.&nbsp;
+Empty lines and lines starting with a hash sign (`#`) are treated as comments and do nothing.
 
-Example configuration file with 3 regex patterns:
+Example configuration file with 3 regexes:
 ```config
 # Ignore Config for w3c-html-validator
 
-^Duplicate ID
-^Element .blockquote. not allowed
-^Element .style. not allowed
+/^Duplicate ID/
+/^Element .blockquote. not allowed/
+/^Element .style. not allowed/
 ```
 The caret (`^`) regex operator says to match from the beginning of the validation message.&nbsp;
-The dot (`.`) regex operator says to match any one character which is a handy way to avoid typing the special quote characters in some of the validation messages.
+The dot (`.`) regex operator says to match any one character which is a handy way to avoid typing the special curly quote characters in some of the validation messages.
 
 ## D) Application Code and Testing Frameworks
 In addition to the CLI interface, the **w3c-html-validator** package can also be imported and called directly in ESM and TypeScript projects.
@@ -129,18 +129,18 @@ $ node examples.js
 
 ### 2. Options
 #### w3cHtmlValidator.validate(options)
-| Name (key)       | Type                    | Default                          | Description                                                          |
-| :--------------- | :---------------------- | :------------------------------- | :------------------------------------------------------------------- |
-| `checkUrl`       | **string**              | `'https://validator.w3.org/nu/'` | W3C validation API endpoint.                                         |
-| `filename`       | **string**              | `null`                           | HTML file to validate.                                               |
-| `html`           | **string**              | `null`                           | HTML string to validate.                                             |
-| `ignoreLevel`    | `'info'` or `'warning'` | `null`                           | Skip unwanted messages.*                                             |
-| `ignoreMessages` | **string** or **regex** | `null`                           | Skip messages containing a string or matching a regular expression.* |
-| `output`         | `'json'` or `'html'`    | `'json'`                         | Get results as an array or as a web page.                            |
-| `website`        | **string**              | `null`                           | URL of website to validate.                                          |
+| Name (key)       | Type                    | Default                          | Description                                             |
+| :--------------- | :---------------------- | :------------------------------- | :------------------------------------------------------ |
+| `checkUrl`       | **string**              | `'https://validator.w3.org/nu/'` | W3C validation API endpoint.                            |
+| `filename`       | **string**              | `null`                           | HTML file to validate.                                  |
+| `html`           | **string**              | `null`                           | HTML string to validate.                                |
+| `ignoreLevel`    | `'info'` or `'warning'` | `null`                           | Skip unwanted messages.*                                |
+| `ignoreMessages` | **array**               | `[]`                             | Skip messages containing a string or matching a regex.* |
+| `output`         | `'json'` or `'html'`    | `'json'`                         | Get results as an array or as a web page.               |
+| `website`        | **string**              | `null`                           | URL of website to validate.                             |
 
 *The `ignoreMessages` and `ignoreLevel` options only work for `'json'` output.&nbsp;
-Option value `'warning'` also skips `'info'`.
+Setting `ignoreLevel` to `'warning'` skips both `'warning'` level and `'info'` level validation messages.
 
 #### w3cHtmlValidator.reporter(options)
 | Name (key)       | Type        | Default | Description                                                     |

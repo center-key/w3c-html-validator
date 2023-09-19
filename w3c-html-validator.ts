@@ -8,13 +8,13 @@ import request from 'superagent';
 
 // Type Declarations
 export type ValidatorSettings = {
-   html:           string,                      //example: '<!doctype html><html><head><title>Home</title></html>''
-   filename:       string,                      //example: 'docs/index.html'
-   website:        string,                      //example: 'https://pretty-print-json.js.org/'
-   checkUrl:       string,                      //default: 'https://validator.w3.org/nu/'
-   ignoreLevel:    'info' | 'warning',          //skip unwanted messages ('warning' also skips 'info')
-   ignoreMessages: string | RegExp | RegExp[],  //matcher to skip unwanted messages
-   output:         ValidatorResultsOutput,
+   html:           string,                  //example: '<!doctype html><html><head><title>Home</title></html>''
+   filename:       string,                  //example: 'docs/index.html'
+   website:        string,                  //example: 'https://pretty-print-json.js.org/'
+   checkUrl:       string,                  //default: 'https://validator.w3.org/nu/'
+   ignoreLevel:    'info' | 'warning',      //skip unwanted validation messages ('warning' also skips 'info')
+   ignoreMessages: (string | RegExp)[],     //patterns to skip unwanted validation messages
+   output:         ValidatorResultsOutput,  //'json' or 'html'
    };
 export type ValidatorResultsMessage = {
    // type                  subType
@@ -64,7 +64,7 @@ const w3cHtmlValidator = {
       const defaults = {
          checkUrl:       'https://validator.w3.org/nu/',
          ignoreLevel:    null,
-         ignoreMessages: null,
+         ignoreMessages: [],
          output:         'json',
          };
       const settings = { ...defaults, ...options };
@@ -92,19 +92,16 @@ const w3cHtmlValidator = {
          filename: settings.filename,
          website:  settings.website,
          };
-      const noRegex = !settings.ignoreMessages || typeof settings.ignoreMessages === 'string';
-      const regexes = noRegex ? [] : <RegExp[]>[settings.ignoreMessages].flat();
       const filterMessages = (response: request.Response): request.Response => {
          const aboveInfo = (subType: ValidatorResultsMessageSubType): boolean =>
             settings.ignoreLevel === 'info' && !!subType;
          const aboveIgnoreLevel = (message: ValidatorResultsMessage): boolean =>
             !settings.ignoreLevel || message.type !== 'info' || aboveInfo(message.subType);
-         const skipSubstr = (title: string) =>
-            typeof settings.ignoreMessages === 'string' && title.includes(settings.ignoreMessages);
-         const skipRegex = (title: string) =>
-            regexes.some(regex => regex.test(title));
+         const matchesSkipPattern = (title: string): boolean =>
+            settings.ignoreMessages.some(pattern =>
+               typeof pattern === 'string' ? title.includes(pattern) : pattern.test(title));
          const isImportant = (message: ValidatorResultsMessage): boolean =>
-            aboveIgnoreLevel(message) && !skipSubstr(message.message) && !skipRegex(message.message);
+            aboveIgnoreLevel(message) && !matchesSkipPattern(message.message);
          if (json)
             response.body.messages = response.body.messages?.filter(isImportant) ?? [];
          return response;

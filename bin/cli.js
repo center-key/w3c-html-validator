@@ -57,15 +57,14 @@ const reporterOptions = {
    maxMessageLen:  trim,
    };
 const getIgnoreMessages = () => {
-   const toLines =    (text) => text.replace(/\r/g, '').split('\n').map(line => line.trim());
-   const readLines =  (file) => toLines(fs.readFileSync(file).toString());
-   const notComment = (line) => line.length > 1 && !line.startsWith('//');
-   const lines =      ignoreConfig ? readLines(ignoreConfig).filter(notComment) : [];
-   const regexes =    lines.map(line => new RegExp(line));
-   const isRegex =    /^\/.*\/$/;  //starts and ends with a slash indicating it's a regex
-   if (isRegex.test(ignore))
-      regexes.push(new RegExp(ignore.slice(1, -1)));
-   return regexes.length ? regexes : ignore;
+   const toArray =    (text) => text.replace(/\r/g, '').split('\n').map(line => line.trim());
+   const notComment = (line) => line.length > 1 && !line.startsWith('#');
+   const readLines =  (file) => toArray(fs.readFileSync(file).toString()).filter(notComment);
+   const rawLines =   ignoreConfig ? readLines(ignoreConfig) : [];
+   if (ignore)
+      rawLines.push(ignore);
+   const isRegex = /^\/.*\/$/;  //starts and ends with a slash indicating it's a regex
+   return rawLines.map(line => isRegex.test(line) ? new RegExp(line.slice(1, -1)) : line);
    };
 const handleReport = (report) => w3cHtmlValidator.reporter(report, reporterOptions);
 const options =      (filename) => ({ filename: filename, ignoreMessages: getIgnoreMessages() });

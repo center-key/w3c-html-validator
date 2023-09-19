@@ -279,7 +279,7 @@ describe('Option ignoreMessages', () => {
          };
       const options = {
          filename:       'spec/html/invalid.html',
-         ignoreMessages: 'Section lacks heading',
+         ignoreMessages: ['Section lacks heading'],
          };
       w3cHtmlValidator.validate(options).then(handleData);
       });
@@ -298,7 +298,7 @@ describe('Option ignoreMessages', () => {
          };
       const options = {
          filename:      'spec/html/invalid.html',
-         ignoreMessages: /^Element .blockquote./,
+         ignoreMessages: [/^Element .blockquote. not allowed/],
          };
       w3cHtmlValidator.validate(options).then(handleData);
       });
