@@ -77,8 +77,8 @@ Examples:
    - `html-validator docs '--ignore=/^Duplicate ID|^Section lacks|^Element .blockquote. not allowed/'`<br>
    Use a regex with "or" operators (`|`) to skip multiple HTML validation messages.
 
-   - `html-validator docs --ignore-config=config/regex-patterns.txt`<br>
-   Similar to the pervious command but regex patterns are stored in a configuration file (see the _Ignore Configuration File_ section below).
+   - `html-validator docs --ignore-config=spec/ignore-config.txt`<br>
+   Similar to the pervious command but strings and regexes are stored in a configuration file (see the _Ignore Configuration File_ section below).
 
    - `html-validator --quiet`<br>
    Suppress "pass" status messages.

@@ -20,7 +20,10 @@
       "html-validator": "bin/cli.js",
       "w3c-html-validator": "bin/cli.js"
    },
-   "repository": "github:center-key/w3c-html-validator",
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/center-key/w3c-html-validator.git"
+   },
    "homepage": "https://github.com/center-key/w3c-html-validator",
    "bugs": "https://github.com/center-key/w3c-html-validator/issues",
    "docs": "https://github.com/center-key/w3c-html-validator#readme",
@@ -96,7 +99,7 @@
       "assert-deep-strict-equal": "~1.1",
       "copy-file-util": "~1.1",
       "copy-folder-util": "~1.1",
-      "eslint": "~8.49",
+      "eslint": "~8.50",
       "jshint": "~2.13",
       "merge-stream": "~2.0",
       "mocha": "~10.2",
