@@ -85,7 +85,7 @@
       "chalk": "~5.3",
       "cli-argv-util": "~1.2",
       "fancy-log": "~2.0",
-      "glob": "~10.3",
+      "glob": "10.3.6",
       "superagent": "~8.1"
    },
    "devDependencies": {
