@@ -337,10 +337,6 @@ describe('Network request failure', () => {
    it('for service unavailable (HTTP status 503) is handled gracefully', (done) => {
       const handleData = (data) => {
          const actual = data;
-         const networkError = {
-            type:    'network-error',
-            message: '503 Service Unavailable https://mockbin.org/status/503/Service Unavailable?out=json',
-            };
          const expected = {
             validates: false,
             mode:      'html',
@@ -350,14 +346,17 @@ describe('Network request failure', () => {
             website:   null,
             output:    'json',
             status:    503,
-            messages:  [networkError],
             display:   null,
+            messages:  [{
+               type:    'network-error',
+               message: '503 Service Unavailable https://centerkey.com/rest/status/503/?out=json',
+               }],
             };
          assertDeepStrictEqual(actual, expected, done);
          };
       const options = {
          html:     validHtml,
-         checkUrl: 'https://mockbin.org/status/503/Service Unavailable',
+         checkUrl: 'https://centerkey.com/rest/status/503/',
          output:   'json',
          };
       w3cHtmlValidator.validate(options).then(handleData);
