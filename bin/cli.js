@@ -17,6 +17,8 @@
 //
 // Contributors to this project:
 //    $ cd w3c-html-validator
+//    $ npm install
+//    $ npm test
 //    $ node bin/cli.js spec --continue
 
 // Imports

@@ -63,31 +63,33 @@ Command-line flags:
 ### 4. Example CLI usage
 Examples:
    - `html-validator`<br>
-   Validate all HTML files in the project.
+   Validates all HTML files in the project.
 
    - `html-validator docs --exclude=build,tmp`<br>
-   Validate all HTML files in the **docs** folder except files which have "build" or "tmp" anywhere in their pathname or filename.
+   Validates all HTML files in the **docs** folder except files which have "build" or "tmp" anywhere in their pathname or filename.
 
    - `html-validator docs '--ignore=Trailing slash on void elements'`<br>
-   Allow the ugly slashes of self-closing tags despite XHTML being a hideous scourge on the web.
+   Allows the ugly slashes of self-closing tags despite XHTML being a hideous scourge on the web.
 
    - `html-validator docs '--ignore=/^Duplicate ID/'`<br>
-   Use a regex (regular expression) to skip all HTML validation messages that start with "Duplicate ID".
+   Uses a regex (regular expression) to skip all HTML validation messages that start with "Duplicate ID".
 
    - `html-validator docs '--ignore=/^Duplicate ID|^Section lacks|^Element .blockquote. not allowed/'`<br>
-   Use a regex with "or" operators (`|`) to skip multiple HTML validation messages.
+   Uses a regex with "or" operators (`|`) to skip multiple HTML validation messages.
 
    - `html-validator docs --ignore-config=spec/ignore-config.txt`<br>
    Similar to the pervious command but strings and regexes are stored in a configuration file (see the _Ignore Configuration File_ section below).
 
    - `html-validator --quiet`<br>
-   Suppress "pass" status messages.
+   Suppresses all the "pass" status messages.
 
    - `html-validator docs --delay=200`<br>
-   Validate all HTML files in the "docs" folder at a rate of 1 file per 200 ms (default is 500 ms).
+   Validates all HTML files in the "docs" folder at a rate of 1 file per 200 ms (default is 500 ms).
 
    - `html-validator docs --trim=30 --continue`<br>
-   Truncate validation messages to 30 characters and do not abort CI if validation fails.
+   Truncates validation messages to 30 characters and does not abort CI if validation fails.
+
+_**Note:** Single quotes in commands are normalized so they work cross-platform and avoid the errors often encountered on Microsoft Windows._
 
 ### 5. Ignore Configuration File
 The optional `--ignore-config=FILENAME` flag specifies a configuration file with one string or regex per line.&nbsp;
