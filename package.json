@@ -99,7 +99,7 @@
       "assert-deep-strict-equal": "~1.1",
       "copy-file-util": "~1.1",
       "copy-folder-util": "~1.1",
-      "eslint": "~8.52",
+      "eslint": "~8.53",
       "jshint": "~2.13",
       "merge-stream": "~2.0",
       "mocha": "~10.2",

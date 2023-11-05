@@ -37,10 +37,12 @@ const delay =        Number(cli.flagMap.delay) || 500;  //default half second de
 const trim =         Number(cli.flagMap.trim) || null;
 
 // Validator
+const globOptions =  { ignore: '**/node_modules/**/*' };
 const keep =         (filename) => !filename.includes('node_modules/');
-const readFolder =   (folder) => globSync(folder + '**/*.html', { ignore: '**/node_modules/**/*' });
+const readFolder =   (folder) => globSync(folder + '**/*.html', globOptions);
 const expandFolder = (file) => fs.lstatSync(file).isDirectory() ? readFolder(file + '/') : file;
-const getFilenames = () => [...new Set(files.map(expandFolder).flat().filter(keep))].sort();
+const getAllPaths =  () => files.map(file => globSync(file, globOptions)).flat();
+const getFilenames = () => getAllPaths().map(expandFolder).flat().filter(keep).sort();
 const list =         files.length ? getFilenames() : readFolder('');
 const excludes =     cli.flagMap.exclude?.split(',') ?? [];
 const filenames =    list.filter(name => !excludes.find(exclude => name.includes(exclude)));
