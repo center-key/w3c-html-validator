@@ -5,6 +5,7 @@ import chalk   from 'chalk';
 import fs      from 'fs';
 import log     from 'fancy-log';
 import request from 'superagent';
+import slash   from 'slash';
 
 // Type Declarations
 export type ValidatorSettings = {
@@ -74,9 +75,10 @@ const w3cHtmlValidator = {
          throw Error('[w3c-html-validator] Invalid ignoreLevel option: ' + settings.ignoreLevel);
       if (settings.output !== 'json' && settings.output !== 'html')
          throw Error('[w3c-html-validator] Option "output" must be "json" or "html".');
-      const mode =      settings.html ? 'html' : settings.filename ? 'filename' : 'website';
+      const filename =  settings.filename ? slash(settings.filename) : null;
+      const mode =      settings.html ? 'html' : filename ? 'filename' : 'website';
       const readFile =  (filename: string) => fs.readFileSync(filename, 'utf-8').replace(/\r/g, '');
-      const inputHtml = settings.html ?? (settings.filename ? readFile(settings.filename) : null);
+      const inputHtml = settings.html ?? (filename ? readFile(filename) : null);
       const makePostRequest = () => request.post(settings.checkUrl)
          .set('Content-Type', 'text/html; encoding=utf-8')
          .send(<string>inputHtml);
@@ -89,7 +91,7 @@ const w3cHtmlValidator = {
       const success = '<p class="success">';
       const titleLookup = {
          html:     'HTML String (characters: ' + inputHtml?.length + ')',
-         filename: settings.filename,
+         filename: filename,
          website:  settings.website,
          };
       const filterMessages = (response: request.Response): request.Response => {
@@ -111,7 +113,7 @@ const w3cHtmlValidator = {
          mode:      mode,
          title:     <string>titleLookup[mode],
          html:      inputHtml,
-         filename:  settings.filename || null,
+         filename:  filename,
          website:   settings.website || null,
          output:    <ValidatorResultsOutput>settings.output,
          status:    response.statusCode || -1,

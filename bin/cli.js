@@ -26,6 +26,7 @@ import { cliArgvUtil } from 'cli-argv-util';
 import { globSync } from 'glob';
 import { w3cHtmlValidator } from '../dist/w3c-html-validator.js';
 import fs from 'fs';
+import slash from 'slash';
 
 // Parameters and flags
 const validFlags = ['continue', 'delay', 'exclude', 'ignore', 'ignore-config', 'note', 'quiet', 'trim'];
@@ -39,9 +40,9 @@ const trim =         Number(cli.flagMap.trim) || null;
 // Validator
 const globOptions =  { ignore: '**/node_modules/**/*' };
 const keep =         (filename) => !filename.includes('node_modules/');
-const readFolder =   (folder) => globSync(folder + '**/*.html', globOptions);
+const readFolder =   (folder) => globSync(slash(folder + '**/*.html'), globOptions);
+const getAllPaths =  () => files.map(file => globSync(slash(file), globOptions)).flat();
 const expandFolder = (file) => fs.lstatSync(file).isDirectory() ? readFolder(file + '/') : file;
-const getAllPaths =  () => files.map(file => globSync(file, globOptions)).flat();
 const getFilenames = () => getAllPaths().map(expandFolder).flat().filter(keep).sort();
 const list =         files.length ? getFilenames() : readFolder('');
 const excludes =     cli.flagMap.exclude?.split(',') ?? [];
