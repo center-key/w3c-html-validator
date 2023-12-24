@@ -78,7 +78,7 @@ Examples:
    Uses a regex with "or" operators (`|`) to skip multiple HTML validation messages.
 
    - `html-validator docs --ignore-config=spec/ignore-config.txt`<br>
-   Similar to the pervious command but strings and regexes are stored in a configuration file (see the _Ignore Configuration File_ section below).
+   Similar to the pervious command but strings and regexes are stored in a configuration file (see the _Configuration File for Ignore Patterns_ section below).
 
    - `html-validator --quiet`<br>
    Suppresses all the "pass" status messages.
@@ -91,7 +91,7 @@ Examples:
 
 _**Note:** Single quotes in commands are normalized so they work cross-platform and avoid the errors often encountered on Microsoft Windows._
 
-### 5. Ignore Configuration File
+### 5. Configuration File for Ignore Patterns
 The optional `--ignore-config=FILENAME` flag specifies a configuration file with one string or regex per line.&nbsp;
 HTML validation messages containing any of the strings or matching any of the regexes will be skipped.&nbsp;
 Empty lines and lines starting with a hash sign (`#`) are treated as comments and do nothing.
