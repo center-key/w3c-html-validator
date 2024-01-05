@@ -126,8 +126,9 @@ const w3cHtmlValidator = {
          const response = reason.response;
          const getMsg =   () => [response.status, response.res.statusMessage, response.request.url];
          const message =  response ? getMsg() : [reason.errno, reason.message];
-         response.body =  { messages: [{ type: 'network-error', message: message.join(' ') }] };
-         return toValidatorResults(response);
+         const errRes =   response ?? <ReasonError['response']>{};
+         errRes.body =    { messages: [{ type: 'network-error', message: message.join(' ') }] };
+         return toValidatorResults(errRes);
          };
       return w3cRequest.then(filterMessages).then(toValidatorResults).catch(handleError);
       },
