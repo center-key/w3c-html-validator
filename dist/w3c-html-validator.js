@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.6.3 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.6.4 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import chalk from 'chalk';
 import fs from 'fs';
@@ -6,7 +6,7 @@ import log from 'fancy-log';
 import request from 'superagent';
 import slash from 'slash';
 const w3cHtmlValidator = {
-    version: '1.6.3',
+    version: '1.6.4',
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
@@ -65,8 +65,9 @@ const w3cHtmlValidator = {
             const response = reason.response;
             const getMsg = () => [response.status, response.res.statusMessage, response.request.url];
             const message = response ? getMsg() : [reason.errno, reason.message];
-            response.body = { messages: [{ type: 'network-error', message: message.join(' ') }] };
-            return toValidatorResults(response);
+            const errRes = response ?? {};
+            errRes.body = { messages: [{ type: 'network-error', message: message.join(' ') }] };
+            return toValidatorResults(errRes);
         };
         return w3cRequest.then(filterMessages).then(toValidatorResults).catch(handleError);
     },
