@@ -123,11 +123,10 @@ const w3cHtmlValidator = {
       type ReasonResponse = { request: { url: string }, res: { statusMessage: string }};
       type ReasonError =    Error & { errno: number, response: request.Response & ReasonResponse };
       const handleError = (reason: ReasonError): ValidatorResults => {
-         const response = reason.response;
-         const getMsg =   () => [response.status, response.res.statusMessage, response.request.url];
-         const message =  response ? getMsg() : [reason.errno, reason.message];
-         const errRes =   response ?? <ReasonError['response']>{};
-         errRes.body =    { messages: [{ type: 'network-error', message: message.join(' ') }] };
+         const errRes =  reason.response ?? <ReasonError['response']>{};
+         const getMsg =  () => [errRes.status, errRes.res.statusMessage, errRes.request.url];
+         const message = reason.response ? getMsg() : [reason.errno, reason.message];
+         errRes.body =   { messages: [{ type: 'network-error', message: message.join(' ') }] };
          return toValidatorResults(errRes);
          };
       return w3cRequest.then(filterMessages).then(toValidatorResults).catch(handleError);
