@@ -5,17 +5,11 @@
    "license": "MIT",
    "type": "module",
    "module": "dist/w3c-html-validator.js",
-   "main": "dist/w3c-html-validator.js",
    "types": "dist/w3c-html-validator.d.ts",
+   "exports": "./dist/w3c-html-validator.js",
    "files": [
       "dist"
    ],
-   "exports": {
-      ".": {
-         "import": "./dist/w3c-html-validator.js"
-      },
-      "./": "./dist/"
-   },
    "bin": {
       "html-validator": "bin/cli.js",
       "w3c-html-validator": "bin/cli.js"
@@ -91,10 +85,10 @@
    },
    "devDependencies": {
       "@types/fancy-log": "~2.0",
-      "@types/node": "~20.10",
+      "@types/node": "~20.11",
       "@types/superagent": "~8.1",
-      "@typescript-eslint/eslint-plugin": "~6.17",
-      "@typescript-eslint/parser": "~6.17",
+      "@typescript-eslint/eslint-plugin": "~6.19",
+      "@typescript-eslint/parser": "~6.19",
       "add-dist-header": "~1.3",
       "assert-deep-strict-equal": "~1.1",
       "copy-file-util": "~1.1",
