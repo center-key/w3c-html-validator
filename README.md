@@ -144,7 +144,7 @@ $ node examples.js
 *The `ignoreMessages` and `ignoreLevel` options only work for `'json'` output.&nbsp;
 Setting `ignoreLevel` to `'warning'` skips both `'warning'` level and `'info'` level validation messages.
 
-#### w3cHtmlValidator.reporter(options)
+#### w3cHtmlValidator.reporter(results, options)
 | Name (key)       | Type        | Default | Description                                                     |
 | :--------------- | :---------- | :------ | :-------------------------------------------------------------- |
 | `continueOnFail` | **boolean** | `false` | Report messages but do not throw an error if validation failed. |

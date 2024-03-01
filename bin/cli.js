@@ -71,8 +71,8 @@ const getIgnoreMessages = () => {
    const isRegex = /^\/.*\/$/;  //starts and ends with a slash indicating it's a regex
    return rawLines.map(line => isRegex.test(line) ? new RegExp(line.slice(1, -1)) : line);
    };
-const handleReport = (report) => w3cHtmlValidator.reporter(report, reporterOptions);
-const options =      (filename) => ({ filename: filename, ignoreMessages: getIgnoreMessages() });
-const getReport =    (filename) => w3cHtmlValidator.validate(options(filename)).then(handleReport);
-const processFile =  (filename, i) => globalThis.setTimeout(() => getReport(filename), i * delay);
+const handleResults = (results) => w3cHtmlValidator.reporter(results, reporterOptions);
+const options =       (filename) => ({ filename: filename, ignoreMessages: getIgnoreMessages() });
+const getReport =     (filename) => w3cHtmlValidator.validate(options(filename)).then(handleResults);
+const processFile =   (filename, i) => globalThis.setTimeout(() => getReport(filename), i * delay);
 filenames.forEach(processFile);
