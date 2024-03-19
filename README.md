@@ -8,7 +8,7 @@ _Check the markup validity of HTML files using the W3C validator_
 [![Build](https://github.com/center-key/w3c-html-validator/workflows/build/badge.svg)](https://github.com/center-key/w3c-html-validator/actions/workflows/run-spec-on-push.yaml)
 
 **w3c-html-validator** takes HTML files and returns detailed validation results.&nbsp;
-The reporter produces formatted output indended for use in build scripts and test suites.
+The reporter produces formatted output indented for use in build scripts and test suites.
 
 <img src=https://raw.githubusercontent.com/center-key/w3c-html-validator/main/examples.png
 width=800 alt=screenshot>
@@ -109,6 +109,8 @@ The dot (`.`) regex operator says to match any one character, which is a handy w
 
 ## D) Application Code and Testing Frameworks
 In addition to the CLI interface, the **w3c-html-validator** package can also be imported and called directly in ESM and TypeScript projects.
+
+Note that if your application calls `w3cHtmlValidator.validate()` multiple times, you must throttle (debounce) the calls or risk getting rejected by the W3C server.
 
 ### 1. Import
 Example call to the `validate()` function:
