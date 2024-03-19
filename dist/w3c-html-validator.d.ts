@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.6.4 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.7.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 export type ValidatorSettings = {
     html: string;
