@@ -5,7 +5,7 @@ _Check the markup validity of HTML files using the W3C validator_
 
 [![License:MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/center-key/w3c-html-validator/blob/main/LICENSE.txt)
 [![npm](https://img.shields.io/npm/v/w3c-html-validator.svg)](https://www.npmjs.com/package/w3c-html-validator)
-[![Build](https://github.com/center-key/w3c-html-validator/workflows/build/badge.svg)](https://github.com/center-key/w3c-html-validator/actions/workflows/run-spec-on-push.yaml)
+[![Build](https://github.com/center-key/w3c-html-validator/actions/workflows/run-spec-on-push.yaml/badge.svg)](https://github.com/center-key/w3c-html-validator/actions/workflows/run-spec-on-push.yaml)
 
 **w3c-html-validator** takes HTML files and returns detailed validation results.&nbsp;
 The reporter produces formatted output indented for use in build scripts and test suites.
@@ -141,6 +141,7 @@ $ node examples.js
 | `ignoreLevel`    | `'info'` or `'warning'` | `null`                           | Skip unwanted messages.*                                |
 | `ignoreMessages` | **array**               | `[]`                             | Skip messages containing a string or matching a regex.* |
 | `output`         | `'json'` or `'html'`    | `'json'`                         | Get results as an array or as a web page.               |
+| `skip`           | **boolean**             | `false`                          | bypass validation (for usage while building your CI).   |
 | `website`        | **string**              | `null`                           | URL of website to validate.                             |
 
 *The `ignoreMessages` and `ignoreLevel` options only work for `'json'` output.&nbsp;
@@ -171,6 +172,7 @@ type ValidatorResults = {
    status:    number,
    messages:  ValidatorResultsMessage[] | null,  //for 'json' output
    display:   string | null,                     //for 'html' output
+   skip:      boolean,
    };
 ```
 

@@ -49,14 +49,15 @@ describe('Library module', () => {
       assertDeepStrictEqual(actual, expected);
       });
 
-   it('has functions named validate(), summary(), and reporter()', () => {
+   it('has functions named validate(), skipNotice() summary(), and reporter()', () => {
       const module = w3cHtmlValidator;
       const actual = Object.keys(module).sort().map(key => [key, typeof module[key]]);
       const expected = [
-         ['reporter', 'function'],
-         ['summary', 'function'],
-         ['validate', 'function'],
-         ['version',  'string'],
+         ['reporter',   'function'],
+         ['skipNotice', 'function'],
+         ['summary',    'function'],
+         ['validate',   'function'],
+         ['version',    'string'],
          ];
       assertDeepStrictEqual(actual, expected);
       });
@@ -80,6 +81,7 @@ describe('Pretty-Print JSON website', () => {
             status:    200,
             messages:  [],
             display:   null,
+            skip:      false,
             };
          assertDeepStrictEqual(actual, expected, done);
          };
@@ -105,6 +107,7 @@ describe('Valid HTML string', () => {
             status:    200,
             messages:  [],
             display:   null,
+            skip:      false,
             };
          assertDeepStrictEqual(actual, expected, done);
          };
@@ -125,6 +128,7 @@ describe('Valid HTML string', () => {
             output:    'html',
             status:    200,
             messages:  null,
+            skip:      false,
             };
          assertDeepStrictEqual(actual, expected, done);
          };
@@ -176,6 +180,7 @@ describe('Invalid HTML string', () => {
                   },
                ],
             display:   null,
+            skip:      false,
             };
          assertDeepStrictEqual(actual, expected, done);
          };
@@ -196,6 +201,7 @@ describe('Invalid HTML string', () => {
             output:    'html',
             status:    200,
             messages:  null,
+            skip:      false,
             };
          assertDeepStrictEqual(actual, expected, done);
          };
@@ -221,6 +227,7 @@ describe('HTML file', () => {
             status:    200,
             messages:  [],
             display:   null,
+            skip:      false,
             };
          assertDeepStrictEqual(actual, expected, done);
          };
@@ -346,11 +353,12 @@ describe('Network request failure', () => {
             website:   null,
             output:    'json',
             status:    503,
-            display:   null,
             messages:  [{
                type:    'network-error',
                message: '503 Service Unavailable https://centerkey.com/rest/status/503/?out=json',
                }],
+            display:   null,
+            skip:      false,
             };
          assertDeepStrictEqual(actual, expected, done);
          };
@@ -381,6 +389,7 @@ describe('The reporter() function', () => {
             status:    200,
             messages:  [],
             display:   null,
+            skip:      false,
             };
          assertDeepStrictEqual(actual, expected, done);
          };

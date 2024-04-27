@@ -36,6 +36,7 @@ const ignore =       cli.flagMap.ignore ?? null;
 const ignoreConfig = cli.flagMap.ignoreConfig ?? null;
 const delay =        Number(cli.flagMap.delay) || 500;  //default half second debounce pause
 const trim =         Number(cli.flagMap.trim) || null;
+const skip =         process.env.w3cHtmlValidator === 'skip';  //bash: export w3cHtmlValidator=skip
 
 // Validator
 const globOptions =  { ignore: '**/node_modules/**/*' };
@@ -54,6 +55,8 @@ const error =
    null;
 if (error)
    throw Error('[w3c-html-validator] ' + error);
+if (skip)
+   w3cHtmlValidator.skipNotice();
 if (filenames.length > 1 && !cli.flagOn.quiet)
    w3cHtmlValidator.summary(filenames.length);
 const reporterOptions = {
@@ -71,8 +74,9 @@ const getIgnoreMessages = () => {
    const isRegex = /^\/.*\/$/;  //starts and ends with a slash indicating it's a regex
    return rawLines.map(line => isRegex.test(line) ? new RegExp(line.slice(1, -1)) : line);
    };
+const baseOptions =   { ignoreMessages: getIgnoreMessages(), skip: skip };
+const options =       (filename) => ({ filename: filename, ...baseOptions });
 const handleResults = (results) => w3cHtmlValidator.reporter(results, reporterOptions);
-const options =       (filename) => ({ filename: filename, ignoreMessages: getIgnoreMessages() });
 const getReport =     (filename) => w3cHtmlValidator.validate(options(filename)).then(handleResults);
 const processFile =   (filename, i) => globalThis.setTimeout(() => getReport(filename), i * delay);
 filenames.forEach(processFile);

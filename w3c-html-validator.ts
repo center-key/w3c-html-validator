@@ -16,6 +16,7 @@ export type ValidatorSettings = {
    ignoreLevel:    'info' | 'warning',      //skip unwanted validation messages ('warning' also skips 'info')
    ignoreMessages: (string | RegExp)[],     //patterns to skip unwanted validation messages
    output:         ValidatorResultsOutput,  //'json' or 'html'
+   skip:           boolean,                 //bypass validation (for usage while building your CI)
    };
 export type ValidatorResultsMessage = {
    // type                  subType
@@ -47,6 +48,7 @@ export type ValidatorResults = {
    status:    number,
    messages:  ValidatorResultsMessage[] | null,
    display:   string | null,
+   skip:      boolean,
    };
 export type ValidatorResultsOutput = ValidatorResults['output'];
 export type ReporterSettings = {
@@ -59,7 +61,7 @@ export type ReporterSettings = {
 // W3C HTML Validator
 const w3cHtmlValidator = {
 
-   version: '{{pkg.version}}',
+   version: '{{package.version}}',
 
    validate(options: Partial<ValidatorSettings>): Promise<ValidatorResults> {
       const defaults = {
@@ -67,6 +69,7 @@ const w3cHtmlValidator = {
          ignoreLevel:    null,
          ignoreMessages: [],
          output:         'json',
+         skip:           false,
          };
       const settings = { ...defaults, ...options };
       if (!settings.html && !settings.filename && !settings.website)
@@ -119,6 +122,7 @@ const w3cHtmlValidator = {
          status:    response.statusCode || -1,
          messages:  json ? response.body.messages : null,
          display:   json ? null : response.text,
+         skip:      settings.skip,
          });
       type ReasonResponse = { request: { url: string }, res: { statusMessage: string }};
       type ReasonError =    Error & { errno: number, response: request.Response & ReasonResponse };
@@ -129,7 +133,20 @@ const w3cHtmlValidator = {
          errRes.body =   { messages: [{ type: 'network-error', message: message.join(' ') }] };
          return toValidatorResults(errRes);
          };
-      return w3cRequest.then(filterMessages).then(toValidatorResults).catch(handleError);
+      const pseudoResponse = <request.Response>{
+         statusCode: 200,
+         body:       { messages: [] },
+         text:       'Validation skipped.',
+         };
+      const pseudoRequest = (): Promise<request.Response> =>
+         new Promise(resolve => resolve(pseudoResponse));
+      const validation = settings.skip ? pseudoRequest() : w3cRequest;
+      return validation.then(filterMessages).then(toValidatorResults).catch(handleError);
+      },
+
+   skipNotice() {
+      log(chalk.gray('w3c-html-validator'),
+         chalk.yellowBright('skip mode:'), chalk.whiteBright('validation being bypassed'));
       },
 
    summary(numFiles: number) {
