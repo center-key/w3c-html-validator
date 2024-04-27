@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.7.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.8.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 export type ValidatorSettings = {
     html: string;
@@ -8,6 +8,7 @@ export type ValidatorSettings = {
     ignoreLevel: 'info' | 'warning';
     ignoreMessages: (string | RegExp)[];
     output: ValidatorResultsOutput;
+    skip: boolean;
 };
 export type ValidatorResultsMessage = {
     type: 'info' | 'error' | 'non-document-error' | 'network-error';
@@ -33,6 +34,7 @@ export type ValidatorResults = {
     status: number;
     messages: ValidatorResultsMessage[] | null;
     display: string | null;
+    skip: boolean;
 };
 export type ValidatorResultsOutput = ValidatorResults['output'];
 export type ReporterSettings = {
@@ -44,6 +46,7 @@ export type ReporterSettings = {
 declare const w3cHtmlValidator: {
     version: string;
     validate(options: Partial<ValidatorSettings>): Promise<ValidatorResults>;
+    skipNotice(): void;
     summary(numFiles: number): void;
     reporter(results: ValidatorResults, options?: Partial<ReporterSettings>): ValidatorResults;
 };

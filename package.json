@@ -1,6 +1,6 @@
 {
    "name": "w3c-html-validator",
-   "version": "1.7.0",
+   "version": "1.8.0",
    "description": "Check the markup validity of HTML files using the W3C validator",
    "license": "MIT",
    "type": "module",
@@ -81,22 +81,22 @@
       "fancy-log": "~2.0",
       "glob": "~10.3",
       "slash": "~5.1",
-      "superagent": "~8.1"
+      "superagent": "~9.0"
    },
    "devDependencies": {
       "@types/fancy-log": "~2.0",
-      "@types/node": "~20.11",
+      "@types/node": "~20.12",
       "@types/superagent": "~8.1",
-      "@typescript-eslint/eslint-plugin": "~7.3",
-      "@typescript-eslint/parser": "~7.3",
+      "@typescript-eslint/eslint-plugin": "~7.7",
+      "@typescript-eslint/parser": "~7.7",
       "add-dist-header": "~1.4",
       "assert-deep-strict-equal": "~1.2",
       "copy-file-util": "~1.2",
       "copy-folder-util": "~1.1",
-      "eslint": "~8.57",
+      "eslint": "8.57.0",
       "jshint": "~2.13",
       "merge-stream": "~2.0",
-      "mocha": "~10.3",
+      "mocha": "~10.4",
       "rimraf": "~5.0",
       "run-scripts-util": "~1.2",
       "typescript": "~5.4"

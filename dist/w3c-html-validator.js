@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.7.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.8.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import chalk from 'chalk';
 import fs from 'fs';
@@ -6,13 +6,14 @@ import log from 'fancy-log';
 import request from 'superagent';
 import slash from 'slash';
 const w3cHtmlValidator = {
-    version: '1.7.0',
+    version: '1.8.0',
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
             ignoreLevel: null,
             ignoreMessages: [],
             output: 'json',
+            skip: false,
         };
         const settings = { ...defaults, ...options };
         if (!settings.html && !settings.filename && !settings.website)
@@ -60,6 +61,7 @@ const w3cHtmlValidator = {
             status: response.statusCode || -1,
             messages: json ? response.body.messages : null,
             display: json ? null : response.text,
+            skip: settings.skip,
         });
         const handleError = (reason) => {
             const errRes = reason.response ?? {};
@@ -68,7 +70,17 @@ const w3cHtmlValidator = {
             errRes.body = { messages: [{ type: 'network-error', message: message.join(' ') }] };
             return toValidatorResults(errRes);
         };
-        return w3cRequest.then(filterMessages).then(toValidatorResults).catch(handleError);
+        const pseudoResponse = {
+            statusCode: 200,
+            body: { messages: [] },
+            text: 'Validation skipped.',
+        };
+        const pseudoRequest = () => new Promise(resolve => resolve(pseudoResponse));
+        const validation = settings.skip ? pseudoRequest() : w3cRequest;
+        return validation.then(filterMessages).then(toValidatorResults).catch(handleError);
+    },
+    skipNotice() {
+        log(chalk.gray('w3c-html-validator'), chalk.yellowBright('skip mode:'), chalk.whiteBright('validation being bypassed'));
     },
     summary(numFiles) {
         log(chalk.gray('w3c-html-validator'), chalk.magenta('files: ' + numFiles));
