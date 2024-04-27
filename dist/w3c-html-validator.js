@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.8.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.8.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import chalk from 'chalk';
 import fs from 'fs';
@@ -6,14 +6,14 @@ import log from 'fancy-log';
 import request from 'superagent';
 import slash from 'slash';
 const w3cHtmlValidator = {
-    version: '1.8.0',
+    version: '1.8.1',
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
+            dryRun: false,
             ignoreLevel: null,
             ignoreMessages: [],
             output: 'json',
-            skip: false,
         };
         const settings = { ...defaults, ...options };
         if (!settings.html && !settings.filename && !settings.website)
@@ -61,7 +61,7 @@ const w3cHtmlValidator = {
             status: response.statusCode || -1,
             messages: json ? response.body.messages : null,
             display: json ? null : response.text,
-            skip: settings.skip,
+            dryRun: settings.dryRun,
         });
         const handleError = (reason) => {
             const errRes = reason.response ?? {};
@@ -73,14 +73,14 @@ const w3cHtmlValidator = {
         const pseudoResponse = {
             statusCode: 200,
             body: { messages: [] },
-            text: 'Validation skipped.',
+            text: 'Validation bypassed.',
         };
         const pseudoRequest = () => new Promise(resolve => resolve(pseudoResponse));
-        const validation = settings.skip ? pseudoRequest() : w3cRequest;
+        const validation = settings.dryRun ? pseudoRequest() : w3cRequest;
         return validation.then(filterMessages).then(toValidatorResults).catch(handleError);
     },
-    skipNotice() {
-        log(chalk.gray('w3c-html-validator'), chalk.yellowBright('skip mode:'), chalk.whiteBright('validation being bypassed'));
+    dryRunNotice() {
+        log(chalk.gray('w3c-html-validator'), chalk.yellowBright('dry run mode:'), chalk.whiteBright('validation being bypassed'));
     },
     summary(numFiles) {
         log(chalk.gray('w3c-html-validator'), chalk.magenta('files: ' + numFiles));
