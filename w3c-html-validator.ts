@@ -16,7 +16,7 @@ export type ValidatorSettings = {
    ignoreLevel:    'info' | 'warning',      //skip unwanted validation messages ('warning' also skips 'info')
    ignoreMessages: (string | RegExp)[],     //patterns to skip unwanted validation messages
    output:         ValidatorResultsOutput,  //'json' or 'html'
-   skip:           boolean,                 //bypass validation (for usage while building your CI)
+   dryRun:         boolean,                 //bypass validation (for usage while building your CI)
    };
 export type ValidatorResultsMessage = {
    // type                  subType
@@ -48,7 +48,7 @@ export type ValidatorResults = {
    status:    number,
    messages:  ValidatorResultsMessage[] | null,
    display:   string | null,
-   skip:      boolean,
+   dryRun:    boolean,
    };
 export type ValidatorResultsOutput = ValidatorResults['output'];
 export type ReporterSettings = {
@@ -66,10 +66,10 @@ const w3cHtmlValidator = {
    validate(options: Partial<ValidatorSettings>): Promise<ValidatorResults> {
       const defaults = {
          checkUrl:       'https://validator.w3.org/nu/',
+         dryRun:         false,
          ignoreLevel:    null,
          ignoreMessages: [],
          output:         'json',
-         skip:           false,
          };
       const settings = { ...defaults, ...options };
       if (!settings.html && !settings.filename && !settings.website)
@@ -122,7 +122,7 @@ const w3cHtmlValidator = {
          status:    response.statusCode || -1,
          messages:  json ? response.body.messages : null,
          display:   json ? null : response.text,
-         skip:      settings.skip,
+         dryRun:    settings.dryRun,
          });
       type ReasonResponse = { request: { url: string }, res: { statusMessage: string }};
       type ReasonError =    Error & { errno: number, response: request.Response & ReasonResponse };
@@ -136,17 +136,17 @@ const w3cHtmlValidator = {
       const pseudoResponse = <request.Response>{
          statusCode: 200,
          body:       { messages: [] },
-         text:       'Validation skipped.',
+         text:       'Validation bypassed.',
          };
       const pseudoRequest = (): Promise<request.Response> =>
          new Promise(resolve => resolve(pseudoResponse));
-      const validation = settings.skip ? pseudoRequest() : w3cRequest;
+      const validation = settings.dryRun ? pseudoRequest() : w3cRequest;
       return validation.then(filterMessages).then(toValidatorResults).catch(handleError);
       },
 
-   skipNotice() {
+   dryRunNotice() {
       log(chalk.gray('w3c-html-validator'),
-         chalk.yellowBright('skip mode:'), chalk.whiteBright('validation being bypassed'));
+         chalk.yellowBright('dry run mode:'), chalk.whiteBright('validation being bypassed'));
       },
 
    summary(numFiles: number) {

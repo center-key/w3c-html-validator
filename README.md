@@ -53,6 +53,7 @@ Command-line flags:
 | ----------------- | ------------------------------------------------------------------- | ---------- |
 | `--continue`      | Report messages but do not throw an error if validation failed.     | N/A        |
 | `--delay`         | Debounce pause in milliseconds between each file validation.        | **number** |
+| `--dry-run`       | Bypass validation (for usage while building your CI).               | N/A        |
 | `--exclude`       | Comma separated list of strings to match in paths to skip.          | **string** |
 | `--ignore`        | Skip validation messages containing a string or matching a regex.   | **string** |
 | `--ignore-config` | File containing strings and regexes of validation messages to skip. | **string** |
@@ -136,12 +137,12 @@ $ node examples.js
 | Name (key)       | Type                    | Default                          | Description                                             |
 | :--------------- | :---------------------- | :------------------------------- | :------------------------------------------------------ |
 | `checkUrl`       | **string**              | `'https://validator.w3.org/nu/'` | W3C validation API endpoint.                            |
+| `dryRun`         | **boolean**             | `false`                          | Bypass validation (for usage while building your CI).   |
 | `filename`       | **string**              | `null`                           | HTML file to validate.                                  |
 | `html`           | **string**              | `null`                           | HTML string to validate.                                |
 | `ignoreLevel`    | `'info'` or `'warning'` | `null`                           | Skip unwanted messages.*                                |
 | `ignoreMessages` | **array**               | `[]`                             | Skip messages containing a string or matching a regex.* |
 | `output`         | `'json'` or `'html'`    | `'json'`                         | Get results as an array or as a web page.               |
-| `skip`           | **boolean**             | `false`                          | bypass validation (for usage while building your CI).   |
 | `website`        | **string**              | `null`                           | URL of website to validate.                             |
 
 *The `ignoreMessages` and `ignoreLevel` options only work for `'json'` output.&nbsp;
@@ -172,7 +173,7 @@ type ValidatorResults = {
    status:    number,
    messages:  ValidatorResultsMessage[] | null,  //for 'json' output
    display:   string | null,                     //for 'html' output
-   skip:      boolean,
+   dryRun:    boolean,
    };
 ```
 
