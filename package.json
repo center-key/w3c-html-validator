@@ -79,16 +79,15 @@
       "chalk": "~5.3",
       "cli-argv-util": "~1.2",
       "fancy-log": "~2.0",
-      "glob": "~10.3",
+      "glob": "~10.4",
       "slash": "~5.1",
       "superagent": "~9.0"
    },
    "devDependencies": {
+      "@eslint/js": "~9.3",
       "@types/fancy-log": "~2.0",
       "@types/node": "~20.12",
       "@types/superagent": "~8.1",
-      "@typescript-eslint/eslint-plugin": "~7.7",
-      "@typescript-eslint/parser": "~7.7",
       "add-dist-header": "~1.4",
       "assert-deep-strict-equal": "~1.2",
       "copy-file-util": "~1.2",
@@ -99,6 +98,7 @@
       "mocha": "~10.4",
       "rimraf": "~5.0",
       "run-scripts-util": "~1.2",
-      "typescript": "~5.4"
+      "typescript": "~5.4",
+      "typescript-eslint": "~7.11"
    }
 }
