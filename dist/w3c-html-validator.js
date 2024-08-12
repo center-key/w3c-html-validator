@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.8.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.8.2 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import chalk from 'chalk';
 import fs from 'fs';
@@ -6,7 +6,7 @@ import log from 'fancy-log';
 import request from 'superagent';
 import slash from 'slash';
 const w3cHtmlValidator = {
-    version: '1.8.1',
+    version: '1.8.2',
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
@@ -17,11 +17,11 @@ const w3cHtmlValidator = {
         };
         const settings = { ...defaults, ...options };
         if (!settings.html && !settings.filename && !settings.website)
-            throw Error('[w3c-html-validator] Must specify the "html", "filename", or "website" option.');
+            throw new Error('[w3c-html-validator] Must specify the "html", "filename", or "website" option.');
         if (![null, 'info', 'warning'].includes(settings.ignoreLevel))
-            throw Error('[w3c-html-validator] Invalid ignoreLevel option: ' + settings.ignoreLevel);
+            throw new Error(`[w3c-html-validator] Invalid ignoreLevel option: ${settings.ignoreLevel}`);
         if (settings.output !== 'json' && settings.output !== 'html')
-            throw Error('[w3c-html-validator] Option "output" must be "json" or "html".');
+            throw new Error('[w3c-html-validator] Option "output" must be "json" or "html".');
         const filename = settings.filename ? slash(settings.filename) : null;
         const mode = settings.html ? 'html' : filename ? 'filename' : 'website';
         const readFile = (filename) => fs.readFileSync(filename, 'utf-8').replace(/\r/g, '');
@@ -37,7 +37,7 @@ const w3cHtmlValidator = {
         const json = settings.output === 'json';
         const success = '<p class="success">';
         const titleLookup = {
-            html: 'HTML String (characters: ' + inputHtml?.length + ')',
+            html: `HTML String (characters: ${inputHtml?.length})`,
             filename: filename,
             website: settings.website,
         };
@@ -83,7 +83,7 @@ const w3cHtmlValidator = {
         log(chalk.gray('w3c-html-validator'), chalk.yellowBright('dry run mode:'), chalk.whiteBright('validation being bypassed'));
     },
     summary(numFiles) {
-        log(chalk.gray('w3c-html-validator'), chalk.magenta('files: ' + numFiles));
+        log(chalk.gray('w3c-html-validator'), chalk.magenta('files: ' + String(numFiles)));
     },
     reporter(results, options) {
         const defaults = {
@@ -94,11 +94,11 @@ const w3cHtmlValidator = {
         };
         const settings = { ...defaults, ...options };
         if (typeof results?.validates !== 'boolean')
-            throw Error('[w3c-html-validator] Invalid results for reporter(): ' + String(results));
+            throw new Error('[w3c-html-validator] Invalid results for reporter(): ' + String(results));
         const messages = results.messages ?? [];
         const title = settings.title ?? results.title;
         const status = results.validates ? chalk.green.bold('✔ pass') : chalk.red.bold('✘ fail');
-        const count = results.validates ? '' : '(messages: ' + messages.length + ')';
+        const count = results.validates ? '' : `(messages: ${messages.length})`;
         if (!results.validates || !settings.quiet)
             log(chalk.gray('w3c-html-validator'), status, chalk.blue.bold(title), chalk.white(count));
         const typeColorMap = {
@@ -107,7 +107,7 @@ const w3cHtmlValidator = {
             info: chalk.white.bold,
         };
         const logMessage = (message) => {
-            const type = (message.subType ?? message.type);
+            const type = message.subType ?? message.type;
             const typeColor = typeColorMap[type] ?? chalk.redBright.bold;
             const location = `line ${message.lastLine}, column ${message.firstColumn}:`;
             const lineText = message.extract?.replace(/\n/g, '\\n');
@@ -119,11 +119,11 @@ const w3cHtmlValidator = {
         messages.forEach(logMessage);
         const failDetails = () => {
             const toString = (message) => `${message.subType ?? message.type} line ${message.lastLine} column ${message.firstColumn}`;
-            const fileDetails = () => results.filename + ' -- ' + results.messages.map(toString).join(', ');
+            const fileDetails = () => `${results.filename} -- ${results.messages.map(toString).join(', ')}`;
             return !results.filename ? results.messages[0].message : fileDetails();
         };
         if (!settings.continueOnFail && !results.validates)
-            throw Error('[w3c-html-validator] Failed: ' + failDetails());
+            throw new Error('[w3c-html-validator] Failed: ' + failDetails());
         return results;
     },
 };

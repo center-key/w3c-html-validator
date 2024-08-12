@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.8.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.8.2 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 export type ValidatorSettings = {
     html: string;
@@ -14,7 +14,7 @@ export type ValidatorResultsMessage = {
     type: 'info' | 'error' | 'non-document-error' | 'network-error';
     subType?: 'warning' | 'fatal' | 'io' | 'schema' | 'internal';
     message: string;
-    extract: string;
+    extract?: string;
     lastLine: number;
     firstColumn: number;
     lastColumn: number;
