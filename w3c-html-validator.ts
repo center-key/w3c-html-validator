@@ -1,7 +1,7 @@
 // W3C HTML Validator ~ MIT License
 
 // Imports
-import chalk   from 'chalk';
+import chalk, { ChalkInstance } from 'chalk';
 import fs      from 'fs';
 import log     from 'fancy-log';
 import request from 'superagent';
@@ -28,7 +28,7 @@ export type ValidatorResultsMessage = {
    type:         'info' | 'error' | 'non-document-error' | 'network-error',
    subType?:     'warning' | 'fatal' | 'io' | 'schema' | 'internal',
    message:      string,  //example: 'Section lacks heading.'
-   extract:      string,  //example: '<section>Hi</section>'
+   extract?:     string,  //example: '<section>Hi</section>'
    lastLine:     number,
    firstColumn:  number,
    lastColumn:   number,
@@ -73,11 +73,11 @@ const w3cHtmlValidator = {
          };
       const settings = { ...defaults, ...options };
       if (!settings.html && !settings.filename && !settings.website)
-         throw Error('[w3c-html-validator] Must specify the "html", "filename", or "website" option.');
+         throw new Error('[w3c-html-validator] Must specify the "html", "filename", or "website" option.');
       if (![null, 'info', 'warning'].includes(settings.ignoreLevel))
-         throw Error('[w3c-html-validator] Invalid ignoreLevel option: ' + settings.ignoreLevel);
+         throw new Error(`[w3c-html-validator] Invalid ignoreLevel option: ${settings.ignoreLevel}`);
       if (settings.output !== 'json' && settings.output !== 'html')
-         throw Error('[w3c-html-validator] Option "output" must be "json" or "html".');
+         throw new Error('[w3c-html-validator] Option "output" must be "json" or "html".');
       const filename =  settings.filename ? slash(settings.filename) : null;
       const mode =      settings.html ? 'html' : filename ? 'filename' : 'website';
       const readFile =  (filename: string) => fs.readFileSync(filename, 'utf-8').replace(/\r/g, '');
@@ -93,7 +93,7 @@ const w3cHtmlValidator = {
       const json =    settings.output === 'json';
       const success = '<p class="success">';
       const titleLookup = {
-         html:     'HTML String (characters: ' + inputHtml?.length + ')',
+         html:     `HTML String (characters: ${inputHtml?.length})`,
          filename: filename,
          website:  settings.website,
          };
@@ -108,11 +108,11 @@ const w3cHtmlValidator = {
          const isImportant = (message: ValidatorResultsMessage): boolean =>
             aboveIgnoreLevel(message) && !matchesSkipPattern(message.message);
          if (json)
-            response.body.messages = response.body.messages?.filter(isImportant) ?? [];
+            response.body.messages = response.body.messages?.filter(isImportant) ?? [];  //eslint-disable-line
          return response;
          };
       const toValidatorResults = (response: request.Response): ValidatorResults => ({
-         validates: json ? !response.body.messages.length : !!response.text?.includes(success),
+         validates: json ? !response.body.messages.length : !!response.text?.includes(success),  //eslint-disable-line
          mode:      mode,
          title:     <string>titleLookup[mode],
          html:      inputHtml,
@@ -120,16 +120,16 @@ const w3cHtmlValidator = {
          website:   settings.website || null,
          output:    <ValidatorResultsOutput>settings.output,
          status:    response.statusCode || -1,
-         messages:  json ? response.body.messages : null,
+         messages:  json ? response.body.messages : null,  //eslint-disable-line
          display:   json ? null : response.text,
          dryRun:    settings.dryRun,
          });
       type ReasonResponse = { request: { url: string }, res: { statusMessage: string }};
       type ReasonError =    Error & { errno: number, response: request.Response & ReasonResponse };
       const handleError = (reason: ReasonError): ValidatorResults => {
-         const errRes =  reason.response ?? <ReasonError['response']>{};
+         const errRes =  reason.response ?? <ReasonError['response']>{};  //eslint-disable-line
          const getMsg =  () => [errRes.status, errRes.res.statusMessage, errRes.request.url];
-         const message = reason.response ? getMsg() : [reason.errno, reason.message];
+         const message = reason.response ? getMsg() : [reason.errno, reason.message];  //eslint-disable-line
          errRes.body =   { messages: [{ type: 'network-error', message: message.join(' ') }] };
          return toValidatorResults(errRes);
          };
@@ -150,7 +150,7 @@ const w3cHtmlValidator = {
       },
 
    summary(numFiles: number) {
-      log(chalk.gray('w3c-html-validator'), chalk.magenta('files: ' + numFiles));
+      log(chalk.gray('w3c-html-validator'), chalk.magenta('files: ' + String(numFiles)));
       },
 
    reporter(results: ValidatorResults, options?: Partial<ReporterSettings>): ValidatorResults {
@@ -161,21 +161,21 @@ const w3cHtmlValidator = {
          title:          null,
          };
       const settings = { ...defaults, ...options };
-      if (typeof results?.validates !== 'boolean')
-         throw Error('[w3c-html-validator] Invalid results for reporter(): ' + String(results));
+      if (typeof results?.validates !== 'boolean')  //eslint-disable-line
+         throw new Error('[w3c-html-validator] Invalid results for reporter(): ' + String(results));
       const messages = results.messages ?? [];
       const title =    settings.title ?? results.title;
       const status =   results.validates ? chalk.green.bold('✔ pass') : chalk.red.bold('✘ fail');
-      const count =    results.validates ? '' : '(messages: ' + messages!.length + ')';
+      const count =    results.validates ? '' : `(messages: ${messages.length})`;
       if (!results.validates || !settings.quiet)
          log(chalk.gray('w3c-html-validator'), status, chalk.blue.bold(title), chalk.white(count));
-      const typeColorMap = {
+      const typeColorMap = <{ [messageType: string]: ChalkInstance }>{
          error:   chalk.red.bold,
          warning: chalk.yellow.bold,
          info:    chalk.white.bold,
          };
       const logMessage = (message: ValidatorResultsMessage) => {
-         const type =      <keyof typeof typeColorMap>(message.subType ?? message.type);
+         const type =      message.subType ?? message.type;
          const typeColor = typeColorMap[type] ?? chalk.redBright.bold;
          const location =  `line ${message.lastLine}, column ${message.firstColumn}:`;
          const lineText =  message.extract?.replace(/\n/g, '\\n');
@@ -190,11 +190,11 @@ const w3cHtmlValidator = {
          const toString = (message: ValidatorResultsMessage) =>
             `${message.subType ?? message.type} line ${message.lastLine} column ${message.firstColumn}`;
          const fileDetails = () =>
-            results.filename + ' -- ' + results.messages!.map(toString).join(', ');
+            `${results.filename} -- ${results.messages!.map(toString).join(', ')}`;
          return !results.filename ? results.messages![0]!.message : fileDetails();
          };
       if (!settings.continueOnFail && !results.validates)
-         throw Error('[w3c-html-validator] Failed: ' + failDetails());
+         throw new Error('[w3c-html-validator] Failed: ' + failDetails());
       return results;
       },
 

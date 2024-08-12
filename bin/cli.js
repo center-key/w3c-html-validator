@@ -54,7 +54,7 @@ const error =
    cli.flagOn.trim && !trim ? 'Value of "trim" must be a positive whole number.' :
    null;
 if (error)
-   throw Error('[w3c-html-validator] ' + error);
+   throw new Error('[w3c-html-validator] ' + error);
 if (dryRunMode)
    w3cHtmlValidator.dryRunNotice();
 if (filenames.length > 1 && !cli.flagOn.quiet)
