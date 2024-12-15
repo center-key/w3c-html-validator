@@ -162,7 +162,7 @@ const w3cHtmlValidator = {
          };
       const settings = { ...defaults, ...options };
       if (typeof results?.validates !== 'boolean')  //eslint-disable-line
-         throw new Error('[w3c-html-validator] Invalid results for reporter(): ' + String(results));  //eslint-disable-line
+         throw new Error('[w3c-html-validator] Invalid results for reporter(): ' + String(<unknown>results));
       const messages = results.messages ?? [];
       const title =    settings.title ?? results.title;
       const status =   results.validates ? chalk.green.bold('✔ pass') : chalk.red.bold('✘ fail');
