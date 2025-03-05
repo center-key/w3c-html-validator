@@ -158,7 +158,7 @@ Setting `ignoreLevel` to `'warning'` skips both `'warning'` level and `'info'` l
 
 ### 3. TypeScript declarations
 See the TypeScript declarations at the top of the
-[w3c-html-validator.ts](w3c-html-validator.ts) file.
+[w3c-html-validator.ts](src/w3c-html-validator.ts) file.
 
 The output of the `w3cHtmlValidator.validate(options: ValidatorOptions)` function is a **promise**
 for a `ValidatorResults` object:
