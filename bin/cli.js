@@ -29,25 +29,23 @@ import fs from 'fs';
 import slash from 'slash';
 
 // Parameters and flags
-const validFlags = ['continue', 'delay', 'dry-run', 'exclude', 'ignore', 'ignore-config', 'note', 'quiet', 'trim'];
+const validFlags =
+   ['continue', 'delay', 'dry-run', 'exclude', 'ignore', 'ignore-config', 'note', 'quiet', 'trim'];
 const cli =          cliArgvUtil.parse(validFlags);
-const files =        cli.params;
+const files =        cli.params.length ? cli.params.map(cliArgvUtil.cleanPath) : ['.'];
 const ignore =       cli.flagMap.ignore ?? null;
 const ignoreConfig = cli.flagMap.ignoreConfig ?? null;
 const delay =        Number(cli.flagMap.delay) || 500;  //default half second debounce pause
 const trim =         Number(cli.flagMap.trim) || null;
 const dryRunMode =   cli.flagOn.dryRun || process.env.w3cHtmlValidator === 'dry-run';  //bash: export w3cHtmlValidator=dry-run
 
-// Validator
-const globOptions =  { ignore: '**/node_modules/**/*' };
-const keep =         (filename) => !filename.includes('node_modules/');
-const readFolder =   (folder) => globSync(slash(folder + '**/*.html'), globOptions);
-const getAllPaths =  () => files.map(file => globSync(slash(file), globOptions)).flat();
-const expandFolder = (file) => fs.lstatSync(file).isDirectory() ? readFolder(file + '/') : file;
-const getFilenames = () => getAllPaths().map(expandFolder).flat().filter(keep).sort();
-const list =         files.length ? getFilenames() : readFolder('');
-const excludes =     cli.flagMap.exclude?.split(',') ?? [];
-const filenames =    list.filter(name => !excludes.find(exclude => name.includes(exclude)));
+const getFilenames = () => {
+   const readFilenames = (file) => globSync(file, { ignore: '**/node_modules/**/*' }).map(slash);
+   const readHtmlFiles = (folder) => readFilenames(folder + '/**/*.html');
+   const addHtml =       (file) => fs.lstatSync(file).isDirectory() ? readHtmlFiles(file) : file;
+   return files.map(readFilenames).flat().map(addHtml).flat().sort();
+   };
+const filenames = getFilenames();
 const error =
    cli.invalidFlag ?          cli.invalidFlagMsg :
    !filenames.length ?        'No files to validate.' :

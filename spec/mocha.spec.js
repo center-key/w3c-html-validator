@@ -433,3 +433,27 @@ describe('Executing the CLI', () => {
       });
 
    });
+
+////////////////////////////////////////////////////////////////////////////////
+describe('Executing the CLI from on the project home folder', () => {
+   const run = (posix) => cliArgvUtil.run(pkg, posix);
+
+   it('with "**/*.html" skips the "node_modules" folder', () => {
+      const actual =   run('html-validator "**/*.html" --dry-run');
+      const expected = null;
+      assertDeepStrictEqual(actual, expected);
+      });
+
+   it('with "." skips the "node_modules" folder', () => {
+      const actual =   run('html-validator . --dry-run');
+      const expected = null;
+      assertDeepStrictEqual(actual, expected);
+      });
+
+   it('without specifying any files skips the "node_modules" folder', () => {
+      const actual =   run('html-validator --dry-run');
+      const expected = null;
+      assertDeepStrictEqual(actual, expected);
+      });
+
+   });

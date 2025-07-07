@@ -58,14 +58,14 @@
    },
    "dependencies": {
       "chalk": "~5.4",
-      "cli-argv-util": "~1.2",
+      "cli-argv-util": "~1.3",
       "fancy-log": "~2.0",
       "glob": "~11.0",
       "slash": "~5.1",
       "superagent": "~10.2"
    },
    "devDependencies": {
-      "@eslint/js": "~9.28",
+      "@eslint/js": "~9.30",
       "@types/fancy-log": "~2.0",
       "@types/node": "~24.0",
       "@types/superagent": "~8.1",
@@ -73,13 +73,13 @@
       "assert-deep-strict-equal": "~1.2",
       "copy-file-util": "~1.2",
       "copy-folder-util": "~1.1",
-      "eslint": "~9.28",
+      "eslint": "~9.30",
       "jshint": "~2.13",
       "merge-stream": "~2.0",
-      "mocha": "~11.6",
+      "mocha": "~11.7",
       "rimraf": "~6.0",
       "run-scripts-util": "~1.3",
       "typescript": "~5.8",
-      "typescript-eslint": "~8.34"
+      "typescript-eslint": "~8.36"
    }
 }
