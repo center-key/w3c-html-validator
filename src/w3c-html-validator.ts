@@ -162,7 +162,7 @@ const w3cHtmlValidator = {
          };
       const settings = { ...defaults, ...options };
       if (typeof results?.validates !== 'boolean')  //eslint-disable-line
-         throw new Error('[w3c-html-validator] Invalid results for reporter(): ' + String(<unknown>results));
+         throw new Error(`[w3c-html-validator] Invalid results for reporter(): ${<unknown>results}`);
       const messages = results.messages ?? [];
       const title =    settings.title ?? results.title;
       const status =   results.validates ? chalk.green.bold('✔ pass') : chalk.red.bold('✘ fail');
@@ -194,7 +194,7 @@ const w3cHtmlValidator = {
          return !results.filename ? results.messages![0]!.message : fileDetails();
          };
       if (!settings.continueOnFail && !results.validates)
-         throw new Error('[w3c-html-validator] Failed: ' + failDetails());
+         throw new Error(`[w3c-html-validator] Failed: ${failDetails()}`);
       return results;
       },
 

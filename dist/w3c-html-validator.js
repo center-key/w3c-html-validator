@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.8.3 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.9.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import chalk from 'chalk';
 import fs from 'fs';
@@ -6,7 +6,7 @@ import log from 'fancy-log';
 import request from 'superagent';
 import slash from 'slash';
 const w3cHtmlValidator = {
-    version: '1.8.3',
+    version: '1.9.0',
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
@@ -94,7 +94,7 @@ const w3cHtmlValidator = {
         };
         const settings = { ...defaults, ...options };
         if (typeof results?.validates !== 'boolean')
-            throw new Error('[w3c-html-validator] Invalid results for reporter(): ' + String(results));
+            throw new Error(`[w3c-html-validator] Invalid results for reporter(): ${results}`);
         const messages = results.messages ?? [];
         const title = settings.title ?? results.title;
         const status = results.validates ? chalk.green.bold('✔ pass') : chalk.red.bold('✘ fail');
@@ -123,7 +123,7 @@ const w3cHtmlValidator = {
             return !results.filename ? results.messages[0].message : fileDetails();
         };
         if (!settings.continueOnFail && !results.validates)
-            throw new Error('[w3c-html-validator] Failed: ' + failDetails());
+            throw new Error(`[w3c-html-validator] Failed: ${failDetails()}`);
         return results;
     },
 };
