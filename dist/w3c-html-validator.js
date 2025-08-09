@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.9.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v1.9.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import chalk from 'chalk';
 import fs from 'fs';
@@ -6,7 +6,7 @@ import log from 'fancy-log';
 import request from 'superagent';
 import slash from 'slash';
 const w3cHtmlValidator = {
-    version: '1.9.0',
+    version: '1.9.1',
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
