@@ -33,6 +33,7 @@ const validFlags =
    ['continue', 'delay', 'dry-run', 'exclude', 'ignore', 'ignore-config', 'note', 'quiet', 'trim'];
 const cli =          cliArgvUtil.parse(validFlags);
 const files =        cli.params.length ? cli.params.map(cliArgvUtil.cleanPath) : ['.'];
+const excludeList =  cli.flagMap.exclude ? cli.flagMap.exclude.split(',') : [];
 const ignore =       cli.flagMap.ignore ?? null;
 const ignoreConfig = cli.flagMap.ignoreConfig ?? null;
 const delay =        Number(cli.flagMap.delay) || 500;  //default half second debounce pause
@@ -43,7 +44,8 @@ const getFilenames = () => {
    const readFilenames = (file) => globSync(file, { ignore: '**/node_modules/**/*' }).map(slash);
    const readHtmlFiles = (folder) => readFilenames(folder + '/**/*.html');
    const addHtml =       (file) => fs.lstatSync(file).isDirectory() ? readHtmlFiles(file) : file;
-   return files.map(readFilenames).flat().map(addHtml).flat().sort();
+   const keep =          (file) => excludeList.every(exclude => !file.includes(exclude));
+   return files.map(readFilenames).flat().map(addHtml).flat().filter(keep).sort();
    };
 const filenames = getFilenames();
 const error =

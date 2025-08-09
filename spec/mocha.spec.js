@@ -435,7 +435,7 @@ describe('Executing the CLI', () => {
    });
 
 ////////////////////////////////////////////////////////////////////////////////
-describe('Executing the CLI from on the project home folder', () => {
+describe('Executing the CLI on the project home folder [manual check]', () => {
    const run = (posix) => cliArgvUtil.run(pkg, posix);
 
    it('with "**/*.html" skips the "node_modules" folder', () => {
@@ -452,6 +452,12 @@ describe('Executing the CLI from on the project home folder', () => {
 
    it('without specifying any files skips the "node_modules" folder', () => {
       const actual =   run('html-validator --dry-run');
+      const expected = null;
+      assertDeepStrictEqual(actual, expected);
+      });
+
+   it('with the "--exclude=invalid.html" option excludes just one file', () => {
+      const actual =   run('html-validator . --exclude=invalid.html --dry-run');
       const expected = null;
       assertDeepStrictEqual(actual, expected);
       });
