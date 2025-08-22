@@ -456,8 +456,8 @@ describe('Executing the CLI on the project home folder [manual check]', () => {
       assertDeepStrictEqual(actual, expected);
       });
 
-   it('with the "--exclude=invalid.html" option excludes just one file', () => {
-      const actual =   run('html-validator . --exclude=invalid.html --dry-run');
+   it('with the "--exclude" flag contining "invalid.html" skips that one file', () => {
+      const actual =   run('html-validator . --exclude=aaa,invalid.html,bbb --dry-run');
       const expected = null;
       assertDeepStrictEqual(actual, expected);
       });

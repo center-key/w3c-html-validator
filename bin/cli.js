@@ -33,7 +33,7 @@ const validFlags =
    ['continue', 'delay', 'dry-run', 'exclude', 'ignore', 'ignore-config', 'note', 'quiet', 'trim'];
 const cli =          cliArgvUtil.parse(validFlags);
 const files =        cli.params.length ? cli.params.map(cliArgvUtil.cleanPath) : ['.'];
-const excludeList =  cli.flagMap.exclude ? cli.flagMap.exclude.split(',') : [];
+const excludeList =  cli.flagMap.exclude?.split(',') ?? [];
 const ignore =       cli.flagMap.ignore ?? null;
 const ignoreConfig = cli.flagMap.ignoreConfig ?? null;
 const delay =        Number(cli.flagMap.delay) || 500;  //default half second debounce pause
