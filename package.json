@@ -1,6 +1,6 @@
 {
    "name": "w3c-html-validator",
-   "version": "1.9.1",
+   "version": "2.0.0",
    "description": "Check the markup validity of HTML files using the W3C validator",
    "license": "MIT",
    "type": "module",

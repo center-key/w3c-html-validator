@@ -113,8 +113,8 @@ The dot (`.`) regex operator says to match any one character, which is a handy w
 The optional `--default-rules` flag causes HTML validation messages to be skipped if they are on the opinionated pre-defined list of unhelpful messages.&nbsp;
 
 Default ignore list:
-| Pattern                  | Level       | Explanation |                                                        |
-| ------------------------ | ----------- | ------------|
+| Pattern                  | Level       | Explanation |
+| ------------------------ | ----------- | ----------- |
 | `Section lacks heading.` | **warning** | Rule is sensible for traditional print publishing but absurd for modern UI components not burning in nested `<div>` hell. |
 
 If there is an additional W3C validation message you think is ridiculous, open an issue with a note explaining why the message should be ignored.&nbsp;
@@ -148,6 +148,7 @@ $ node examples.js
 | Name (key)       | Type                    | Default                          | Description                                             |
 | :--------------- | :---------------------- | :------------------------------- | :------------------------------------------------------ |
 | `checkUrl`       | **string**              | `'https://validator.w3.org/nu/'` | W3C validation API endpoint.                            |
+| `defaultRules`   | **boolean**             | `false`                          | Apply additional built-in opinionated ignore list.      |
 | `dryRun`         | **boolean**             | `false`                          | Bypass validation (for usage while building your CI).   |
 | `filename`       | **string**              | `null`                           | HTML file to validate.                                  |
 | `html`           | **string**              | `null`                           | HTML string to validate.                                |

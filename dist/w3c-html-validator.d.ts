@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.9.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v2.0.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 export type ValidatorSettings = {
     html: string;
@@ -6,10 +6,12 @@ export type ValidatorSettings = {
     website: string;
     checkUrl: string;
     ignoreLevel: 'info' | 'warning';
-    ignoreMessages: (string | RegExp)[];
+    ignoreMessages: ValidatorIgnorePattern[];
+    defaultRules: boolean;
     output: ValidatorResultsOutput;
     dryRun: boolean;
 };
+export type ValidatorIgnorePattern = string | RegExp;
 export type ValidatorResultsMessage = {
     type: 'info' | 'error' | 'non-document-error' | 'network-error';
     subType?: 'warning' | 'fatal' | 'io' | 'schema' | 'internal';
@@ -45,6 +47,7 @@ export type ReporterSettings = {
 };
 declare const w3cHtmlValidator: {
     version: string;
+    defaultIgnoreList: string[];
     validate(options: Partial<ValidatorSettings>): Promise<ValidatorResults>;
     dryRunNotice(): void;
     summary(numFiles: number): void;

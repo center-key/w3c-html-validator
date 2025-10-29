@@ -1,4 +1,4 @@
-//! w3c-html-validator v1.9.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v2.0.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import chalk from 'chalk';
 import fs from 'fs';
@@ -6,10 +6,14 @@ import log from 'fancy-log';
 import request from 'superagent';
 import slash from 'slash';
 const w3cHtmlValidator = {
-    version: '1.9.1',
+    version: '2.0.0',
+    defaultIgnoreList: [
+        'Section lacks heading.'
+    ],
     validate(options) {
         const defaults = {
             checkUrl: 'https://validator.w3.org/nu/',
+            defaultRules: false,
             dryRun: false,
             ignoreLevel: null,
             ignoreMessages: [],
@@ -24,7 +28,8 @@ const w3cHtmlValidator = {
             throw new Error('[w3c-html-validator] Option "output" must be "json" or "html".');
         const filename = settings.filename ? slash(settings.filename) : null;
         const mode = settings.html ? 'html' : filename ? 'filename' : 'website';
-        const readFile = (filename) => fs.readFileSync(filename, 'utf-8').replace(/\r/g, '');
+        const unixify = (text) => text.replace(/\r/g, '');
+        const readFile = (filename) => unixify(fs.readFileSync(filename, 'utf-8'));
         const inputHtml = settings.html ?? (filename ? readFile(filename) : null);
         const makePostRequest = () => request.post(settings.checkUrl)
             .set('Content-Type', 'text/html; encoding=utf-8')
@@ -32,7 +37,8 @@ const w3cHtmlValidator = {
         const makeGetRequest = () => request.get(settings.checkUrl)
             .query({ doc: settings.website });
         const w3cRequest = inputHtml ? makePostRequest() : makeGetRequest();
-        w3cRequest.set('User-Agent', 'W3C HTML Validator ~ github.com/center-key/w3c-html-validator');
+        const userAgent = 'W3C HTML Validator ~ github.com/center-key/w3c-html-validator';
+        w3cRequest.set('User-Agent', userAgent);
         w3cRequest.query({ out: settings.output });
         const json = settings.output === 'json';
         const success = '<p class="success">';
@@ -44,8 +50,11 @@ const w3cHtmlValidator = {
         const filterMessages = (response) => {
             const aboveInfo = (subType) => settings.ignoreLevel === 'info' && !!subType;
             const aboveIgnoreLevel = (message) => !settings.ignoreLevel || message.type !== 'info' || aboveInfo(message.subType);
-            const matchesSkipPattern = (title) => settings.ignoreMessages.some(pattern => typeof pattern === 'string' ? title.includes(pattern) : pattern.test(title));
-            const isImportant = (message) => aboveIgnoreLevel(message) && !matchesSkipPattern(message.message);
+            const defaultList = settings.defaultRules ? w3cHtmlValidator.defaultIgnoreList : [];
+            const ignoreList = [...settings.ignoreMessages, ...defaultList];
+            const tester = (title) => (pattern) => typeof pattern === 'string' ? title.includes(pattern) : pattern.test(title);
+            const skipMatchFound = (title) => ignoreList.some(tester(title));
+            const isImportant = (message) => aboveIgnoreLevel(message) && !skipMatchFound(message.message);
             if (json)
                 response.body.messages = response.body.messages?.filter(isImportant) ?? [];
             return response;
