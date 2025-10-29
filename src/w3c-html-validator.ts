@@ -9,15 +9,17 @@ import slash   from 'slash';
 
 // Type Declarations
 export type ValidatorSettings = {
-   html:           string,                  //example: '<!doctype html><html><head><title>Home</title></html>''
-   filename:       string,                  //example: 'docs/index.html'
-   website:        string,                  //example: 'https://pretty-print-json.js.org/'
-   checkUrl:       string,                  //default: 'https://validator.w3.org/nu/'
-   ignoreLevel:    'info' | 'warning',      //skip unwanted validation messages ('warning' also skips 'info')
-   ignoreMessages: (string | RegExp)[],     //patterns to skip unwanted validation messages
-   output:         ValidatorResultsOutput,  //'json' or 'html'
-   dryRun:         boolean,                 //bypass validation (for usage while building your CI)
+   html:           string,                   //example: '<!doctype html><html><head><title>Home</title></html>''
+   filename:       string,                   //example: 'docs/index.html'
+   website:        string,                   //example: 'https://pretty-print-json.js.org/'
+   checkUrl:       string,                   //default: 'https://validator.w3.org/nu/'
+   ignoreLevel:    'info' | 'warning',       //skip unwanted validation messages ('warning' also skips 'info')
+   ignoreMessages: ValidatorIgnorePattern[], //patterns to skip unwanted validation messages
+   defaultRules:   boolean,                  //apply additional built-in opinionated ignore list
+   output:         ValidatorResultsOutput,   //'json' or 'html'
+   dryRun:         boolean,                  //bypass validation (for usage while building your CI)
    };
+export type ValidatorIgnorePattern = string | RegExp;  //pattern to skip unwanted validation messages
 export type ValidatorResultsMessage = {
    // type                  subType
    // --------------------  --------------------------------------------------
@@ -63,9 +65,14 @@ const w3cHtmlValidator = {
 
    version: '{{package.version}}',
 
+   defaultIgnoreList: [
+      'Section lacks heading.'  //sensible for traditional print publishing but absurd for modern UI components
+      ],
+
    validate(options: Partial<ValidatorSettings>): Promise<ValidatorResults> {
       const defaults = {
          checkUrl:       'https://validator.w3.org/nu/',
+         defaultRules:   false,
          dryRun:         false,
          ignoreLevel:    null,
          ignoreMessages: [],
@@ -80,7 +87,8 @@ const w3cHtmlValidator = {
          throw new Error('[w3c-html-validator] Option "output" must be "json" or "html".');
       const filename =  settings.filename ? slash(settings.filename) : null;
       const mode =      settings.html ? 'html' : filename ? 'filename' : 'website';
-      const readFile =  (filename: string) => fs.readFileSync(filename, 'utf-8').replace(/\r/g, '');
+      const unixify =   (text: string) => text.replace(/\r/g, '');
+      const readFile =  (filename: string) => unixify(fs.readFileSync(filename, 'utf-8'));
       const inputHtml = settings.html ?? (filename ? readFile(filename) : null);
       const makePostRequest = () => request.post(settings.checkUrl)
          .set('Content-Type', 'text/html; encoding=utf-8')
@@ -88,7 +96,8 @@ const w3cHtmlValidator = {
       const makeGetRequest = () => request.get(settings.checkUrl)
          .query({ doc: settings.website });
       const w3cRequest = inputHtml ? makePostRequest() : makeGetRequest();
-      w3cRequest.set('User-Agent', 'W3C HTML Validator ~ github.com/center-key/w3c-html-validator');
+      const userAgent =  'W3C HTML Validator ~ github.com/center-key/w3c-html-validator';
+      w3cRequest.set('User-Agent', userAgent);
       w3cRequest.query({ out: settings.output });
       const json =    settings.output === 'json';
       const success = '<p class="success">';
@@ -102,11 +111,14 @@ const w3cHtmlValidator = {
             settings.ignoreLevel === 'info' && !!subType;
          const aboveIgnoreLevel = (message: ValidatorResultsMessage): boolean =>
             !settings.ignoreLevel || message.type !== 'info' || aboveInfo(message.subType);
-         const matchesSkipPattern = (title: string): boolean =>
-            settings.ignoreMessages.some(pattern =>
-               typeof pattern === 'string' ? title.includes(pattern) : pattern.test(title));
+         const defaultList = settings.defaultRules ? w3cHtmlValidator.defaultIgnoreList : [];
+         const ignoreList =  [...settings.ignoreMessages, ...defaultList];
+         const tester = (title: string) => (pattern: ValidatorIgnorePattern) =>
+            typeof pattern === 'string' ? title.includes(pattern) : pattern.test(title)
+         const skipMatchFound = (title: string): boolean =>
+            ignoreList.some(tester(title));
          const isImportant = (message: ValidatorResultsMessage): boolean =>
-            aboveIgnoreLevel(message) && !matchesSkipPattern(message.message);
+            aboveIgnoreLevel(message) && !skipMatchFound(message.message);
          if (json)
             response.body.messages = response.body.messages?.filter(isImportant) ?? [];  //eslint-disable-line
          return response;

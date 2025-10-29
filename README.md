@@ -52,11 +52,12 @@ Command-line flags:
 | Flag              | Description                                                         | Value      |
 | ----------------- | ------------------------------------------------------------------- | ---------- |
 | `--continue`      | Report messages but do not throw an error if validation failed.     | N/A        |
+| `--default-rules` | Apply additional built-in opinionated ignore list.                  | N/A        |
 | `--delay`         | Debounce pause in milliseconds between each file validation.        | **number** |
 | `--dry-run`       | Bypass validation (for usage while building your CI).               | N/A        |
 | `--exclude`       | Comma separated list of strings to match in paths to skip.          | **string** |
-| `--ignore`        | Skip validation messages containing a string or matching a regex.   | **string** |
 | `--ignore-config` | File containing strings and regexes of validation messages to skip. | **string** |
+| `--ignore`        | Skip validation messages containing a string or matching a regex.   | **string** |
 | `--note`          | Place to add a comment only for humans.                             | **string** |
 | `--quiet`         | Suppress messages for successful validations.                       | N/A        |
 | `--trim`          | Truncate validation messages to not exceed a maximum length.        | **number** |
@@ -81,8 +82,8 @@ Examples:
    - `html-validator docs --ignore-config=spec/ignore-config.txt`<br>
    Similar to the pervious command but strings and regexes are stored in a configuration file (see the _Configuration File for Ignore Patterns_ section below).
 
-   - `html-validator --quiet`<br>
-   Suppresses all the "pass" status messages.
+   - `html-validator --default-rules --quiet`<br>
+   Skip all HTML validation messages in the built-in opinionated ignore list and also suppresses all the "pass" status messages.
 
    - `html-validator docs --delay=200`<br>
    Validates all HTML files in the "docs" folder at a rate of 1 file per 200 ms (default is 500 ms).
@@ -107,6 +108,16 @@ Example configuration file with 3 regexes:
 ```
 The caret (`^`) regex operator says to match from the beginning of the validation message.&nbsp;
 The dot (`.`) regex operator says to match any one character, which is a handy way to avoid typing the special curly quote characters in some of the validation messages.
+
+### 6. Default Ignore List
+The optional `--default-rules` flag causes HTML validation messages to be skipped if they are on the opinionated pre-defined list of unhelpful messages.&nbsp;
+
+Default ignore list:
+| Pattern                  | Level       | Explanation |                                                        |
+| ------------------------ | ----------- | ------------|
+| `Section lacks heading.` | **warning** | Rule is sensible for traditional print publishing but absurd for modern UI components not burning in nested `<div>` hell. |
+
+If there is an additional W3C validation message you think is ridiculous, open an issue with a note explaining why the message should be ignored.&nbsp;
 
 ## D) Application Code and Testing Frameworks
 In addition to the CLI interface, the **w3c-html-validator** package can also be imported and called directly in ESM and TypeScript projects.

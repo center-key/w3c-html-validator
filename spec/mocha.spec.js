@@ -9,9 +9,10 @@ import fs from 'fs';
 
 // Setup
 import { w3cHtmlValidator } from '../dist/w3c-html-validator.js';
-const pkg =         JSON.parse(fs.readFileSync('package.json', 'utf-8'));
-const validHtml =   fs.readFileSync('spec/html/valid.html',   'utf-8').replace(/\r/g, '');
-const invalidHtml = fs.readFileSync('spec/html/invalid.html', 'utf-8').replace(/\r/g, '');
+const readTextFile = (filename) => fs.readFileSync(filename, 'utf-8').replace(/\r/g, '');
+const pkg =          JSON.parse(readTextFile('package.json'));
+const validHtml =    readTextFile('spec/html/valid.html');
+const invalidHtml =  readTextFile('spec/html/invalid.html');
 
 ////////////////////////////////////////////////////////////////////////////////
 describe('The "dist" folder', () => {
@@ -49,15 +50,16 @@ describe('Library module', () => {
       assertDeepStrictEqual(actual, expected);
       });
 
-   it('has functions named validate(), dryRunNotice() summary(), and reporter()', () => {
+   it('has functions named validate(), dryRunNotice(), summary(), and reporter()', () => {
       const module = w3cHtmlValidator;
       const actual = Object.keys(module).sort().map(key => [key, typeof module[key]]);
       const expected = [
-         ['dryRunNotice', 'function'],
-         ['reporter',     'function'],
-         ['summary',      'function'],
-         ['validate',     'function'],
-         ['version',      'string'],
+         ['defaultIgnoreList', 'object'],
+         ['dryRunNotice',      'function'],
+         ['reporter',          'function'],
+         ['summary',           'function'],
+         ['validate',          'function'],
+         ['version',           'string'],
          ];
       assertDeepStrictEqual(actual, expected);
       });
@@ -428,6 +430,12 @@ describe('Executing the CLI', () => {
 
    it('skips validation message matching --ignore and --ignore-config regex patterns', () => {
       const actual =   run('html-validator spec/html "--ignore=/^Section lacks heading/" --ignore-config=spec/ignore-config.txt');
+      const expected = null;
+      assertDeepStrictEqual(actual, expected);
+      });
+
+   it('with --ignore=blockquote and --default-rules skips both validation messages for invalid.html', () => {
+      const actual =   run('html-validator spec/html/invalid.html --ignore=blockquote --default-rules');
       const expected = null;
       assertDeepStrictEqual(actual, expected);
       });

@@ -29,16 +29,17 @@ import fs from 'fs';
 import slash from 'slash';
 
 // Parameters and flags
-const validFlags =
-   ['continue', 'delay', 'dry-run', 'exclude', 'ignore', 'ignore-config', 'note', 'quiet', 'trim'];
+const validFlags = ['continue', 'default-rules', 'delay', 'dry-run', 'exclude',
+   'ignore', 'ignore-config', 'note', 'quiet', 'trim'];
 const cli =          cliArgvUtil.parse(validFlags);
 const files =        cli.params.length ? cli.params.map(cliArgvUtil.cleanPath) : ['.'];
 const excludeList =  cli.flagMap.exclude?.split(',') ?? [];
 const ignore =       cli.flagMap.ignore ?? null;
 const ignoreConfig = cli.flagMap.ignoreConfig ?? null;
+const defaultRules = cli.flagOn.defaultRules;
 const delay =        Number(cli.flagMap.delay) || 500;  //default half second debounce pause
 const trim =         Number(cli.flagMap.trim) || null;
-const dryRunMode =   cli.flagOn.dryRun || process.env.w3cHtmlValidator === 'dry-run';  //bash: export w3cHtmlValidator=dry-run
+const dryRun =       cli.flagOn.dryRun || process.env.w3cHtmlValidator === 'dry-run';  //bash: export w3cHtmlValidator=dry-run
 
 const getFilenames = () => {
    const readFilenames = (file) => globSync(file, { ignore: '**/node_modules/**/*' }).map(slash);
@@ -55,7 +56,7 @@ const error =
    null;
 if (error)
    throw new Error('[w3c-html-validator] ' + error);
-if (dryRunMode)
+if (dryRun)
    w3cHtmlValidator.dryRunNotice();
 if (filenames.length > 1 && !cli.flagOn.quiet)
    w3cHtmlValidator.summary(filenames.length);
@@ -74,8 +75,8 @@ const getIgnoreMessages = () => {
    const isRegex = /^\/.*\/$/;  //starts and ends with a slash indicating it's a regex
    return rawLines.map(line => isRegex.test(line) ? new RegExp(line.slice(1, -1)) : line);
    };
-const baseOptions =   { ignoreMessages: getIgnoreMessages(), dryRun: dryRunMode };
-const options =       (filename) => ({ filename: filename, ...baseOptions });
+const ignoreMessages = getIgnoreMessages();
+const options =       (filename) => ({ filename, ignoreMessages, defaultRules, dryRun });
 const handleResults = (results) => w3cHtmlValidator.reporter(results, reporterOptions);
 const getReport =     (filename) => w3cHtmlValidator.validate(options(filename)).then(handleResults);
 const processFile =   (filename, i) => globalThis.setTimeout(() => getReport(filename), i * delay);
