@@ -1,14 +1,14 @@
-//! w3c-html-validator v2.0.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v2.0.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 export type ValidatorSettings = {
-    html: string;
-    filename: string;
-    website: string;
-    checkUrl: string;
-    ignoreLevel: 'info' | 'warning';
+    html: string | null;
+    filename: string | null;
+    website: string | null;
+    checkUrl: string | null;
+    ignoreLevel: 'info' | 'warning' | null;
     ignoreMessages: ValidatorIgnorePattern[];
     defaultRules: boolean;
-    output: ValidatorResultsOutput;
+    output: 'json' | 'html' | null;
     dryRun: boolean;
 };
 export type ValidatorIgnorePattern = string | RegExp;
@@ -38,7 +38,6 @@ export type ValidatorResults = {
     display: string | null;
     dryRun: boolean;
 };
-export type ValidatorResultsOutput = ValidatorResults['output'];
 export type ReporterSettings = {
     continueOnFail: boolean;
     maxMessageLen: number | null;
@@ -48,6 +47,8 @@ export type ReporterSettings = {
 declare const w3cHtmlValidator: {
     version: string;
     defaultIgnoreList: string[];
+    assert(ok: unknown, message: string | null): void;
+    cli(): void;
     validate(options: Partial<ValidatorSettings>): Promise<ValidatorResults>;
     dryRunNotice(): void;
     summary(numFiles: number): void;
