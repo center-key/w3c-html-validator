@@ -1,6 +1,8 @@
 // W3C HTML Validator ~ MIT License
 
 // Imports
+import { cliArgvUtil } from 'cli-argv-util';
+import { globSync } from 'glob';
 import chalk, { ChalkInstance } from 'chalk';
 import fs      from 'fs';
 import log     from 'fancy-log';
@@ -71,6 +73,60 @@ const w3cHtmlValidator = {
    assert(ok: unknown, message: string | null) {
       if (!ok)
          throw new Error(`[w3c-html-validator] ${message}`);
+      },
+
+   cli() {
+      const validFlags = ['continue', 'default-rules', 'delay', 'dry-run', 'exclude',
+         'ignore', 'ignore-config', 'note', 'quiet', 'trim'];
+      const cli =          cliArgvUtil.parse(validFlags);
+      const files =        cli.params.length ? cli.params.map(cliArgvUtil.cleanPath) : ['.'];
+      const excludeList =  cli.flagMap.exclude?.split(',') ?? [];
+      const ignore =       cli.flagMap.ignore ?? null;
+      const ignoreConfig = cli.flagMap.ignoreConfig ?? null;
+      const defaultRules = cli.flagOn.defaultRules!;
+      const delay =        Number(cli.flagMap.delay) || 500;  //default half second debounce pause
+      const trim =         Number(cli.flagMap.trim) || null;
+      const dryRun =       cli.flagOn.dryRun || process.env.w3cHtmlValidator === 'dry-run';  //bash: export w3cHtmlValidator=dry-run
+      const getFilenames = () => {
+         const readFilenames = (file: string) => globSync(file, { ignore: '**/node_modules/**/*' }).map(slash);
+         const readHtmlFiles = (folder: string) => readFilenames(folder + '/**/*.html');
+         const addHtml =       (file: string) => fs.lstatSync(file).isDirectory() ? readHtmlFiles(file) : file;
+         const keep =          (file: string) => excludeList.every(exclude => !file.includes(exclude));
+         return files.map(readFilenames).flat().map(addHtml).flat().filter(keep).sort();
+         };
+      const filenames = getFilenames();
+      const error =
+         cli.invalidFlag ?          cli.invalidFlagMsg :
+         !filenames.length ?        'No files to validate.' :
+         cli.flagOn.trim && !trim ? 'Value of "trim" must be a positive whole number.' :
+         null;
+      w3cHtmlValidator.assert(!error, error);
+      if (dryRun)
+         w3cHtmlValidator.dryRunNotice();
+      if (filenames.length > 1 && !cli.flagOn.quiet)
+         w3cHtmlValidator.summary(filenames.length);
+      const reporterOptions: ReporterSettings = {
+         continueOnFail: cli.flagOn.continue!,
+         maxMessageLen:  trim,
+         quiet:          cli.flagOn.quiet!,
+         title:          null,
+         };
+      const getIgnoreMessages = () => {
+         const toArray =    (text: string) => text.replace(/\r/g, '').split('\n').map(line => line.trim());
+         const notComment = (line: string) => line.length > 1 && !line.startsWith('#');
+         const readLines =  (file: string) => toArray(fs.readFileSync(file).toString()).filter(notComment);
+         const rawLines =   ignoreConfig ? readLines(ignoreConfig) : [];
+         if (ignore)
+            rawLines.push(ignore);
+         const isRegex = /^\/.*\/$/;  //starts and ends with a slash indicating it's a regex
+         return rawLines.map(line => isRegex.test(line) ? new RegExp(line.slice(1, -1)) : line);
+         };
+      const ignoreMessages = getIgnoreMessages();
+      const options =       (filename: string): Partial<ValidatorSettings> => ({ filename, ignoreMessages, defaultRules, dryRun });
+      const handleResults = (results: ValidatorResults) => w3cHtmlValidator.reporter(results, reporterOptions);
+      const getReport =     (filename: string) => w3cHtmlValidator.validate(options(filename)).then(handleResults);
+      const processFile =   (filename: string, i: number) => globalThis.setTimeout(() => getReport(filename), i * delay);
+      filenames.forEach(processFile);
       },
 
    validate(options: Partial<ValidatorSettings>): Promise<ValidatorResults> {
