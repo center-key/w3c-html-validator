@@ -54,6 +54,7 @@ describe('Library module', () => {
       const module = w3cHtmlValidator;
       const actual = Object.keys(module).sort().map(key => [key, typeof module[key]]);
       const expected = [
+         ['assert',            'function'],
          ['defaultIgnoreList', 'object'],
          ['dryRunNotice',      'function'],
          ['reporter',          'function'],
@@ -346,6 +347,7 @@ describe('Network request failure', () => {
    it('for service unavailable (HTTP status 503) is handled gracefully', (done) => {
       const handleData = (data) => {
          const actual = data;
+         const message = '503 Service Unavailable https://centerkey.com/rest/status/503/?out=json';
          const expected = {
             validates: false,
             mode:      'html',
@@ -355,10 +357,7 @@ describe('Network request failure', () => {
             website:   null,
             output:    'json',
             status:    503,
-            messages:  [{
-               type:    'network-error',
-               message: '503 Service Unavailable https://centerkey.com/rest/status/503/?out=json',
-               }],
+            messages:  [{ type: 'network-error', message: message }],
             display:   null,
             dryRun:    false,
             };

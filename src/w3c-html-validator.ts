@@ -9,15 +9,15 @@ import slash   from 'slash';
 
 // Type Declarations
 export type ValidatorSettings = {
-   html:           string,                   //example: '<!doctype html><html><head><title>Home</title></html>''
-   filename:       string,                   //example: 'docs/index.html'
-   website:        string,                   //example: 'https://pretty-print-json.js.org/'
-   checkUrl:       string,                   //default: 'https://validator.w3.org/nu/'
-   ignoreLevel:    'info' | 'warning',       //skip unwanted validation messages ('warning' also skips 'info')
-   ignoreMessages: ValidatorIgnorePattern[], //patterns to skip unwanted validation messages
-   defaultRules:   boolean,                  //apply additional built-in opinionated ignore list
-   output:         ValidatorResultsOutput,   //'json' or 'html'
-   dryRun:         boolean,                  //bypass validation (for usage while building your CI)
+   html:           string | null,              //example: '<!doctype html><html><head><title>Home</title></html>''
+   filename:       string | null,              //example: 'docs/index.html'
+   website:        string | null,              //example: 'https://pretty-print-json.js.org/'
+   checkUrl:       string | null,              //default: 'https://validator.w3.org/nu/'
+   ignoreLevel:    'info' | 'warning' | null,  //skip unwanted validation messages ('warning' also skips 'info')
+   ignoreMessages: ValidatorIgnorePattern[],   //patterns to skip unwanted validation messages
+   defaultRules:   boolean,                    //apply additional built-in opinionated ignore list
+   output:         'json' | 'html' | null,     //configure results as an array or as a web page
+   dryRun:         boolean,                    //bypass validation (for usage while building your CI)
    };
 export type ValidatorIgnorePattern = string | RegExp;  //pattern to skip unwanted validation messages
 export type ValidatorResultsMessage = {
@@ -52,7 +52,6 @@ export type ValidatorResults = {
    display:   string | null,
    dryRun:    boolean,
    };
-export type ValidatorResultsOutput = ValidatorResults['output'];
 export type ReporterSettings = {
    continueOnFail: boolean,        //report messages but do not throw an error if validation failed
    maxMessageLen:  number | null,  //trim validation messages to not exceed a maximum length
@@ -69,31 +68,42 @@ const w3cHtmlValidator = {
       'Section lacks heading.'  //sensible for traditional print publishing but absurd for modern UI components
       ],
 
+   assert(ok: unknown, message: string | null) {
+      if (!ok)
+         throw new Error(`[w3c-html-validator] ${message}`);
+      },
+
    validate(options: Partial<ValidatorSettings>): Promise<ValidatorResults> {
-      const defaults = {
+      const defaults: ValidatorSettings = {
          checkUrl:       'https://validator.w3.org/nu/',
          defaultRules:   false,
          dryRun:         false,
+         filename:       null,
+         html:           null,
          ignoreLevel:    null,
          ignoreMessages: [],
          output:         'json',
+         website:        null,
          };
-      const settings = { ...defaults, ...options };
-      if (!settings.html && !settings.filename && !settings.website)
-         throw new Error('[w3c-html-validator] Must specify the "html", "filename", or "website" option.');
-      if (![null, 'info', 'warning'].includes(settings.ignoreLevel))
-         throw new Error(`[w3c-html-validator] Invalid ignoreLevel option: ${settings.ignoreLevel}`);
-      if (settings.output !== 'json' && settings.output !== 'html')
-         throw new Error('[w3c-html-validator] Option "output" must be "json" or "html".');
+      const settings =      { ...defaults, ...options };
+      const missingInput =  !settings.html && !settings.filename && !settings.website;
+      const badLevel =      ![null, 'info', 'warning'].includes(settings.ignoreLevel);
+      const invalidOutput = settings.output !== 'json' && settings.output !== 'html';
+      const error =
+         missingInput ?  'Must specify the "html", "filename", or "website" option.' :
+         badLevel ?      `Invalid ignoreLevel option: ${settings.ignoreLevel}` :
+         invalidOutput ? 'Option "output" must be "json" or "html".' :
+         null;
+      w3cHtmlValidator.assert(!error, error);
       const filename =  settings.filename ? slash(settings.filename) : null;
       const mode =      settings.html ? 'html' : filename ? 'filename' : 'website';
       const unixify =   (text: string) => text.replace(/\r/g, '');
       const readFile =  (filename: string) => unixify(fs.readFileSync(filename, 'utf-8'));
       const inputHtml = settings.html ?? (filename ? readFile(filename) : null);
-      const makePostRequest = () => request.post(settings.checkUrl)
+      const makePostRequest = () => request.post(settings.checkUrl!)
          .set('Content-Type', 'text/html; encoding=utf-8')
          .send(<string>inputHtml);
-      const makeGetRequest = () => request.get(settings.checkUrl)
+      const makeGetRequest = () => request.get(settings.checkUrl!)
          .query({ doc: settings.website });
       const w3cRequest = inputHtml ? makePostRequest() : makeGetRequest();
       const userAgent =  'W3C HTML Validator ~ github.com/center-key/w3c-html-validator';
@@ -130,7 +140,7 @@ const w3cHtmlValidator = {
          html:      inputHtml,
          filename:  filename,
          website:   settings.website || null,
-         output:    <ValidatorResultsOutput>settings.output,
+         output:    settings.output!,
          status:    response.statusCode || -1,
          messages:  json ? response.body.messages : null,  //eslint-disable-line
          display:   json ? null : response.text,
@@ -166,15 +176,15 @@ const w3cHtmlValidator = {
       },
 
    reporter(results: ValidatorResults, options?: Partial<ReporterSettings>): ValidatorResults {
-      const defaults = {
+      const defaults: ReporterSettings = {
          continueOnFail: false,
          maxMessageLen:  null,
          quiet:          false,
          title:          null,
          };
       const settings = { ...defaults, ...options };
-      if (typeof results?.validates !== 'boolean')  //eslint-disable-line
-         throw new Error(`[w3c-html-validator] Invalid results for reporter(): ${<unknown>results}`);
+      const hasResults = 'validates' in results && typeof results.validates === 'boolean';
+      w3cHtmlValidator.assert(hasResults, `Invalid results for reporter(): ${<unknown>results}`);
       const messages = results.messages ?? [];
       const title =    settings.title ?? results.title;
       const status =   results.validates ? chalk.green.bold('✔ pass') : chalk.red.bold('✘ fail');
@@ -205,8 +215,8 @@ const w3cHtmlValidator = {
             `${results.filename} -- ${results.messages!.map(toString).join(', ')}`;
          return !results.filename ? results.messages![0]!.message : fileDetails();
          };
-      if (!settings.continueOnFail && !results.validates)
-         throw new Error(`[w3c-html-validator] Failed: ${failDetails()}`);
+      const failed = !settings.continueOnFail && !results.validates;
+      w3cHtmlValidator.assert(!failed, `Failed: ${failDetails()}`);
       return results;
       },
 

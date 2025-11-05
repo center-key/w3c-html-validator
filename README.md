@@ -62,8 +62,7 @@ Command-line flags:
 | `--quiet`         | Suppress messages for successful validations.                       | N/A        |
 | `--trim`          | Truncate validation messages to not exceed a maximum length.        | **number** |
 
-### 4. Example CLI usage
-Examples:
+### 4. Examples
    - `html-validator`<br>
    Validates all HTML files in the project.
 
