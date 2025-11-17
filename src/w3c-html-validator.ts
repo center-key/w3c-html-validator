@@ -1,4 +1,21 @@
 // W3C HTML Validator ~ MIT License
+//
+// Usage in package.json:
+//    "scripts": {
+//       "validate": "html-validator docs flyer.html",
+//       "all":      "html-validator"
+//    },
+//
+// Usage from command line:
+//    $ npm install --save-dev w3c-html-validator
+//    $ npx html-validator dist  #validate all html files in the dist folder
+//    $ npx html-validator docs flyer.html
+//
+// Contributors to this project:
+//    $ cd w3c-html-validator
+//    $ npm install
+//    $ npm test
+//    $ node bin/cli.js spec --continue
 
 // Imports
 import { cliArgvUtil } from 'cli-argv-util';

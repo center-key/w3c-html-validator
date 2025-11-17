@@ -20,7 +20,14 @@ $ npm install --save-dev w3c-html-validator
 ```
 
 ## B) Usage
-### 1. npm package.json scripts
+### 1. Synopsis
+```
+html-validator [INPUT1] [INPUT2] [INPUT3] [...]
+```
+Parameters:
+Each parameter is a folder or file to be sent to the HTML validator.
+
+### 2. npm package.json scripts
 Run `html-validator` from the `"scripts"` section of your **package.json** file.
 
 The parameters are folders and files to be validated.
@@ -37,7 +44,7 @@ Example **package.json** scripts:
 Passing no parameters defaults to validating all HTML files in the project (skipping the
 **node_modules** folder).
 
-### 2. Command-line npx
+### 3. Command-line npx
 Example terminal commands:
 ```shell
 $ npm install --save-dev w3c-html-validator
@@ -47,7 +54,7 @@ The above `npx` line validates all the HTML files in the **docs** folder.
 
 You can also install **w3c-html-validator** globally (`--global`) and then run it anywhere directly from the terminal.
 
-### 3. CLI flags
+### 4. CLI flags
 Command-line flags:
 | Flag              | Description                                                         | Value      |
 | ----------------- | ------------------------------------------------------------------- | ---------- |
@@ -62,7 +69,7 @@ Command-line flags:
 | `--quiet`         | Suppress messages for successful validations.                       | N/A        |
 | `--trim`          | Truncate validation messages to not exceed a maximum length.        | **number** |
 
-### 4. Examples
+### 5. Examples
    - `html-validator`<br>
    Validates all HTML files in the project.
 
@@ -92,7 +99,7 @@ Command-line flags:
 
 _**Note:** Single quotes in commands are normalized so they work cross-platform and avoid the errors often encountered on Microsoft Windows._
 
-### 5. Configuration File for Ignore Patterns
+### 6. Configuration File for Ignore Patterns
 The optional `--ignore-config=FILENAME` flag specifies a configuration file with one string or regex per line.&nbsp;
 HTML validation messages containing any of the strings or matching any of the regexes will be skipped.&nbsp;
 Empty lines and lines starting with a hash sign (`#`) are treated as comments and do nothing.
@@ -108,7 +115,7 @@ Example configuration file with 3 regexes:
 The caret (`^`) regex operator says to match from the beginning of the validation message.&nbsp;
 The dot (`.`) regex operator says to match any one character, which is a handy way to avoid typing the special curly quote characters in some of the validation messages.
 
-### 6. Default Ignore List
+### 7. Default Ignore List
 The optional `--default-rules` flag causes HTML validation messages to be skipped if they are on the opinionated pre-defined list of unhelpful messages.&nbsp;
 
 Default ignore list:
