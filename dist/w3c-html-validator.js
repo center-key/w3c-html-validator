@@ -1,4 +1,4 @@
-//! w3c-html-validator v2.0.2 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v2.1.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import { cliArgvUtil } from 'cli-argv-util';
 import { globSync } from 'glob';
@@ -8,9 +8,10 @@ import log from 'fancy-log';
 import request from 'superagent';
 import slash from 'slash';
 const w3cHtmlValidator = {
-    version: '2.0.2',
+    version: '2.1.0',
     defaultIgnoreList: [
-        'Section lacks heading.'
+        'with computed level',
+        'Section lacks heading.',
     ],
     assert(ok, message) {
         if (!ok)
