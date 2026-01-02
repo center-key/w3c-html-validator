@@ -84,7 +84,8 @@ const w3cHtmlValidator = {
    version: '{{package.version}}',
 
    defaultIgnoreList: [
-      'Section lacks heading.'  //sensible for traditional print publishing but absurd for modern UI components
+      'with computed level',     //ridiculous that adding an <aside> with an <h2> breaks the outer flow's outline
+      'Section lacks heading.',  //sensible for traditional print publishing but absurd for modern UI components
       ],
 
    assert(ok: unknown, message: string | null) {

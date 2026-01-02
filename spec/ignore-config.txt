@@ -3,3 +3,4 @@
 /^Duplicate ID/
 /^Element .blockquote. not allowed/
 /^Element .style. not allowed/
+/with computed level/

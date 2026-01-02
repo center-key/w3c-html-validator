@@ -146,15 +146,16 @@ describe('Invalid HTML string', () => {
 
    it('fails validator with JSON output', (done) => {
       const message = {
-         heading: 'Section lacks heading. Consider using “h2”-“h6” elements to add identifying headings to all sections, or else use a “div” element instead for any cases where no heading is needed.',
-         child:   'Element “blockquote” not allowed as child of element “span” in this context. (Suppressing further errors from this subtree.)',
+         heading:  'Section lacks heading. Consider using “h2”-“h6” elements to add identifying headings to all sections, or else use a “div” element instead for any cases where no heading is needed.',
+         child:    'Element “blockquote” not allowed as child of element “span” in this context. (Suppressing further errors from this subtree.)',
+         skipping: 'The heading “h3” (with computed level 3) follows the heading “h1” (with computed level 1), skipping 1 heading level.',
          };
       const handleData = (data) => {
          const actual = data;
          const expected = {
             validates: false,
             mode:      'html',
-            title:     'HTML String (characters: 275)',
+            title:     'HTML String (characters: 312)',
             html:      invalidHtml,
             filename:  null,
             website:   null,
@@ -176,11 +177,21 @@ describe('Invalid HTML string', () => {
                   type:         'error',
                   message:      message.child,
                   extract:      '\n   <span><blockquote>Inside',
-                  lastLine:     12,
+                  lastLine:     13,
                   firstColumn:  10,
                   lastColumn:   21,
                   hiliteStart:  10,
                   hiliteLength: 12,
+                  },
+               {
+                  type:         'error',
+                  message:      message.skipping,
+                  extract:      'ction>\n   <h3>Skippi',
+                  lastLine:     12,
+                  firstColumn:  4,
+                  lastColumn:   7,
+                  hiliteStart:  10,
+                  hiliteLength: 4,
                   },
                ],
             display:   null,
@@ -198,7 +209,7 @@ describe('Invalid HTML string', () => {
          const expected = {
             validates: false,
             mode:      'html',
-            title:     'HTML String (characters: 275)',
+            title:     'HTML String (characters: 312)',
             html:      invalidHtml,
             filename:  null,
             website:   null,
@@ -260,7 +271,7 @@ describe('Option ignoreLevel set to "warning"', () => {
             };
          const expected = {
             validates: false,
-            messages: ['error'],
+            messages:  ['error', 'error'],
             };
          assertDeepStrictEqual(actual, expected, done);
          };
@@ -284,7 +295,7 @@ describe('Option ignoreMessages', () => {
             };
          const expected = {
             validates: false,
-            messages: ['error'],
+            messages:  ['error', 'error'],
             };
          assertDeepStrictEqual(actual, expected, done);
          };
@@ -309,7 +320,7 @@ describe('Option ignoreMessages', () => {
          };
       const options = {
          filename:      'spec/html/invalid.html',
-         ignoreMessages: [/^Element .blockquote. not allowed/],
+         ignoreMessages: [/^Element .blockquote. not allowed/, /with computed level/],
          };
       w3cHtmlValidator.validate(options).then(handleData);
       });
@@ -403,9 +414,10 @@ describe('The reporter() function', () => {
    it('throws the correct error when validation fails', () => {
       const options = { filename: 'spec/html/invalid.html' };
       const fail = () => w3cHtmlValidator.validate(options).then(w3cHtmlValidator.reporter);
+      const lineInfo = 'warning line 9 column 4, error line 13 column 10, error line 12 column 4';
       const expected = {
          name:    'Error',
-         message: '[w3c-html-validator] Failed: spec/html/invalid.html -- warning line 9 column 4, error line 12 column 10',
+         message: '[w3c-html-validator] Failed: spec/html/invalid.html -- ' + lineInfo,
          };
       return assert.rejects(fail, expected);
       });

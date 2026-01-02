@@ -97,7 +97,8 @@ Command-line flags:
    - `html-validator docs --trim=30 --continue`<br>
    Truncates validation messages to 30 characters and does not abort CI if validation fails.
 
-_**Note:** Single quotes in commands are normalized so they work cross-platform and avoid the errors often encountered on Microsoft Windows._
+> [!NOTE]
+> _Single quotes in commands are normalized so they work cross-platform and avoid the errors often encountered on Microsoft Windows._
 
 ### 6. Configuration File for Ignore Patterns
 The optional `--ignore-config=FILENAME` flag specifies a configuration file with one string or regex per line.&nbsp;
@@ -121,6 +122,7 @@ The optional `--default-rules` flag causes HTML validation messages to be skippe
 Default ignore list:
 | Pattern                  | Level       | Explanation |
 | ------------------------ | ----------- | ----------- |
+| `with computed level'`   | **error**   | It's ridiculous that adding an `<aside>` with an `<h2>` breaks the outer flow's outline. |
 | `Section lacks heading.` | **warning** | Rule is sensible for traditional print publishing but absurd for modern UI components not burning in nested `<div>` hell. |
 
 If there is an additional W3C validation message you think is ridiculous, open an issue with a note explaining why the message should be ignored.&nbsp;
