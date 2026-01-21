@@ -1,4 +1,4 @@
-//! w3c-html-validator v2.1.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v2.2.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 export type ValidatorSettings = {
     html: string | null;
@@ -46,6 +46,7 @@ export type ReporterSettings = {
 };
 declare const w3cHtmlValidator: {
     version: string;
+    checkUrl: string;
     defaultIgnoreList: string[];
     assert(ok: unknown, message: string | null): void;
     cli(): void;

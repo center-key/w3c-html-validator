@@ -58,6 +58,7 @@ You can also install **w3c-html-validator** globally (`--global`) and then run i
 Command-line flags:
 | Flag              | Description                                                         | Value      |
 | ----------------- | ------------------------------------------------------------------- | ---------- |
+| `--check-url`     | W3C validation API endpoint (example: `http://localhost/nu/`).      | **string** |
 | `--continue`      | Report messages but do not throw an error if validation failed.     | N/A        |
 | `--default-rules` | Apply additional built-in opinionated ignore list.                  | N/A        |
 | `--delay`         | Debounce pause in milliseconds between each file validation.        | **number** |
@@ -98,7 +99,7 @@ Command-line flags:
    Truncates validation messages to 30 characters and does not abort CI if validation fails.
 
    - `html-validator docs --check-url=http://localhost/nu/ --delay=0`<br>
-   Validates the HTML files in the **docs** folder using a locally hosted W3C validator, such as the [docker-validator-w3c](https://github.com/netresearch/docker-validator-w3c) server.
+   Uses a locally hosted W3C validator, such as the [docker-validator-w3c](https://github.com/netresearch/docker-validator-w3c) server.
 
 > [!NOTE]
 > _Single quotes in commands are normalized so they work cross-platform and avoid the errors often encountered on Microsoft Windows._

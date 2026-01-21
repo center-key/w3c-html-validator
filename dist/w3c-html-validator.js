@@ -1,4 +1,4 @@
-//! w3c-html-validator v2.1.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v2.2.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import { cliArgvUtil } from 'cli-argv-util';
 import { globSync } from 'glob';
@@ -8,7 +8,8 @@ import log from 'fancy-log';
 import request from 'superagent';
 import slash from 'slash';
 const w3cHtmlValidator = {
-    version: '2.1.0',
+    version: '2.2.0',
+    checkUrl: 'https://validator.w3.org/nu/',
     defaultIgnoreList: [
         'with computed level',
         'Section lacks heading.',
@@ -18,10 +19,11 @@ const w3cHtmlValidator = {
             throw new Error(`[w3c-html-validator] ${message}`);
     },
     cli() {
-        const validFlags = ['continue', 'default-rules', 'delay', 'dry-run', 'exclude',
+        const validFlags = ['check-url', 'continue', 'default-rules', 'delay', 'dry-run', 'exclude',
             'ignore', 'ignore-config', 'note', 'quiet', 'trim'];
         const cli = cliArgvUtil.parse(validFlags);
         const files = cli.params.length ? cli.params.map(cliArgvUtil.cleanPath) : ['.'];
+        const checkUrl = cli.flagMap.checkUrl ?? w3cHtmlValidator.checkUrl;
         const excludeList = cli.flagMap.exclude?.split(',') ?? [];
         const ignore = cli.flagMap.ignore ?? null;
         const ignoreConfig = cli.flagMap.ignoreConfig ?? null;
@@ -63,7 +65,7 @@ const w3cHtmlValidator = {
             return rawLines.map(line => isRegex.test(line) ? new RegExp(line.slice(1, -1)) : line);
         };
         const ignoreMessages = getIgnoreMessages();
-        const options = (filename) => ({ filename, ignoreMessages, defaultRules, dryRun });
+        const options = (filename) => ({ filename, checkUrl, ignoreMessages, defaultRules, dryRun });
         const handleResults = (results) => w3cHtmlValidator.reporter(results, reporterOptions);
         const getReport = (filename) => w3cHtmlValidator.validate(options(filename)).then(handleResults);
         const processFile = (filename, i) => globalThis.setTimeout(() => getReport(filename), i * delay);
@@ -71,7 +73,7 @@ const w3cHtmlValidator = {
     },
     validate(options) {
         const defaults = {
-            checkUrl: 'https://validator.w3.org/nu/',
+            checkUrl: w3cHtmlValidator.checkUrl,
             defaultRules: false,
             dryRun: false,
             filename: null,
