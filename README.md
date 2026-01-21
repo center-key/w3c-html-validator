@@ -92,10 +92,13 @@ Command-line flags:
    Skip all HTML validation messages in the built-in opinionated ignore list and also suppresses all the "pass" status messages.
 
    - `html-validator docs --delay=200`<br>
-   Validates all HTML files in the "docs" folder at a rate of 1 file per 200 ms (default is 500 ms).
+   Validates all HTML files in the **docs** folder at a rate of 1 file per 200 ms (default is 500 ms).
 
    - `html-validator docs --trim=30 --continue`<br>
    Truncates validation messages to 30 characters and does not abort CI if validation fails.
+
+   - `html-validator docs --check-url=http://localhost/nu/ --delay=0`<br>
+   Validates the HTML files in the **docs** folder using a locally hosted W3C validator, such as the [docker-validator-w3c](https://github.com/netresearch/docker-validator-w3c) server.
 
 > [!NOTE]
 > _Single quotes in commands are normalized so they work cross-platform and avoid the errors often encountered on Microsoft Windows._
@@ -122,7 +125,7 @@ The optional `--default-rules` flag causes HTML validation messages to be skippe
 Default ignore list:
 | Pattern                  | Level       | Explanation |
 | ------------------------ | ----------- | ----------- |
-| `with computed level'`   | **error**   | It's ridiculous that adding an `<aside>` with an `<h2>` breaks the outer flow's outline. |
+| `with computed level`    | **error**   | It's ridiculous that adding an `<aside>` with an `<h2>` breaks the outer flow's outline. |
 | `Section lacks heading.` | **warning** | Rule is sensible for traditional print publishing but absurd for modern UI components not burning in nested `<div>` hell. |
 
 If there is an additional W3C validation message you think is ridiculous, open an issue with a note explaining why the message should be ignored.&nbsp;
@@ -138,7 +141,7 @@ Example call to the `validate()` function:
 import { w3cHtmlValidator } from 'w3c-html-validator';
 
 const options = { filename: 'docs/index.html' };
-w3cHtmlValidator.validate(options).then(console.log);
+w3cHtmlValidator.validate(options).then(console.log);  //outputs the resutls object
 ```
 To display formatted output, replace `console.log` with `w3cHtmlValidator.reporter`:
 ```typescript

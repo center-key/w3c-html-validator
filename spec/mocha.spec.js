@@ -55,6 +55,7 @@ describe('Library module', () => {
       const actual = Object.keys(module).sort().map(key => [key, typeof module[key]]);
       const expected = [
          ['assert',            'function'],
+         ['checkUrl',          'string'],
          ['cli',               'function'],
          ['defaultIgnoreList', 'object'],
          ['dryRunNotice',      'function'],
@@ -430,6 +431,12 @@ describe('Executing the CLI', () => {
 
    it('to check a valid HTML file correctly outputs a "pass" message', () => {
       const actual =   run('html-validator spec/html/valid.html --note=cli');
+      const expected = null;
+      assertDeepStrictEqual(actual, expected);
+      });
+
+   it('with the default W3C check URL on a valid HTML file outputs a "pass" message', () => {
+      const actual =   run('html-validator spec/html/valid.html --check-url=https://validator.w3.org/nu/');
       const expected = null;
       assertDeepStrictEqual(actual, expected);
       });

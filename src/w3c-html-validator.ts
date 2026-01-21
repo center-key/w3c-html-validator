@@ -83,6 +83,8 @@ const w3cHtmlValidator = {
 
    version: '{{package.version}}',
 
+   checkUrl: 'https://validator.w3.org/nu/',
+
    defaultIgnoreList: [
       'with computed level',     //ridiculous that adding an <aside> with an <h2> breaks the outer flow's outline
       'Section lacks heading.',  //sensible for traditional print publishing but absurd for modern UI components
@@ -94,10 +96,11 @@ const w3cHtmlValidator = {
       },
 
    cli() {
-      const validFlags = ['continue', 'default-rules', 'delay', 'dry-run', 'exclude',
+      const validFlags = ['check-url', 'continue', 'default-rules', 'delay', 'dry-run', 'exclude',
          'ignore', 'ignore-config', 'note', 'quiet', 'trim'];
       const cli =          cliArgvUtil.parse(validFlags);
       const files =        cli.params.length ? cli.params.map(cliArgvUtil.cleanPath) : ['.'];
+      const checkUrl =     cli.flagMap.checkUrl ?? w3cHtmlValidator.checkUrl;
       const excludeList =  cli.flagMap.exclude?.split(',') ?? [];
       const ignore =       cli.flagMap.ignore ?? null;
       const ignoreConfig = cli.flagMap.ignoreConfig ?? null;
@@ -140,7 +143,8 @@ const w3cHtmlValidator = {
          return rawLines.map(line => isRegex.test(line) ? new RegExp(line.slice(1, -1)) : line);
          };
       const ignoreMessages = getIgnoreMessages();
-      const options =       (filename: string): Partial<ValidatorSettings> => ({ filename, ignoreMessages, defaultRules, dryRun });
+      const options = (filename: string): Partial<ValidatorSettings> =>
+         ({ filename, checkUrl, ignoreMessages, defaultRules, dryRun });
       const handleResults = (results: ValidatorResults) => w3cHtmlValidator.reporter(results, reporterOptions);
       const getReport =     (filename: string) => w3cHtmlValidator.validate(options(filename)).then(handleResults);
       const processFile =   (filename: string, i: number) => globalThis.setTimeout(() => getReport(filename), i * delay);
@@ -149,7 +153,7 @@ const w3cHtmlValidator = {
 
    validate(options: Partial<ValidatorSettings>): Promise<ValidatorResults> {
       const defaults: ValidatorSettings = {
-         checkUrl:       'https://validator.w3.org/nu/',
+         checkUrl:       w3cHtmlValidator.checkUrl,
          defaultRules:   false,
          dryRun:         false,
          filename:       null,
