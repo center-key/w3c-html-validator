@@ -246,7 +246,7 @@ const w3cHtmlValidator = {
 
    dryRunNotice() {
       log(chalk.gray('w3c-html-validator'),
-         chalk.yellowBright('dry run mode:'), chalk.whiteBright('validation being bypassed'));
+         chalk.yellowBright('dry run mode:'), chalk.whiteBright('skipping validation'));
       },
 
    summary(numFiles: number) {
