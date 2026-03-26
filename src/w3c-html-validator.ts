@@ -220,16 +220,16 @@ const w3cHtmlValidator = {
          website:   settings.website || null,
          output:    settings.output!,
          status:    response.statusCode || -1,
-         messages:  json ? response.body.messages : null,  //eslint-disable-line
+         messages:  json ? (<{ messages: ValidatorResultsMessage[]}>response.body).messages : null,
          display:   json ? null : response.text,
          dryRun:    settings.dryRun,
          });
       type ReasonResponse = { request: { url: string }, res: { statusMessage: string }};
       type ReasonError =    Error & { errno: number, response: request.Response & ReasonResponse };
       const handleError = (reason: ReasonError): ValidatorResults => {
-         const errRes =  reason.response ?? <ReasonError['response']>{};  //eslint-disable-line
+         const errRes =  reason.response ?? <ReasonError['response']>{};  //eslint-disable-line @typescript-eslint/no-unnecessary-condition
          const getMsg =  () => [errRes.status, errRes.res.statusMessage, errRes.request.url];
-         const message = reason.response ? getMsg() : [reason.errno, reason.message];  //eslint-disable-line
+         const message = reason.response ? getMsg() : [reason.errno, reason.message];  //eslint-disable-line @typescript-eslint/no-unnecessary-condition
          errRes.body =   { messages: [{ type: 'network-error', message: message.join(' ') }] };
          return toValidatorResults(errRes);
          };
