@@ -78,7 +78,7 @@
       "mocha": "~11.7",
       "rimraf": "~6.1",
       "run-scripts-util": "~1.3",
-      "typescript": "~5.9",
-      "typescript-eslint": "~8.57"
+      "typescript": "~6.0",
+      "typescript-eslint": "~8.58"
    }
 }

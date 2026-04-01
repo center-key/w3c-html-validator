@@ -203,7 +203,7 @@ type ValidatorResults = {
 
 ### 4. Mocha example
 ```javascript
-import assert from 'assert';
+import assert from 'node:assert';
 import { w3cHtmlValidator } from 'w3c-html-validator';
 
 describe('Home page', () => {

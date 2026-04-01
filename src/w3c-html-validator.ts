@@ -21,7 +21,7 @@
 import { cliArgvUtil } from 'cli-argv-util';
 import { globSync } from 'glob';
 import chalk, { ChalkInstance } from 'chalk';
-import fs      from 'fs';
+import fs      from 'node:fs';
 import log     from 'fancy-log';
 import request from 'superagent';
 import slash   from 'slash';

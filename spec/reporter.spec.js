@@ -3,8 +3,8 @@
 
 // Imports
 import { assertDeepStrictEqual } from 'assert-deep-strict-equal';
-import assert from 'assert';
-import fs from 'fs';
+import assert from 'node:assert';
+import fs     from 'node:fs';
 
 // Setup
 import { w3cHtmlValidator } from '../dist/w3c-html-validator.js';
