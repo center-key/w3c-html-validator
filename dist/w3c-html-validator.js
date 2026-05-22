@@ -1,14 +1,14 @@
-//! w3c-html-validator v2.2.0 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v2.2.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import { cliArgvUtil } from 'cli-argv-util';
 import { globSync } from 'glob';
 import chalk from 'chalk';
-import fs from 'fs';
+import fs from 'node:fs';
 import log from 'fancy-log';
 import request from 'superagent';
 import slash from 'slash';
 const w3cHtmlValidator = {
-    version: '2.2.0',
+    version: '2.2.1',
     checkUrl: 'https://validator.w3.org/nu/',
     defaultIgnoreList: [
         'with computed level',
@@ -98,7 +98,7 @@ const w3cHtmlValidator = {
         const readFile = (filename) => unixify(fs.readFileSync(filename, 'utf-8'));
         const inputHtml = settings.html ?? (filename ? readFile(filename) : null);
         const makePostRequest = () => request.post(settings.checkUrl)
-            .set('Content-Type', 'text/html; encoding=utf-8')
+            .set('content-type', 'text/html; encoding=utf-8')
             .send(inputHtml);
         const makeGetRequest = () => request.get(settings.checkUrl)
             .query({ doc: settings.website });
@@ -155,7 +155,7 @@ const w3cHtmlValidator = {
         return validation.then(filterMessages).then(toValidatorResults).catch(handleError);
     },
     dryRunNotice() {
-        log(chalk.gray('w3c-html-validator'), chalk.yellowBright('dry run mode:'), chalk.whiteBright('validation being bypassed'));
+        log(chalk.gray('w3c-html-validator'), chalk.yellowBright('dry run mode:'), chalk.whiteBright('skipping validation'));
     },
     summary(numFiles) {
         log(chalk.gray('w3c-html-validator'), chalk.magenta('files: ' + String(numFiles)));
