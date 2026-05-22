@@ -179,7 +179,7 @@ const w3cHtmlValidator = {
       const readFile =  (filename: string) => unixify(fs.readFileSync(filename, 'utf-8'));
       const inputHtml = settings.html ?? (filename ? readFile(filename) : null);
       const makePostRequest = () => request.post(settings.checkUrl!)
-         .set('Content-Type', 'text/html; encoding=utf-8')
+         .set('content-type', 'text/html; encoding=utf-8')
          .send(<string>inputHtml);
       const makeGetRequest = () => request.get(settings.checkUrl!)
          .query({ doc: settings.website });
