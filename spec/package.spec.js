@@ -48,7 +48,7 @@ describe('Library module', () => {
       const module = w3cHtmlValidator;
       const actual = Object.keys(module).sort().map(key => [key, typeof module[key]]);
       const expected = [
-         ['assert',            'function'],
+         ['assertOk',          'function'],
          ['checkUrl',          'string'],
          ['cli',               'function'],
          ['defaultIgnoreList', 'object'],

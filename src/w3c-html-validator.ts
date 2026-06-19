@@ -90,7 +90,7 @@ const w3cHtmlValidator = {
       'Section lacks heading.',  //sensible for traditional print publishing but absurd for modern UI components
       ],
 
-   assert(ok: unknown, message: string | null) {
+   assertOk(ok: unknown, message: string | null) {
       if (!ok)
          throw new Error(`[w3c-html-validator] ${message}`);
       },
@@ -121,7 +121,7 @@ const w3cHtmlValidator = {
          !filenames.length ?        'No files to validate.' :
          cli.flagOn.trim && !trim ? 'Value of "trim" must be a positive whole number.' :
          null;
-      w3cHtmlValidator.assert(!error, error);
+      w3cHtmlValidator.assertOk(!error, error);
       if (dryRun)
          w3cHtmlValidator.dryRunNotice();
       if (filenames.length > 1 && !cli.flagOn.quiet)
@@ -172,7 +172,7 @@ const w3cHtmlValidator = {
          badLevel ?      `Invalid ignoreLevel option: ${settings.ignoreLevel}` :
          invalidOutput ? 'Option "output" must be "json" or "html".' :
          null;
-      w3cHtmlValidator.assert(!error, error);
+      w3cHtmlValidator.assertOk(!error, error);
       const filename =  settings.filename ? slash(settings.filename) : null;
       const mode =      settings.html ? 'html' : filename ? 'filename' : 'website';
       const unixify =   (text: string) => text.replace(/\r/g, '');
@@ -262,7 +262,7 @@ const w3cHtmlValidator = {
          };
       const settings = { ...defaults, ...options };
       const hasResults = 'validates' in results && typeof results.validates === 'boolean';
-      w3cHtmlValidator.assert(hasResults, `Invalid results for reporter(): ${<unknown>results}`);
+      w3cHtmlValidator.assertOk(hasResults, `Invalid results for reporter(): ${<unknown>results}`);
       const messages = results.messages ?? [];
       const title =    settings.title ?? results.title;
       const status =   results.validates ? chalk.green.bold('✔ pass') : chalk.red.bold('✘ fail');
@@ -294,7 +294,7 @@ const w3cHtmlValidator = {
          return !results.filename ? results.messages![0]!.message : fileDetails();
          };
       const failed = !settings.continueOnFail && !results.validates;
-      w3cHtmlValidator.assert(!failed, `Failed: ${failDetails()}`);
+      w3cHtmlValidator.assertOk(!failed, `Failed: ${failDetails()}`);
       return results;
       },
 
