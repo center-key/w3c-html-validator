@@ -192,6 +192,7 @@ type ValidatorResults = {
    mode:      'html' | 'filename' | 'website';
    html:      string | null,
    filename:  string | null,
+   fileCount: number | null,
    website:   string | null,
    output:    'json' | 'html',
    status:    number,

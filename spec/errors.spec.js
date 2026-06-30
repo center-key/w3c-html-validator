@@ -50,6 +50,7 @@ describe('Network request failure', () => {
             title:     'HTML String (characters: 153)',
             html:      validHtml,
             filename:  null,
+            fileCount: null,
             website:   null,
             output:    'json',
             status:    503,

@@ -26,10 +26,10 @@ describe('The "dist" folder', () => {
 describe('Library version number', () => {
 
    it('follows semantic version formatting', () => {
-      const data = w3cHtmlValidator.version;
-      const semVerPattern = /\d+[.]\d+[.]\d+/;
-      const actual =   { version: data, valid: semVerPattern.test(data) };
-      const expected = { version: data, valid: true };
+      const version =  w3cHtmlValidator.version;
+      const semVer =   /\d+[.]\d+[.]\d+/;
+      const actual =   { version: version, valid: semVer.test(version) };
+      const expected = { version: version, valid: true };
       assertDeepStrictEqual(actual, expected);
       });
 
@@ -38,13 +38,13 @@ describe('Library version number', () => {
 ////////////////////////////////////////////////////////////////////////////////
 describe('Library module', () => {
 
-   it('is an object', () => {
-      const actual =   { constructor: w3cHtmlValidator.constructor.name };
-      const expected = { constructor: 'Object' };
+   it('is exported as an object', () => {
+      const actual =   { type: typeof w3cHtmlValidator };
+      const expected = { type: 'object' };
       assertDeepStrictEqual(actual, expected);
       });
 
-   it('has functions named validate(), dryRunNotice(), summary(), and reporter()', () => {
+   it('has the correct properties', () => {
       const module = w3cHtmlValidator;
       const actual = Object.keys(module).sort().map(key => [key, typeof module[key]]);
       const expected = [
@@ -52,9 +52,7 @@ describe('Library module', () => {
          ['checkUrl',          'string'],
          ['cli',               'function'],
          ['defaultIgnoreList', 'object'],
-         ['dryRunNotice',      'function'],
          ['reporter',          'function'],
-         ['summary',           'function'],
          ['validate',          'function'],
          ['version',           'string'],
          ];

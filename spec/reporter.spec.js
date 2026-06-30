@@ -23,6 +23,7 @@ describe('The reporter() function', () => {
             title:     'spec/html/valid.html',
             html:      validHtml,
             filename:  'spec/html/valid.html',
+            fileCount: 7,
             website:   null,
             output:    'json',
             status:    200,
@@ -32,13 +33,20 @@ describe('The reporter() function', () => {
             };
          assertDeepStrictEqual(actual, expected, done);
          };
-      w3cHtmlValidator.validate({ filename: 'spec/html/valid.html' })
+      const options = {
+         filename: 'spec/html/valid.html',
+         fileCount: 7,
+         };
+      w3cHtmlValidator.validate(options)
          .then(w3cHtmlValidator.reporter)
          .then(handleData);
       });
 
    it('throws the correct error when validation fails', () => {
-      const options = { filename: 'spec/html/invalid.html' };
+      const options = {
+         filename:  'spec/html/invalid.html',
+         fileCount: 7,
+         };
       const fail = () => w3cHtmlValidator.validate(options).then(w3cHtmlValidator.reporter);
       const lineInfo = 'warning line 9 column 4, error line 13 column 10, error line 12 column 4';
       const expected = {
