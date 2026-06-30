@@ -1,8 +1,9 @@
-//! w3c-html-validator v2.2.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v2.2.2 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 export type ValidatorSettings = {
     html: string | null;
     filename: string | null;
+    fileCount: number | null;
     website: string | null;
     checkUrl: string | null;
     ignoreLevel: 'info' | 'warning' | null;
@@ -31,6 +32,7 @@ export type ValidatorResults = {
     title: string;
     html: string | null;
     filename: string | null;
+    fileCount: number | null;
     website: string | null;
     output: 'json' | 'html';
     status: number;
@@ -48,11 +50,9 @@ declare const w3cHtmlValidator: {
     version: string;
     checkUrl: string;
     defaultIgnoreList: string[];
-    assert(ok: unknown, message: string | null): void;
+    assertOk(ok: unknown, message: string | null): void;
     cli(): void;
     validate(options: Partial<ValidatorSettings>): Promise<ValidatorResults>;
-    dryRunNotice(): void;
-    summary(numFiles: number): void;
     reporter(results: ValidatorResults, options?: Partial<ReporterSettings>): ValidatorResults;
 };
 export { w3cHtmlValidator };

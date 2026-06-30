@@ -1,4 +1,4 @@
-//! w3c-html-validator v2.2.1 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v2.2.2 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import { cliArgvUtil } from 'cli-argv-util';
 import { globSync } from 'glob';
@@ -8,13 +8,13 @@ import log from 'fancy-log';
 import request from 'superagent';
 import slash from 'slash';
 const w3cHtmlValidator = {
-    version: '2.2.1',
+    version: '2.2.2',
     checkUrl: 'https://validator.w3.org/nu/',
     defaultIgnoreList: [
         'with computed level',
         'Section lacks heading.',
     ],
-    assert(ok, message) {
+    assertOk(ok, message) {
         if (!ok)
             throw new Error(`[w3c-html-validator] ${message}`);
     },
@@ -24,7 +24,7 @@ const w3cHtmlValidator = {
         const cli = cliArgvUtil.parse(validFlags);
         const files = cli.params.length ? cli.params.map(cliArgvUtil.cleanPath) : ['.'];
         const checkUrl = cli.flagMap.checkUrl ?? w3cHtmlValidator.checkUrl;
-        const excludeList = cli.flagMap.exclude?.split(',') ?? [];
+        const excludes = cli.flagMap.exclude?.split(',') ?? [];
         const ignore = cli.flagMap.ignore ?? null;
         const ignoreConfig = cli.flagMap.ignoreConfig ?? null;
         const defaultRules = cli.flagOn.defaultRules;
@@ -32,10 +32,12 @@ const w3cHtmlValidator = {
         const trim = Number(cli.flagMap.trim) || null;
         const dryRun = cli.flagOn.dryRun || process.env.w3cHtmlValidator === 'dry-run';
         const getFilenames = () => {
-            const readFilenames = (file) => globSync(file, { ignore: '**/node_modules/**/*' }).map(slash);
+            const globOptions = { ignore: '**/node_modules/**/*' };
+            const readFilenames = (file) => globSync(file, globOptions).map(slash);
+            const isFolder = (folder) => fs.lstatSync(folder).isDirectory();
             const readHtmlFiles = (folder) => readFilenames(folder + '/**/*.html');
-            const addHtml = (file) => fs.lstatSync(file).isDirectory() ? readHtmlFiles(file) : file;
-            const keep = (file) => excludeList.every(exclude => !file.includes(exclude));
+            const addHtml = (file) => isFolder(file) ? readHtmlFiles(file) : file;
+            const keep = (file) => excludes.every(exclude => !file.includes(exclude));
             return files.map(readFilenames).flat().map(addHtml).flat().filter(keep).sort();
         };
         const filenames = getFilenames();
@@ -43,11 +45,13 @@ const w3cHtmlValidator = {
             !filenames.length ? 'No files to validate.' :
                 cli.flagOn.trim && !trim ? 'Value of "trim" must be a positive whole number.' :
                     null;
-        w3cHtmlValidator.assert(!error, error);
-        if (dryRun)
-            w3cHtmlValidator.dryRunNotice();
-        if (filenames.length > 1 && !cli.flagOn.quiet)
-            w3cHtmlValidator.summary(filenames.length);
+        w3cHtmlValidator.assertOk(!error, error);
+        const name = chalk.gray('w3c-html-validator');
+        const version = chalk.gray('v' + w3cHtmlValidator.version);
+        const summary = chalk.white(`(files: ${filenames.length})`);
+        const warning = dryRun ? chalk.yellowBright('[dry run mode - skipping validation]') : '';
+        if (!cli.flagOn.quiet || dryRun)
+            log(name, version, checkUrl, summary, warning);
         const reporterOptions = {
             continueOnFail: cli.flagOn.continue,
             maxMessageLen: trim,
@@ -65,10 +69,10 @@ const w3cHtmlValidator = {
             return rawLines.map(line => isRegex.test(line) ? new RegExp(line.slice(1, -1)) : line);
         };
         const ignoreMessages = getIgnoreMessages();
-        const options = (filename) => ({ filename, checkUrl, ignoreMessages, defaultRules, dryRun });
+        const options = (filename, fileCount) => ({ filename, fileCount, checkUrl, ignoreMessages, defaultRules, dryRun });
         const handleResults = (results) => w3cHtmlValidator.reporter(results, reporterOptions);
-        const getReport = (filename) => w3cHtmlValidator.validate(options(filename)).then(handleResults);
-        const processFile = (filename, i) => globalThis.setTimeout(() => getReport(filename), i * delay);
+        const getReport = (filename, fileCount) => w3cHtmlValidator.validate(options(filename, fileCount)).then(handleResults);
+        const processFile = (filename, index) => globalThis.setTimeout(() => getReport(filename, index + 1), index * delay);
         filenames.forEach(processFile);
     },
     validate(options) {
@@ -77,6 +81,7 @@ const w3cHtmlValidator = {
             defaultRules: false,
             dryRun: false,
             filename: null,
+            fileCount: null,
             html: null,
             ignoreLevel: null,
             ignoreMessages: [],
@@ -91,7 +96,7 @@ const w3cHtmlValidator = {
             badLevel ? `Invalid ignoreLevel option: ${settings.ignoreLevel}` :
                 invalidOutput ? 'Option "output" must be "json" or "html".' :
                     null;
-        w3cHtmlValidator.assert(!error, error);
+        w3cHtmlValidator.assertOk(!error, error);
         const filename = settings.filename ? slash(settings.filename) : null;
         const mode = settings.html ? 'html' : filename ? 'filename' : 'website';
         const unixify = (text) => text.replace(/\r/g, '');
@@ -131,6 +136,7 @@ const w3cHtmlValidator = {
             title: titleLookup[mode],
             html: inputHtml,
             filename: filename,
+            fileCount: settings.fileCount,
             website: settings.website || null,
             output: settings.output,
             status: response.statusCode || -1,
@@ -154,12 +160,6 @@ const w3cHtmlValidator = {
         const validation = settings.dryRun ? pseudoRequest() : w3cRequest;
         return validation.then(filterMessages).then(toValidatorResults).catch(handleError);
     },
-    dryRunNotice() {
-        log(chalk.gray('w3c-html-validator'), chalk.yellowBright('dry run mode:'), chalk.whiteBright('skipping validation'));
-    },
-    summary(numFiles) {
-        log(chalk.gray('w3c-html-validator'), chalk.magenta('files: ' + String(numFiles)));
-    },
     reporter(results, options) {
         const defaults = {
             continueOnFail: false,
@@ -168,14 +168,16 @@ const w3cHtmlValidator = {
             title: null,
         };
         const settings = { ...defaults, ...options };
+        const name = chalk.gray('w3c-html-validator');
+        const fileCount = results.fileCount ? chalk.magenta(results.fileCount) + ' ' : '';
         const hasResults = 'validates' in results && typeof results.validates === 'boolean';
-        w3cHtmlValidator.assert(hasResults, `Invalid results for reporter(): ${results}`);
+        w3cHtmlValidator.assertOk(hasResults, `Invalid results for reporter(): ${results}`);
         const messages = results.messages ?? [];
         const title = settings.title ?? results.title;
         const status = results.validates ? chalk.green.bold('✔ pass') : chalk.red.bold('✘ fail');
         const count = results.validates ? '' : `(messages: ${messages.length})`;
-        if (!results.validates || !settings.quiet)
-            log(chalk.gray('w3c-html-validator'), status, chalk.blue.bold(title), chalk.white(count));
+        if (!results.validates || !settings.quiet || results.dryRun)
+            log(name, status, fileCount + chalk.blue.bold(title), chalk.white(count));
         const typeColorMap = {
             error: chalk.red.bold,
             warning: chalk.yellow.bold,
@@ -198,7 +200,7 @@ const w3cHtmlValidator = {
             return !results.filename ? results.messages[0].message : fileDetails();
         };
         const failed = !settings.continueOnFail && !results.validates;
-        w3cHtmlValidator.assert(!failed, `Failed: ${failDetails()}`);
+        w3cHtmlValidator.assertOk(!failed, `Failed: ${failDetails()}`);
         return results;
     },
 };
