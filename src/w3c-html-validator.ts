@@ -128,7 +128,7 @@ const w3cHtmlValidator = {
       w3cHtmlValidator.assertOk(!error, error);
       const name =    chalk.gray('w3c-html-validator');
       const version = chalk.gray('v' +  w3cHtmlValidator.version);
-      const summary = chalk.white(`(files: ${filenames.length})`);
+      const summary = chalk.blue(`(files: ${filenames.length})`);
       const warning = dryRun ? chalk.yellowBright('[dry run mode - skipping validation]') : '';
       if (!cli.flagOn.quiet || dryRun)
          log(name, version, checkUrl, summary, warning);
@@ -262,16 +262,16 @@ const w3cHtmlValidator = {
          title:          null,
          };
       const settings =   { ...defaults, ...options };
-      const name =       chalk.gray('w3c-html-validator');
-      const fileCount =  results.fileCount ? chalk.magenta(results.fileCount) + ' ' : '';
       const hasResults = 'validates' in results && typeof results.validates === 'boolean';
       w3cHtmlValidator.assertOk(hasResults, `Invalid results for reporter(): ${<unknown>results}`);
-      const messages = results.messages ?? [];
-      const title =    settings.title ?? results.title;
-      const status =   results.validates ? chalk.green.bold('✔ pass') : chalk.red.bold('✘ fail');
-      const count =    results.validates ? '' : `(messages: ${messages.length})`;
+      const name =      chalk.gray('w3c-html-validator');
+      const status =    results.validates ? chalk.green.bold('✔ pass') : chalk.red.bold('✘ fail');
+      const fileCount = results.fileCount ? chalk.magenta(results.fileCount) + ' ' : '';
+      const fileInfo =  fileCount + chalk.white(settings.title ?? results.title);
+      const messages =  results.messages ?? [];
+      const msgCount =  results.validates ? '' : chalk.blue(`(messages: ${messages.length})`);
       if (!results.validates || !settings.quiet || results.dryRun)
-         log(name, status, fileCount + chalk.blue.bold(title), chalk.white(count));
+         log(name, status, fileInfo, msgCount);
       const typeColorMap = <{ [messageType: string]: ChalkInstance }>{
          error:   chalk.red.bold,
          warning: chalk.yellow.bold,
@@ -280,12 +280,14 @@ const w3cHtmlValidator = {
       const logMessage = (message: ValidatorResultsMessage) => {
          const type =      message.subType ?? message.type;
          const typeColor = typeColorMap[type] ?? chalk.redBright.bold;
-         const location =  `line ${message.lastLine}, column ${message.firstColumn}:`;
-         const lineText =  message.extract?.replace(/\n/g, '\\n');
+         const label =     typeColor('HTML ' + type + ':');
+         const location =  chalk.white(`line ${message.lastLine}, column ${message.firstColumn}:`);
+         const lineText =  chalk.magenta(message.extract?.replace(/\n/g, '\\n'));
          const maxLen =    settings.maxMessageLen ?? undefined;
-         log(typeColor('HTML ' + type + ':'), message.message.substring(0, maxLen));
+         const errorMsg =  message.message.substring(0, maxLen);
+         log(label, errorMsg);
          if (message.lastLine)
-            log(chalk.white(location), chalk.magenta(lineText));
+            log(location, lineText);
          };
       messages.forEach(logMessage);
       const failDetails = () => {
