@@ -38,14 +38,15 @@ describe('Library version number', () => {
 ////////////////////////////////////////////////////////////////////////////////
 describe('Library module', () => {
 
+   const module = w3cHtmlValidator;
+
    it('is exported as an object', () => {
-      const actual =   { type: typeof w3cHtmlValidator };
+      const actual =   { type: typeof module };
       const expected = { type: 'object' };
       assertDeepStrictEqual(actual, expected);
       });
 
    it('has the correct properties', () => {
-      const module = w3cHtmlValidator;
       const actual = Object.keys(module).sort().map(key => [key, typeof module[key]]);
       const expected = [
          ['assertOk',          'function'],
