@@ -129,7 +129,7 @@ const w3cHtmlValidator = {
       const name =    chalk.gray('w3c-html-validator');
       const version = chalk.gray('v' +  w3cHtmlValidator.version);
       const summary = chalk.blue(`(files: ${filenames.length})`);
-      const warning = dryRun ? chalk.yellowBright('[dry run mode - skipping validation]') : '';
+      const warning = dryRun ? chalk.yellowBright('[dry run mode -- skipping validation]') : '';
       if (!cli.flagOn.quiet || dryRun)
          log(name, version, checkUrl, summary, warning);
       const reporterOptions: ReporterSettings = {
@@ -279,7 +279,7 @@ const w3cHtmlValidator = {
          };
       const logMessage = (message: ValidatorResultsMessage) => {
          const type =      message.subType ?? message.type;
-         const typeColor = typeColorMap[type] ?? chalk.redBright.bold;
+         const typeColor = typeColorMap[type] ?? typeColorMap.error!;
          const label =     typeColor('HTML ' + type + ':');
          const location =  chalk.white(`line ${message.lastLine}, column ${message.firstColumn}:`);
          const lineText =  chalk.magenta(message.extract?.replace(/\n/g, '\\n'));
