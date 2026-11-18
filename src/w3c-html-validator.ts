@@ -237,13 +237,13 @@ const w3cHtmlValidator = {
       type ReasonResponse = { request: { url: string }, res: { statusMessage: string }};
       type ReasonError =    Error & { errno: number, response: request.Response & ReasonResponse };
       const handleError = (reason: ReasonError): ValidatorResults => {
-         const errRes =  reason.response ?? <ReasonError['response']>{};  //eslint-disable-line @typescript-eslint/no-unnecessary-condition
+         const errRes =  reason.response ?? <ReasonError['response']>{};  //eslint-disable-line @typescript-eslint/no-unnecessary-condition,@typescript-eslint/no-unsafe-class-instance-assignment
          const getMsg =  () => [errRes.status, errRes.res.statusMessage, errRes.request.url];
-         const message = reason.response ? getMsg() : [reason.errno, reason.message];  //eslint-disable-line @typescript-eslint/no-unnecessary-condition
+         const message = <unknown>reason.response ? getMsg() : [reason.errno, reason.message];
          errRes.body =   { messages: [{ type: 'network-error', message: message.join(' ') }] };
          return toValidatorResults(errRes);
          };
-      const pseudoResponse = <request.Response>{
+      const pseudoResponse = <request.Response>{  //eslint-disable-line @typescript-eslint/no-unsafe-class-instance-assignment
          statusCode: 200,
          body:       { messages: [] },
          text:       'Validation bypassed.',
