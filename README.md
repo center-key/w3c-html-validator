@@ -27,7 +27,7 @@ html-validator [INPUT1] [INPUT2] [INPUT3] [...]
 Parameters:
 Each parameter is a folder or file to be sent to the HTML validator.
 
-### 2. npm package.json scripts
+### 2. npm `package.json` Scripts
 Run `html-validator` from the `"scripts"` section of your **package.json** file.
 
 The parameters are folders and files to be validated.
@@ -44,7 +44,7 @@ Example **package.json** scripts:
 Passing no parameters defaults to validating all HTML files in the project (skipping the
 **node_modules** folder).
 
-### 3. Command-line npx
+### 3. Command-Line npx
 Example terminal commands:
 ```shell
 $ npm install --save-dev w3c-html-validator
@@ -54,7 +54,7 @@ The above `npx` line validates all the HTML files in the **docs** folder.
 
 You can also install **w3c-html-validator** globally (`--global`) and then run it anywhere directly from the terminal.
 
-### 4. CLI flags
+### 4. CLI Flags
 Command-line flags:
 | Flag              | Description                                                         | Value      |
 | ----------------- | ------------------------------------------------------------------- | ---------- |
@@ -156,7 +156,7 @@ $ node examples.js
 ```
 
 ### 2. Options
-#### w3cHtmlValidator.validate(options)
+#### `w3cHtmlValidator.validate(options)`
 | Name (key)       | Type                    | Default                          | Description                                             |
 | :--------------- | :---------------------- | :------------------------------- | :------------------------------------------------------ |
 | `checkUrl`       | **string**              | `'https://validator.w3.org/nu/'` | W3C validation API endpoint.                            |
@@ -172,7 +172,7 @@ $ node examples.js
 *The `ignoreMessages` and `ignoreLevel` options only work for `'json'` output.&nbsp;
 Setting `ignoreLevel` to `'warning'` skips both `'warning'` level and `'info'` level validation messages.
 
-#### w3cHtmlValidator.reporter(results, options)
+#### `w3cHtmlValidator.reporter(results, options)`
 | Name (key)       | Type        | Default | Description                                                     |
 | :--------------- | :---------- | :------ | :-------------------------------------------------------------- |
 | `continueOnFail` | **boolean** | `false` | Report messages but do not throw an error if validation failed. |
@@ -180,7 +180,7 @@ Setting `ignoreLevel` to `'warning'` skips both `'warning'` level and `'info'` l
 | `quiet`          | **boolean** | `false` | Suppress status messages for successful validations.            |
 | `title`          | **string**  | `null`  | Override display title (useful for naming HTML string inputs).  |
 
-### 3. TypeScript declarations
+### 3. TypeScript Declarations
 See the TypeScript declarations at the top of the
 [w3c-html-validator.ts](src/w3c-html-validator.ts) file.
 
@@ -202,7 +202,7 @@ type ValidatorResults = {
    };
 ```
 
-### 4. Mocha example
+### 4. Mocha Example
 ```javascript
 import assert from 'node:assert';
 import { w3cHtmlValidator } from 'w3c-html-validator';

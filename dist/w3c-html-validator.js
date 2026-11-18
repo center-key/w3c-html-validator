@@ -1,4 +1,4 @@
-//! w3c-html-validator v2.2.3 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
+//! w3c-html-validator v2.2.4 ~~ https://github.com/center-key/w3c-html-validator ~~ MIT License
 
 import { cliArgvUtil } from 'cli-argv-util';
 import { globSync } from 'glob';
@@ -8,7 +8,7 @@ import log from 'fancy-log';
 import request from 'superagent';
 import slash from 'slash';
 const w3cHtmlValidator = {
-    version: '2.2.3',
+    version: '2.2.4',
     checkUrl: 'https://validator.w3.org/nu/',
     defaultIgnoreList: [
         'with computed level',
@@ -49,7 +49,7 @@ const w3cHtmlValidator = {
         const name = chalk.gray('w3c-html-validator');
         const version = chalk.gray('v' + w3cHtmlValidator.version);
         const summary = chalk.blue(`(files: ${filenames.length})`);
-        const warning = dryRun ? chalk.yellowBright('[dry run mode - skipping validation]') : '';
+        const warning = dryRun ? chalk.yellowBright('[dry run mode -- skipping validation]') : '';
         if (!cli.flagOn.quiet || dryRun)
             log(name, version, checkUrl, summary, warning);
         const reporterOptions = {
@@ -185,7 +185,7 @@ const w3cHtmlValidator = {
         };
         const logMessage = (message) => {
             const type = message.subType ?? message.type;
-            const typeColor = typeColorMap[type] ?? chalk.redBright.bold;
+            const typeColor = typeColorMap[type] ?? typeColorMap.error;
             const label = typeColor('HTML ' + type + ':');
             const location = chalk.white(`line ${message.lastLine}, column ${message.firstColumn}:`);
             const lineText = chalk.magenta(message.extract?.replace(/\n/g, '\\n'));
